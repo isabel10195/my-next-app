@@ -21,11 +21,7 @@ export function ArticleCard({ title, excerpt, author, date, readTime, views, ima
 
       <div className="p-6">
         <div className="mb-4 flex items-center gap-2">
-          <img
-            src="/placeholder.svg"
-            alt={author}
-            className="h-8 w-8 rounded-full"
-          />
+          <Icons.avatar className="h-8 w-8 rounded-full text-gray-900 dark:text-white" />
           <div>
             <h4 className="text-sm font-medium text-gray-900 dark:text-white">{author}</h4>
             <p className="text-xs text-gray-500 dark:text-gray-300">{date}</p>

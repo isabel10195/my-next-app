@@ -1,5 +1,5 @@
 import { Icons } from "./ui/icons"
-import FAQsPage from "@/app/faqs/page"
+
 export function Header() {
   return (
     <header className="border-b bg-white dark:bg-gray-950">
@@ -17,17 +17,17 @@ export function Header() {
             <a href="/feed" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
               Feed
             </a>
-            <a href="/music" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
-              Musica
+            <a href="/profile" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+              Perfil
             </a>
           </nav>
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-serif text-gray-900 dark:text-white">
-            THE VIEW ISLAND
+            LA ISLA DE LURE
           </h1>
         </div>
-        <button className="rounded-full border px-4 py-2 text-sm hover:bg-gray-50">
+        <button className="rounded-full border px-4 py-2 text-sm hover:bg-gray-50 dark:text-white dark:hover:text-gray-400">
           Subscribe for €2.50
         </button>
       </div>

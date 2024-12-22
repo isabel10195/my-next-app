@@ -35,6 +35,15 @@ export const Icons = {
       <circle cx="12" cy="12" r="10" strokeWidth={2} />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2" />
     </svg>
-  )
+  ),
+  avatar: (props) => ( 
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <circle cx="12" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z" /> 
+    </svg> 
+  ), 
+  pause: (props) => ( <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" /> </svg> ), 
+  previous: (props) => ( <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12H5m7 7-7-7 7-7" /> </svg> ), 
+  next: (props) => ( <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-7 7 7-7-7-7" /> </svg>)
 }
 

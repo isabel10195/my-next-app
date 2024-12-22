@@ -1,29 +1,14 @@
 'use client'
 
-import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { ArrowLeft } from 'lucide-react'
+
+import { FeedHeader } from "@/components/feed/feed-header"
+import { FeedGrid } from "@/components/feed/feed-grid"
 
 export default function FeedPage() {
-  const router = useRouter()
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6"
-    >
-      <button
-        onClick={() => router.back()}
-        className="mb-6 flex items-center gap-2 text-white"
-      >
-        <ArrowLeft className="h-6 w-6" />
-        Back
-      </button>
-      <h1 className="mb-6 text-3xl font-bold text-white">Feed</h1>
-      {/* Add your feed content here */}
-    </motion.div>
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <FeedHeader />
+      <FeedGrid />
+    </div>
   )
 }
-
