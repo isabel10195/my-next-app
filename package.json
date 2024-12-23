@@ -14,9 +14,8 @@
     "@nextui-org/react": "^2.6.8",
     "antd": "^5.22.5",
     "lucide-react": "^0.469.0",
-    "next": "^15.1.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -63,7 +62,7 @@
     "framer-motion": "^11.15.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
-    "next": "13.5.1",
+    "next": "^15.1.2",
     "next-themes": "^0.3.0",
     "postcss": "^8",
     "react": "18.2.0",

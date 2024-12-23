@@ -80,4 +80,4 @@ const MultimediaCard = () => {
   )
 }
 
-export default MultimediaCard
+export default MultimediaCard;

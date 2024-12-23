@@ -9,7 +9,7 @@ export function CurrencyCard({ pair }) {
   return (
     <motion.div
       layout
-      onClick={() => setIsExpanded(!isExpanded)}
+      // onClick={() => setIsExpanded(!isExpanded)} no hace la animacion bien de expandirse
       className="relative cursor-pointer rounded-lg bg-gray-50 p-4 dark:bg-gray-900"
       whileHover={{ scale: 1.02 }}
     >

@@ -9,7 +9,6 @@ import { SocialLinks } from "@/components/ui/social-links"
 import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
 import MultimediaCard from "@/components/cards/multimedia-card"
 
-
 const currencyPairs = [
   { base: 'GHST', quote: 'USD', value: 5.2, change: 0.9715 },
   { base: 'UMA', quote: 'USD', value: 3.8, change: 1.0937 },
@@ -99,7 +98,7 @@ export default function HomePage() {
                   <MultimediaCard/> <br />
                   <SocialLinks />
                 </div>
-              
+            
               
             </div>
             

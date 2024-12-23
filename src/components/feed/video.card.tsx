@@ -1,22 +1,22 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/cards/card"
-import { MoreHorizontal, Eye, Heart, MessageSquare } from 'lucide-react'
+import { MoreHorizontal, Eye, Heart, MessageSquare, Play } from 'lucide-react'
 
-interface FeedCardProps {
+interface VideoCardProps {
   author: {
     name: string
     avatarUrl: string
     timestamp: string
   }
   content: string
-  images?: string[]
+  videoThumbnail: string
   likes: number
   views: number
   comments: number
 }
 
-export function FeedCard({ author, content, images, likes, views, comments }: FeedCardProps) {
+export function VideoCard({ author, content, videoThumbnail, likes, views, comments }: VideoCardProps) {
   return (
     <Card className="rounded-xl shadow-sm">
       <CardHeader className="flex flex-row items-center gap-4">
@@ -34,18 +34,18 @@ export function FeedCard({ author, content, images, likes, views, comments }: Fe
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm">{content}</p>
-        {images && images.length > 0 && (
-          <div className="grid grid-cols-3 gap-2">
-            {images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`Post image ${index + 1}`}
-                className="rounded-xl object-cover aspect-square w-full"
-              />
-            ))}
+        <div className="relative aspect-video rounded-xl overflow-hidden">
+          <img
+            src={videoThumbnail}
+            alt="Video thumbnail"
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+            <Button size="icon" variant="ghost" className="h-12 w-12 rounded-full bg-white/90 hover:bg-white">
+              <Play className="h-6 w-6" />
+            </Button>
           </div>
-        )}
+        </div>
       </CardContent>
       <CardFooter className="border-t pt-4">
         <div className="flex gap-4">

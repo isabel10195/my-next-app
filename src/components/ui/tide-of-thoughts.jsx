@@ -30,7 +30,7 @@ export function TideOfThoughts({ onClick }) {
     <AnimatePresence>
       <motion.div
         layout
-        onClick={handleClick}
+        // onClick={handleClick} no funciona bien la animacion de expandirse
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}
         className="cursor-pointer rounded-lg bg-gray-100 p-6 dark:bg-gray-900"
@@ -48,15 +48,8 @@ export function TideOfThoughts({ onClick }) {
               layout
               className="w-full max-w-lg rounded-lg bg-white p-6 dark:bg-gray-900"
             >
-              {content}
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="mt-4 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+           
+           
             </motion.div>
           </motion.div>
         ) : (

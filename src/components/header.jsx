@@ -10,14 +10,14 @@ export function Header() {
             <span className="text-gray-900 dark:text-white">5,810</span> {/* Cambié el color de texto */}
           </div>
           <nav className="hidden space-x-6 md:block">
-          <a href="/faqs" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+          <a href="/pages/faqs" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
             FAQs
           </a>
 
-            <a href="/feed" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+            <a href="/pages/feed" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
               Feed
             </a>
-            <a href="/profile" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+            <a href="/pages/profile" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
               Perfil
             </a>
           </nav>
