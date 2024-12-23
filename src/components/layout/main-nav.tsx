@@ -40,6 +40,11 @@ const navItems = [
     href: "/settings",
     icon: Settings,
   },
+  {
+    title: "Home",
+    href: "/",
+    icon: Settings,
+  }
 ]
 
 export function MainNav() {

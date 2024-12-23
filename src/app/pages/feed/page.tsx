@@ -138,7 +138,7 @@ export default function Home() {
         />
         <ScrollArea className="flex-1">
           <MainNav />
-        </ScrollArea>
+        </ScrollArea> {/*ESTE NAV TIENE QUE DEJARTE SCROLLEAR HACIA ABAJO SIN MOVER EL RESTO*/}
       </aside>
       
       <main className="space-y-4">
