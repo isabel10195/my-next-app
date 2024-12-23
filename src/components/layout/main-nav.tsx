@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "../lib/utils"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { HomeIcon, MessageSquare, Users2, Layout, Image, Settings } from 'lucide-react'
 
@@ -46,7 +46,7 @@ export function MainNav() {
   const pathname = usePathname()
 
   return (
-    <ScrollArea className="h-[calc(100vh-4rem)] w-full">
+    <ScrollArea className="h-[calc(100vh-4rem)] w-full dark:bg-gray-800 dark:text-gray-100">
       <div className="space-y-2 p-4">
         {navItems.map((item) => (
           <Button
@@ -54,7 +54,7 @@ export function MainNav() {
             variant={pathname === item.href ? "default" : "ghost"}
             className={cn(
               "w-full justify-start gap-2",
-              pathname === item.href && "bg-primary"
+              pathname === item.href && "bg-primary text-primary-foreground dark:bg-gray-700 dark:text-gray-100"
             )}
             asChild
           >

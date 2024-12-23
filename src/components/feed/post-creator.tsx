@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card } from "../cards/card"
+import { Card } from "@/components/cards/card"
 import { FileIcon, ImageIcon, MapPinIcon, ChevronDownIcon } from 'lucide-react'
 
 interface PostCreatorProps {
@@ -12,7 +12,7 @@ interface PostCreatorProps {
 
 export function PostCreator({ userAvatar, userName }: PostCreatorProps) {
   return (
-    <Card className="p-4">
+    <Card className="p-4 dark:bg-gray-800 dark:text-gray-100">
       <div className="flex items-center gap-4">
         <Avatar>
           <AvatarImage src={userAvatar} alt={userName} />
@@ -22,28 +22,28 @@ export function PostCreator({ userAvatar, userName }: PostCreatorProps) {
           <input
             type="text"
             placeholder="Share something"
-            className="flex-1 bg-transparent outline-none text-sm"
+            className="flex-1 bg-transparent outline-none text-sm dark:text-gray-100 dark:placeholder-gray-400"
           />
         </div>
       </div>
       <div className="flex items-center gap-2 mt-4">
-        <Button variant="ghost" size="sm" className="text-gray-600">
+        <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-400">
           <FileIcon className="w-4 h-4 mr-2" />
           File
         </Button>
-        <Button variant="ghost" size="sm" className="text-gray-600">
+        <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-400">
           <ImageIcon className="w-4 h-4 mr-2" />
           Image
         </Button>
-        <Button variant="ghost" size="sm" className="text-gray-600">
+        <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-400">
           <MapPinIcon className="w-4 h-4 mr-2" />
           Location
         </Button>
-        <Button variant="ghost" size="sm" className="text-gray-600 ml-auto">
+        <Button variant="ghost" size="sm" className="text-gray-600 dark:text-gray-400 ml-auto">
           Public
           <ChevronDownIcon className="w-4 h-4 ml-2" />
         </Button>
-        <Button size="sm" className="bg-black text-white hover:bg-black/90">
+        <Button size="sm" className="bg-black text-white hover:bg-black/90 dark:bg-gray-700 dark:hover:bg-gray-600">
           Send
         </Button>
       </div>

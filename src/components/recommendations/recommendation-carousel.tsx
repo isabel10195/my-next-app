@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Card from "antd/es/card/Card"
+import { Card } from "@/components/cards/card"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 
@@ -41,7 +41,7 @@ export function RecommendationCarousel() {
   }
 
   return (
-    <Card className="p-4 rounded-xl shadow-sm">
+    <Card className="p-4 rounded-xl shadow-sm dark:bg-gray-800 dark:text-gray-100">
       <h2 className="text-xl font-semibold mb-3">Recommendations</h2>
       <div className="relative">
         <div className="flex gap-2 overflow-hidden">
@@ -59,7 +59,7 @@ export function RecommendationCarousel() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -left-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full"
+            className="absolute -left-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full dark:bg-gray-700 dark:text-gray-100"
             onClick={scrollLeft}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function RecommendationCarousel() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full"
+            className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full dark:bg-gray-700 dark:text-gray-100"
             onClick={scrollRight}
           >
             <ChevronRight className="h-4 w-4" />
