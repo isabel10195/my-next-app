@@ -12,7 +12,7 @@ const socialLinks = [
 
 export function SocialLinks() {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-4 align place-items-center">
       {socialLinks.map((link) => (
         <motion.a
           key={link.icon}
@@ -20,7 +20,7 @@ export function SocialLinks() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className={`flex h-12 w-12 items-center justify-center rounded-full ${link.color} 
-            text-white transition-shadow hover:shadow-lg`}
+            text-white transition-shadow hover:shadow-lg `}
         >
           {Icons[link.icon]({ className: "h-5 w-5" })}
         </motion.a>

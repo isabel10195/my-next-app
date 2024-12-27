@@ -10,11 +10,12 @@ import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
 import MultimediaCard from "@/components/cards/multimedia-card"
 
 const currencyPairs = [
-  { base: 'GHST', quote: 'USD', value: 5.2, change: 0.9715 },
-  { base: 'UMA', quote: 'USD', value: 3.8, change: 1.0937 },
-  { base: 'BRICK', quote: 'USD', value: 7.1, change: 0.0772 },
-  { base: 'LCX', quote: 'USD', value: 4.4, change: 0.1570 },
-]
+  { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
+  { base: 'ethereum', quote: 'usd', value: 3.8, change: 1.0937 },
+  { base: 'EUR', quote: 'usd', value: 5.2, change: 0.9715 },
+  { base: 'USD', quote: 'usd', value: 3.8, change: 1.0937 },
+];
+
 
 export default function HomePage() {
   const [expandedArticle, setExpandedArticle] = useState(null)
@@ -89,17 +90,16 @@ export default function HomePage() {
                   onClick={setExpandedArticle}
                 />
               </div>
-              <div className="relative grid grid-cols-2 gap-4">
-                  {currencyPairs.map((pair) => (
-                    <CurrencyCard key={pair.base} pair={pair} />
-                  ))}
-                </div>
+              <div className="relative grid grid-cols-2 gap-4"> 
+                {currencyPairs.map((pair) => (
+                <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                ))}
+              </div>
+
                 <div>
                   <MultimediaCard/> <br />
                   <SocialLinks />
                 </div>
-            
-              
             </div>
             
           </motion.main>

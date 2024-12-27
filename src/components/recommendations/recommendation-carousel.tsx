@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import * as React from "react"
 import { Card } from "@/components/cards/card"
@@ -42,7 +42,7 @@ export function RecommendationCarousel() {
 
   return (
     <Card className="p-4 rounded-xl shadow-sm dark:bg-gray-800 dark:text-gray-100">
-      <h2 className="text-xl font-semibold mb-3">Recommendations</h2>
+      <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">Recommendations</h2>
       <div className="relative">
         <div className="flex gap-2 overflow-hidden">
           {recommendations.slice(currentIndex, currentIndex + itemsToShow).map((item) => (
@@ -51,7 +51,7 @@ export function RecommendationCarousel() {
               className={`flex-1 ${item.color} p-4 rounded-xl flex flex-col items-center justify-center gap-2 min-w-[100px] aspect-square`}
             >
               <span className="text-2xl">{item.icon}</span>
-              <span className="text-sm font-medium">{item.title}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{item.title}</span>
             </div>
           ))}
         </div>
@@ -79,4 +79,3 @@ export function RecommendationCarousel() {
     </Card>
   )
 }
-

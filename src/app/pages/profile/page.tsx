@@ -96,16 +96,8 @@ export default function ProfilePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6"
+     
     >
-      <button
-        // onClick={}
-        className="mb-6 flex items-center gap-2 text-white"
-      >
-        <ArrowLeft className="h-6 w-6" />
-        Back
-      </button>
-      <h1 className="mb-6 text-3xl font-bold text-white">Profile</h1>
       {
          <div className="profile-page">
          <div className="content">
@@ -293,9 +285,9 @@ export default function ProfilePage() {
              </div>
                <div className="menu-bar">
                  <Menu mode="horizontal">
-                   <Menu.Item key="1">Inicio</Menu.Item>
+                   <Menu.Item key="1"><a href="/">Inicio</a></Menu.Item>
                    <Menu.Item key="2">Perfil</Menu.Item>
-                   <Menu.Item key="3">Configuración</Menu.Item>
+                   <Menu.Item key="3"><a href="/page/settings">Configuracion</a></Menu.Item>
                    <Menu.Item key="4">
                      <Badge count={5} dot>
                        <BellOutlined />

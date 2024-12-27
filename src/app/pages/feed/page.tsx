@@ -9,7 +9,6 @@ import { FeedTabs } from "@/components/feed/feed-tabs"
 import { PostCreator } from "@/components/feed/post-creator"
 import { SearchBar } from "@/components/search/search-bar"
 import { RecommendationCarousel } from "@/components/recommendations/recommendation-carousel"
-// import { ThemeToggle } from "@/components/ui/theme-toggle"    AHORA MISMO NO SE SINCRONIZAR ESTE TOGGLER CON EL TEMA DE LA APLICACIÓN
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -129,8 +128,8 @@ export default function Home() {
   }
 
   return (
-    <div className="grid grid-cols-[280px_1fr_280px] gap-4 p-4 bg-background dark:bg-gray-900">
-      <aside className="h-[calc(100vh-2rem)] flex flex-col rounded-xl border bg-card text-card-foreground dark:bg-gray-800 dark:text-gray-100 shadow-sm">
+    <div className="grid grid-cols-[280px_1fr_280px] gap-4 p-4 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+      <aside className="h-[calc(100vh-2rem)] flex flex-col rounded-xl border bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm">
         <UserProfile
           name="Bogdan Nikitin"
           username="nikitinteam"
@@ -138,18 +137,17 @@ export default function Home() {
         />
         <ScrollArea className="flex-1">
           <MainNav />
-        </ScrollArea> {/*ESTE NAV TIENE QUE DEJARTE SCROLLEAR HACIA ABAJO SIN MOVER EL RESTO*/}
+        </ScrollArea>
       </aside>
       
       <main className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold dark:text-gray-100">Feeds</h1>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Feeds</h1>
             <FeedTabs activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
           <div className="flex items-center gap-2">
             <SearchBar />
-            {/* <ThemeToggle /> */}
           </div>
         </div>
 
@@ -184,7 +182,7 @@ export default function Home() {
       </main>
 
       <aside className="space-y-4">
-        <section className="rounded-xl border bg-card text-card-foreground dark:bg-gray-800 dark:text-gray-100 p-4 shadow-sm">
+        <section className="rounded-xl border bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-4 shadow-sm">
           <h2 className="text-xl font-semibold mb-3">Stories</h2>
           <div className="grid grid-cols-2 gap-2">
             <div className="relative group">
@@ -194,11 +192,11 @@ export default function Home() {
                 className="aspect-[4/5] rounded-xl object-cover w-full"
               />
               <div className="absolute bottom-2 left-2 flex items-center gap-1">
-                <Avatar className="w-6 h-6 border-2 border-background dark:border-gray-800">
+                <Avatar className="w-6 h-6 border-2 border-gray-800 dark:border-gray-700">
                   <AvatarImage src="/placeholder.svg?height=24&width=24" />
                   <AvatarFallback>AP</AvatarFallback>
                 </Avatar>
-                <span className="text-xs text-white font-medium">Anatoly Pr.</span>
+                <span className="text-xs text-white dark:text-gray-200 font-medium">Anatoly Pr.</span>
               </div>
             </div>
             <div className="relative group">
@@ -208,17 +206,17 @@ export default function Home() {
                 className="aspect-[4/5] rounded-xl object-cover w-full"
               />
               <div className="absolute bottom-2 left-2 flex items-center gap-1">
-                <Avatar className="w-6 h-6 border-2 border-background dark:border-gray-800">
+                <Avatar className="w-6 h-6 border-2 border-gray-800 dark:border-gray-700">
                   <AvatarImage src="/placeholder.svg?height=24&width=24" />
                   <AvatarFallback>LE</AvatarFallback>
                 </Avatar>
-                <span className="text-xs text-white font-medium">Letia Earns</span>
+                <span className="text-xs text-white dark:text-gray-200 font-medium">Letia Earns</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="rounded-xl border bg-card text-card-foreground dark:bg-gray-800 dark:text-gray-100 p-4 shadow-sm">
+        <section className="rounded-xl border bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-4 shadow-sm">
           <h2 className="text-xl font-semibold mb-3">Suggestions</h2>
           <div className="space-y-4">
             {["Nick Shelburne", "Brittni Lando", "Ivan Shevchenko"].map((name) => (
@@ -228,9 +226,9 @@ export default function Home() {
                   <AvatarFallback>{name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{name}</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{name}</p>
                 </div>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" className="text-gray-700 dark:text-gray-200 border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600">
                   Follow
                 </Button>
               </div>
@@ -243,4 +241,3 @@ export default function Home() {
     </div>
   )
 }
-
