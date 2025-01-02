@@ -36,6 +36,12 @@ export function Header() {
             <a href="/pages/chats" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
               mensajes
             </a>
+            <a href="/pages/login" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+              Login
+            </a>
+            <a href="/pages/register" className="text-sm text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-400">
+              Registro
+            </a>
           </nav>
         </div>
         <div className="text-center">
