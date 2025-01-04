@@ -14,7 +14,7 @@ const db = mysql.createConnection({
 });
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     credentials: true, // Permitir cookies y credenciales
 }));
 
@@ -110,6 +110,196 @@ app.post("/logout", (req, res) => {
     // Elimina la cookie del token
     res.clearCookie("token", { path: "/" }); // Asegúrate de que el path sea el mismo que se usó para configurarla
     res.send("Logout exitoso");
+});
+
+// Crear un nuevo tweet
+app.post("/create-tweet", (req, res) => {
+    const { tweet_text } = req.body;
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).send("No autorizado");
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const user_id = decoded.id;
+
+        db.query(
+            "INSERT INTO tweets (user_id, tweet_text) VALUES (?, ?)",
+            [user_id, tweet_text],
+            (err, result) => {
+                if (err) {
+                    console.error("Error al crear el tweet:", err);
+                    res.status(500).send("Error al crear el tweet");
+                } else {
+                    res.send({ message: "Tweet creado correctamente", tweetId: result.insertId });
+                }
+            }
+        );
+    } catch (error) {
+        console.error("Error al verificar token:", error);
+        res.status(401).send("Token inválido");
+    }
+});
+
+app.get("/get-tweets-seg", (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).send("No autorizado");
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const userId = decoded.id;
+
+        db.query(
+            `SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
+                users.user_handle, users.first_name, users.last_name, users.avatar_url
+            FROM tweets
+            JOIN users ON tweets.user_id = users.user_id
+            JOIN followers ON followers.following_id = tweets.user_id
+            WHERE followers.follower_id = ? 
+            ORDER BY tweets.created_at DESC`,
+            [userId],
+            (err, results) => {
+                if (err) {
+                    console.error("Error al obtener tweets:", err);
+                    return res.status(500).send("Error al obtener tweets");
+                }
+
+                res.send({ tweets: results });
+            }
+        );
+    } catch (error) {
+        console.error("Error al verificar token:", error);
+        res.status(401).send("Token inválido");
+    }
+});
+
+app.get("/get-tweets", (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).send("No autorizado");
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const userId = decoded.id;
+
+        // Obtener los tweets del usuario autenticado (no de los usuarios que sigue)
+        db.query(
+            `SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
+                    user_handle, first_name, last_name, avatar_url 
+            FROM tweets
+            JOIN users ON tweets.user_id = users.user_id
+            WHERE tweets.user_id = ?
+            ORDER BY tweets.created_at DESC`,
+            [userId], // Solo selecciona los tweets del usuario autenticado
+            (err, results) => {
+                if (err) {
+                    console.error("Error al obtener los tweets del usuario:", err);
+                    return res.status(500).send("Error al obtener tweets");
+                }
+
+                res.send({ tweets: results });
+            }
+        );
+    } catch (error) {
+        console.error("Error al verificar token:", error);
+        res.status(401).send("Token inválido");
+    }
+});
+
+// Ruta para obtener los datos del usuario
+app.get("/get-user-data", (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).send("No autorizado");
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const userId = decoded.id;
+
+        db.query(
+            "SELECT first_name, last_name, user_handle, avatar_url FROM users WHERE user_id = ?",
+            [userId],
+            (err, result) => {
+                if (err) {
+                    console.error("Error al obtener datos del usuario:", err);
+                    return res.status(500).send("Error al obtener datos del usuario");
+                }
+
+                const { first_name, last_name, user_handle, avatar_url } = result[0];
+                res.send({
+                first_name,
+                last_name,
+                user_handle,
+                avatarUrl: avatar_url
+                });
+
+            }
+        );
+    } catch (error) {
+        console.error("Error al verificar token:", error);
+        res.status(401).send("Token inválido");
+    }
+});
+
+app.get("/get-following-tweets", (req, res) => {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).send("No autorizado");
+    }
+
+    try {   
+        const decoded = jwt.verify(token, SECRET_KEY);
+        const userId = decoded.id;
+
+        db.query(
+            `SELECT following_id FROM followers WHERE follower_id = ?`,
+            [userId],
+            (err, followingResults) => {
+                if (err) {
+                    console.error("Error al obtener usuarios seguidos:", err);
+                    return res.status(500).send("Error al obtener usuarios seguidos");
+                }
+
+                const followingIds = followingResults.map(follow => follow.following_id);
+
+                if (followingIds.length === 0) {
+                    return res.send({ tweets: [] });
+                }
+
+                db.query(
+                    `SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, created_at, 
+                        user_handle, first_name, last_name, avatar_url 
+                    FROM tweets
+                    JOIN users ON tweets.user_id = users.user_id
+                    WHERE tweets.user_id IN (?)
+                    ORDER BY created_at DESC`,
+                    [followingIds],
+                    (err, tweetResults) => {
+                        if (err) {
+                            console.error("Error al obtener tweets de los usuarios seguidos:", err);
+                            return res.status(500).send("Error al obtener tweets");
+                        }
+                
+                        console.log("Tweet Results: ", tweetResults); // Verifica si los resultados incluyen avatar_url y user_handle
+                        res.send({ tweets: tweetResults });
+                    }
+                );                                            
+            }
+        );
+    } catch (error) {
+        console.error("Error al verificar token:", error);
+        res.status(401).send("Token inválido");
+    }
 });
 
 app.listen(3001, () => {

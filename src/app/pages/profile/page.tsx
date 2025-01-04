@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from 'lucide-react'
@@ -73,23 +74,50 @@ export default function ProfilePage() {
     { id: 4, nombre: 'Ana Martín', foto: 'https://i.pravatar.cc/150?img=4' },
   ];
 
+  const router = useRouter();
+
   const handleLogout = async () => {
-    const router = useRouter();
-  
     try {
-      await fetch('http://localhost:3001/logout', {
+      // Realiza la petición al backend para cerrar sesión
+      const response = await fetch('http://localhost:3001/logout', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include', // Incluye cookies
       });
-  
-      localStorage.removeItem('token');  // Elimina el token
-  
-      // Redirige al login
-      router.push('/login');  // Utiliza router.push aquí
+
+      if (response.ok) {
+        localStorage.removeItem('token'); // Elimina el token local
+        router.push('/'); // Redirige al login
+      } else {
+        console.error("Error al cerrar sesión", await response.text());
+      }
     } catch (error) {
       console.error("Error al cerrar sesión", error);
     }
   };
+  const [tweets, setTweets] = useState([]); // Estado para los tweets del usuario
+  useEffect(() => {
+    // Función para obtener los tweets del backend
+    const fetchTweets = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/get-tweets', {
+          method: 'GET',
+          credentials: 'include', // Asegura que las cookies (como el token) se envíen con la solicitud
+        });
+        console.log('Response:', response);  // Agregar log aquí
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Tweets:', data);  // Verifica que los tweets se reciban correctamente
+          setTweets(data.tweets); // Guarda los tweets obtenidos en el estado
+        } else {
+          console.error("Error al obtener los tweets", await response.text());
+        }
+      } catch (error) {
+        console.error("Error en la solicitud", error);
+      }
+    };    
+
+    fetchTweets(); // Llama a la función al cargar el componente
+  }, []);
   
   return (
     <motion.div
@@ -154,31 +182,32 @@ export default function ProfilePage() {
    
            {/* Cards adicionales */}   
            <div className="other-cards">
-             {/* Card 4: Posts del usuario */}
-             <div className="posts-card">
-               <Card title="Posts">
-                 <List
-                   itemLayout="horizontal"
-                   dataSource={posts}
-                   renderItem={(post) => (
-                     <List.Item
-                       actions={[
-                         <Button type="text" icon={<LikeOutlined />} />,
-                         <Button type="text" icon={<CommentOutlined />} />,
-                         <Button type="text" icon={<ShareAltOutlined />} />,
-                         <Button type="text" icon={<SaveOutlined />} />,
-                       ]}
-                     >
-                       <List.Item.Meta
-                         avatar={<Avatar src={post.avatar} />} 
-                         title={<a href="#!">{post.title}</a>}
-                         description={post.description}
-                       />
-                     </List.Item>
-                   )}
-                 />
-               </Card>
-             </div>
+              {/* Card de Posts */}
+          <div className="posts-card">
+          <Card title="Tweets">
+            <List
+              itemLayout="horizontal"
+              dataSource={tweets.length > 0 ? tweets : [{tweet_text: 'No hay tweets disponibles.'}]}  // Muestra un mensaje si no hay tweets
+              renderItem={(tweet) => (
+                <List.Item
+                  actions={[
+                    <Button type="text" icon={<LikeOutlined />} />,
+                    <Button type="text" icon={<CommentOutlined />} />,
+                    <Button type="text" icon={<ShareAltOutlined />} />,
+                    <Button type="text" icon={<SaveOutlined />} />
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={tweet.avatar_url || "https://via.placeholder.com/50"} />} 
+                    title={<a href="#!">{tweet.user_handle}</a>}
+                    description={tweet.tweet_text}
+                  />
+                </List.Item>
+              )}
+            />
+          </Card>
+  
+            </div>
    
              {/* Cards de Multimedia y Seguidores/Seguidos */}
              <div className="media-content">
