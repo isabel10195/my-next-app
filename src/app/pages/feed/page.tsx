@@ -143,7 +143,34 @@ const handleLike = async (tweetId) => {
         <section className="rounded-xl border bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-4 shadow-sm">
           <h2 className="text-xl font-semibold mb-3">Stories</h2>
           <div className="grid grid-cols-2 gap-2">
-            {/* Aquí irían los stories */}
+            <div className="relative group">
+              <img
+                src="/placeholder.svg?height=100&width=100"
+                alt="Story preview"
+                className="aspect-[4/5] rounded-xl object-cover w-full"
+              />
+              <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                <Avatar className="w-7 h-7 border-2 border-gray-800 dark:border-gray-700">
+                  <AvatarImage src="/placeholder.svg?height=24&width=24" />
+                  <AvatarFallback>AP</AvatarFallback>
+                </Avatar>
+                <span className="text-xs text-grey dark:text-gray-200 font-medium">Anatoly Pr.</span>
+              </div>
+            </div>
+            <div className="relative group">
+              <img
+                src="/placeholder.svg?height=100&width=100"
+                alt="Story preview"
+                className="aspect-[4/5] rounded-xl object-cover w-full"
+              />
+              <div className="absolute bottom-2 left-2 flex items-center gap-1">
+                <Avatar className="w-7 h-7 border-2 border-gray-800 dark:border-gray-700">
+                  <AvatarImage src="/placeholder.svg?height=24&width=24" />
+                  <AvatarFallback>LE</AvatarFallback>
+                </Avatar>
+                <span className="text-xs text-grey dark:text-gray-200 font-medium">Letia Earns</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -159,7 +186,7 @@ const handleLike = async (tweetId) => {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{name}</p>
                 </div>
-                <Button size="sm" variant="outline" className="text-gray-700 dark:text-gray-200 border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600">
+                <Button size="sm" variant="outline"   className="text-gray-700 dark:text-gray-200 border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-white">
                   Follow
                 </Button>
               </div>
