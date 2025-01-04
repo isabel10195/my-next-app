@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Card, CardBody, Image, Button, Slider } from "@nextui-org/react"
+import { HeartIcon, PauseCircleIcon, NextIcon, PreviousIcon, RepeatOneIcon, ShuffleIcon } from './iconos'
 
 const MultimediaCard = () => {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [liked, setLiked] = useState(false)
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying)
@@ -12,72 +15,121 @@ const MultimediaCard = () => {
 
   return (
     <motion.div
-      className="max-w-md mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-4"
       whileHover={{ scale: 1.05 }}
+      className="max-w-md mx-auto my-2"
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <img
-            src="https://via.placeholder.com/100"
-            alt="Current Track"
-            className="w-16 h-16 rounded-lg"
-          />
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-white">Daily Mix</h3>
-            <p className="text-sm text-gray-200">12 Tracks</p>
+      <Card
+        isBlurred
+        className="border-none bg-gradient-to-r from-blue-500 to-blue-950 shadow-lg rounded-xl"
+      >
+        <CardBody className="p-3">
+          <div className="grid grid-cols-12 gap-2 items-center">
+            <div className="relative col-span-4">
+              <Image
+                alt="Current Track"
+                className="object-cover rounded-xl w-24 h-24"
+                src="https://via.placeholder.com/100"
+              />
+            </div>
+
+            <div className="flex flex-col col-span-8">
+              <div className="flex justify-between items-start">
+                <div className="flex flex-col">
+                  <h3 className="font-semibold text-white text-sm">Daily Mix</h3>
+                  <p className="text-xs text-gray-200">12 Tracks</p>
+                  <h1 className="text-base font-medium mt-1 text-white">Frontend Radio</h1>
+                </div>
+                <Button
+                  isIconOnly
+                  className="text-white data-[hover]:bg-white/10"
+                  radius="full"
+                  variant="light"
+                  size="sm"
+                  onPress={() => setLiked((v) => !v)}
+                >
+                  <HeartIcon
+                    size={18}
+                    className={liked ? "[&>path]:stroke-transparent" : ""}
+                    fill={liked ? "currentColor" : "none"}
+                  />
+                </Button>
+              </div>
+
+              <div className="flex flex-col mt-2 gap-1">
+                <Slider
+                  aria-label="Music progress"
+                  classNames={{
+                    track: "bg-white/30",
+                    thumb: "w-2 h-2 after:w-2 after:h-2 after:bg-white",
+                  }}
+                  color="foreground"
+                  defaultValue={33}
+                  size="sm"
+                />
+                <div className="flex justify-between">
+                  <p className="text-xs text-gray-200">1:23</p>
+                  <p className="text-xs text-gray-200">4:32</p>
+                </div>
+              </div>
+
+              <div className="flex w-full items-center justify-center gap-1 mt-2">
+                <Button
+                  isIconOnly
+                  className="data-[hover]:bg-white/10 text-white"
+                  radius="full"
+                  variant="light"
+                  size="sm"
+                >
+                  <RepeatOneIcon size={16} />
+                </Button>
+                <Button
+                  isIconOnly
+                  className="data-[hover]:bg-white/10 text-white"
+                  radius="full"
+                  variant="light"
+                  size="sm"
+                >
+                  <PreviousIcon size={16} />
+                </Button>
+                <Button
+                  isIconOnly
+                  className="w-auto h-auto data-[hover]:bg-white/10 text-white"
+                  radius="full"
+                  variant="light"
+                  onPress={togglePlayPause}
+                >
+                  {isPlaying ? (
+                    <PauseCircleIcon size={32} />
+                  ) : (
+                    <NextIcon size={32} />
+                  )}
+                </Button>
+                <Button
+                  isIconOnly
+                  className="data-[hover]:bg-white/10 text-white"
+                  radius="full"
+                  variant="light"
+                  size="sm"
+                >
+                  <NextIcon size={16} />
+                </Button>
+                <Button
+                  isIconOnly
+                  className="data-[hover]:bg-white/10 text-white"
+                  radius="full"
+                  variant="light"
+                  size="sm"
+                >
+                  <ShuffleIcon size={16} />
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-        <button className="text-white">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-6.427 3.688A1 1 0 017 13.963V10.037a1 1 0 011.325-.962l6.427 3.688a1 1 0 010 1.776z"></path>
-          </svg>
-        </button>
-      </div>
-      <div className="mb-4">
-        <h4 className="text-white text-sm">Frontend Radio</h4>
-        <div className="relative w-full h-1 bg-gray-200 rounded">
-          <div className="absolute top-0 h-1 w-1/3 bg-white rounded"></div>
-        </div>
-        <div className="flex justify-between text-xs text-gray-200">
-          <span>1:23</span>
-          <span>4:32</span>
-        </div>
-      </div>
-      <div className="flex items-center justify-between text-white">
-        <button>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7 7-7"></path>
-          </svg>
-        </button>
-        <button>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m14 0l-7 7m7-7l-7-7"></path>
-          </svg>
-        </button>
-        <button onClick={togglePlayPause}>
-          {isPlaying ? (
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9v6m4-6v6"></path>
-            </svg>
-          ) : (
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-6.427 3.688A1 1 0 017 13.963V10.037a1 1 0 011.325-.962l6.427 3.688a1 1 0 010 1.776z"></path>
-            </svg>
-          )}
-        </button>
-        <button>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7-7 7"></path>
-          </svg>
-        </button>
-        <button>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m14 0l-7 7m7-7l-7-7"></path>
-          </svg>
-        </button>
-      </div>
+        </CardBody>
+      </Card>
     </motion.div>
   )
 }
 
-export default MultimediaCard;
+export default MultimediaCard
+

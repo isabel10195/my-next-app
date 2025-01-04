@@ -25,7 +25,7 @@ export function VideoCard({ author, content, videoThumbnail, likes, views, comme
           <AvatarFallback>{author.name[0]}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-100">{author.name}</h3>
+          <h3 className="font-semibold text-gray-900">{author.name}</h3>
           <p className="text-sm text-gray-400">{author.timestamp}</p>
         </div>
         <Button variant="ghost" size="icon" className="rounded-full text-gray-400 dark:text-gray-500 hover:text-gray-100 dark:hover:text-white">
@@ -33,7 +33,7 @@ export function VideoCard({ author, content, videoThumbnail, likes, views, comme
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-gray-300">{content}</p>
+        <p className="text-sm text-gray-900">{content}</p>
         <div className="relative aspect-video rounded-xl overflow-hidden">
           <img
             src={videoThumbnail}
@@ -49,15 +49,15 @@ export function VideoCard({ author, content, videoThumbnail, likes, views, comme
       </CardContent>
       <CardFooter className="border-t pt-4 border-gray-700">
         <div className="flex gap-4">
-          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-100 dark:hover:text-white">
+          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white">
             <Heart className="w-4 h-4" />
             {likes}
           </Button>
-          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-100 dark:hover:text-white">
+          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white">
             <Eye className="w-4 h-4" />
             {views}
           </Button>
-          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-100 dark:hover:text-white">
+          <Button variant="ghost" size="sm" className="gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white">
             <MessageSquare className="w-4 h-4" />
             {comments}
           </Button>

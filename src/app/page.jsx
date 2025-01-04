@@ -8,6 +8,9 @@ import { CurrencyCard } from "@/components/ui/currency-card"
 import { SocialLinks } from "@/components/ui/social-links"
 import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
 import MultimediaCard from "@/components/cards/multimedia-card"
+import Calendar from "@/components/cards/calendario-card"
+import Navbar from "@/components/navbar/navbar.jsx" 
+import Footer from "@/components/footer"
 
 const currencyPairs = [
   { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
@@ -22,7 +25,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Header />
+      <Navbar/>
       <AnimatePresence>
         {expandedArticle ? (
           <motion.div
@@ -79,16 +82,7 @@ export default function HomePage() {
               </div>
               
               <div className="space-y-6">
-                <ArticleCard
-                  title="Congress Averts Shutdown as Conservatives Steam"
-                  excerpt="Hours after the Senate passed the measure, the House followed suit. The bill will now go to President Biden."
-                  author="Alexa Ruyk"
-                  date="January 28, 2024"
-                  readTime="5 min read"
-                  views={32}
-                  image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
-                  onClick={setExpandedArticle}
-                />
+                <Calendar/>
               </div>
               <div className="relative grid grid-cols-2 gap-4"> 
                 {currencyPairs.map((pair) => (
@@ -97,7 +91,8 @@ export default function HomePage() {
               </div>
 
                 <div>
-                  <MultimediaCard/> <br />
+                  <MultimediaCard/> 
+                  <br />
                   <SocialLinks />
                 </div>
             </div>
@@ -105,6 +100,7 @@ export default function HomePage() {
           </motion.main>
         )}
       </AnimatePresence>
+      <Footer/>
     </div>
   )
 }
