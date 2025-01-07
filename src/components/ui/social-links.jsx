@@ -4,10 +4,10 @@ import { motion } from "framer-motion"
 import { Icons } from "./icons"
 
 const socialLinks = [
-  { icon: 'telegram', url: '#', color: 'bg-blue-500' },
-  { icon: 'youtube', url: '#', color: 'bg-red-500' },
-  { icon: 'facebook', url: '#', color: 'bg-blue-600' },
-  { icon: 'twitter', url: '#', color: 'bg-black' },
+  { icon: 'telegram', url: 'https://web.telegram.org/', color: 'bg-blue-500' },
+  { icon: 'youtube', url: 'https://www.youtube.com', color: 'bg-red-500' },
+  { icon: 'facebook', url: 'https://www.facebook.com/?locale=es_ES', color: 'bg-blue-600' },
+  { icon: 'twitter', url: 'https://x.com/home', color: 'bg-black' },
 ]
 
 export function SocialLinks() {

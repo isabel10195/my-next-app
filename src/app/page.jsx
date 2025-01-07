@@ -2,15 +2,21 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Header } from "@/components/header"
+
 import { ArticleCard } from "@/components/ui/article-card"
 import { CurrencyCard } from "@/components/ui/currency-card"
 import { SocialLinks } from "@/components/ui/social-links"
 import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
+
 import MultimediaCard from "@/components/cards/multimedia-card"
 import Calendar from "@/components/cards/calendario-card"
-import Navbar from "@/components/navbar/navbar.jsx" 
+import CardAutorizacion from "@/components/ui/cardAutorizacion"
+
+import CombinnedNavbar from "@/components/navbar/combinnednavbar" 
+
 import Footer from "@/components/footer"
+
+
 
 const currencyPairs = [
   { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
@@ -24,8 +30,8 @@ export default function HomePage() {
   const [expandedArticle, setExpandedArticle] = useState(null)
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Navbar/>
+    <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
+      <CombinnedNavbar/>
       <AnimatePresence>
         {expandedArticle ? (
           <motion.div
@@ -78,7 +84,7 @@ export default function HomePage() {
                   onClick={setExpandedArticle}
                 />
                 <TideOfThoughts />
-                <TideOfThoughts />
+                <CardAutorizacion />
               </div>
               
               <div className="space-y-6">

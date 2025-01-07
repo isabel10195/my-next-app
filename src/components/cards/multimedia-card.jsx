@@ -27,8 +27,8 @@ const MultimediaCard = () => {
             <div className="relative col-span-4">
               <Image
                 alt="Current Track"
-                className="object-cover rounded-xl w-24 h-24"
-                src="https://via.placeholder.com/100"
+                className="object-cover rounded-xl w-34 h-34"
+                src="https://i.scdn.co/image/ab67616d0000b273548f7ec52da7313de0c5e4a0"
               />
             </div>
 

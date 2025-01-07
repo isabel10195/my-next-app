@@ -1,10 +1,14 @@
-'use client'
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, ReactNode } from 'react';
 
-export function TideOfThoughts({ onClick }) {
-  const [isExpanded, setIsExpanded] = useState(false)
+interface TideOfThoughtsProps {
+  onClick?: (content: ReactNode) => void;
+}
+
+export function TideOfThoughts({ onClick }: TideOfThoughtsProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const content = (
     <>
@@ -17,23 +21,23 @@ export function TideOfThoughts({ onClick }) {
         <span>175 authors</span>
       </div>
     </>
-  )
+  );
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick(content)
-    }
-    setIsExpanded(!isExpanded)
-  }
+  // const handleClick = () => {
+  //   if (onClick) {
+  //     onClick(content);
+  //   }
+  //   setIsExpanded(!isExpanded);
+  // };
 
   return (
     <AnimatePresence>
       <motion.div
         layout
-        // onClick={handleClick} no funciona bien la animacion de expandirse
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}
-        className="cursor-pointer rounded-lg bg-gray-100 p-6 dark:bg-gray-900"
+        className="cursor-pointer rounded-lg bg-white p-6 dark:bg-gray-900"
+        // onClick={handleClick}
       >
         {isExpanded ? (
           <motion.div
@@ -48,8 +52,7 @@ export function TideOfThoughts({ onClick }) {
               layout
               className="w-full max-w-lg rounded-lg bg-white p-6 dark:bg-gray-900"
             >
-           
-           
+              {content}
             </motion.div>
           </motion.div>
         ) : (
@@ -57,5 +60,5 @@ export function TideOfThoughts({ onClick }) {
         )}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
