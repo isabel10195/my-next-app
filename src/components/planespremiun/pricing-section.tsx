@@ -24,7 +24,7 @@ export default function PricingSection() {
   ]
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-black to-gray-900 px-4 py-24">
+    <div className="relative min-h-screen bg-gradient-to-b from-black to-gray-900 px-4 py-12">
       <div className="mx-auto max-w-7xl">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
