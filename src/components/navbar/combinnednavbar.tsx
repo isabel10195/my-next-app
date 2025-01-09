@@ -69,12 +69,11 @@ export default function CombinedNavbar() {
             </div>
           </NavbarItem>
           <NavbarItem>
-            <button
-              className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800"
-              onClick={() => window.location.href = '/pages/planes'}
-            >
+            <Link href="/pages/planes">
+              <button className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">
               Mejorar a Premium
-            </button>
+              </button>
+            </Link>
           </NavbarItem>
         </NavbarContent>
       </div>
