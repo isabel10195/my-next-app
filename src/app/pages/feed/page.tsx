@@ -99,6 +99,7 @@ const handleLike = async (tweetId) => {
         <PostCreator
           userAvatar={avatarUrl}  // Usar el avatar aquí también
           userName={userName}  // Usar el nombre completo
+          onTweetSent={(newTweet) => setTweets([newTweet, ...tweets])} // Actualizar el estado de los tweets
         />
 
         {/* Mostrar los tweets aquí */}
@@ -135,8 +136,6 @@ const handleLike = async (tweetId) => {
         ) : (
           <p className="text-gray-500 dark:text-gray-400">No hay tweets para mostrar</p>
         )}
-
-
       </main>
 
       <aside className="space-y-4">
@@ -186,14 +185,13 @@ const handleLike = async (tweetId) => {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{name}</p>
                 </div>
-                <Button size="sm" variant="outline"   className="text-gray-700 dark:text-gray-200 border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-white">
+                <Button size="sm" variant="outline" className="text-gray-700 dark:text-gray-200 border-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600 hover:text-white">
                   Follow
                 </Button>
               </div>
             ))}
           </div>
         </section>  
-            
         <RecommendationCarousel />
       </aside>
     </div>
