@@ -21,7 +21,6 @@ import Footer from "@/components/footer"
 const currencyPairs = [
   { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
   { base: 'ethereum', quote: 'usd', value: 3.8, change: 1.0937 },
-  { base: 'EUR', quote: 'usd', value: 5.2, change: 0.9715 },
   { base: 'USD', quote: 'usd', value: 3.8, change: 1.0937 },
 ];
 

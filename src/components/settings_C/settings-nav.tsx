@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { cn } from "../lib/utils"
-import { User, Bell, Shield, BarChart3, Eye, Globe, Key, CreditCard, MessageSquare, Database,Send } from 'lucide-react'
+import { User, Bell, Shield, BarChart3, Eye, Globe, Key, CreditCard, MessageSquare, Database, Home } from 'lucide-react'
 
 const settingsNav = [
   {
@@ -9,11 +9,11 @@ const settingsNav = [
      {
         name: "Home",
         href: "/",
-        icon: Send,
+        icon: Home,
      },
      {
         name: "Profile",
-        href: "/settings/profile",
+        href: "/pages/profile",
         icon: User,
       },
       {
@@ -87,26 +87,26 @@ interface SettingsNavProps extends React.HTMLAttributes<HTMLDivElement> {
 export function SettingsNav({ className, ...props }: SettingsNavProps) {
   return (
     <nav className={cn("space-y-6", className)} {...props}>
-      {settingsNav.map((section) => (
-        <div key={section.section}>
-          <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-2">
-            {section.section}
-          </h3>
-          <div className="space-y-1">
-            {section.items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-              >
-                <item.icon className="mr-2 h-4 w-4" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
-    </nav>
+  {settingsNav.map((section) => (
+    <div key={section.section} className="rounded-lg bg-white dark:bg-gray-900 p-4 shadow-lg">
+      <h3 className="px-3 text-sm font-semibold text-gray-900 dark:text-gray-400 mb-2">
+        {section.section}
+      </h3>
+      <div className="space-y-1">
+        {section.items.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="group flex items-center rounded-lg px-4 py-2 text-sm font-medium text-gray-900 hover:bg-blue-600 hover:text-white transition-colors ease-in-out duration-200 dark:text-gray-200 dark:hover:bg-blue-500"
+          >
+            <item.icon className="mr-3 h-5 w-5 text-gray-500 group-hover:text-white transition-colors ease-in-out duration-200 dark:text-gray-400 dark:group-hover:text-white" />
+            <span>{item.name}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  ))}
+</nav>
+
   )
 }
-

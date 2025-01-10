@@ -5,8 +5,12 @@ import ReactPlayer from 'react-player'
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    // Marca como cliente después de la hidratación
+    setIsClient(true)
+
     const handleScroll = () => {
       setScrollY(window.scrollY)
     }
@@ -23,16 +27,18 @@ export default function HeroSection() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <ReactPlayer
-        url="https://www.youtube.com/watch?v=yaHf1FwMYA4"
-        className="absolute left-0 top-0 h-full w-full object-cover"
-        playing={true}
-        muted={true}
-        loop={true}
-        playsinline={true}
-        width="100%"
-        height="100%"
-      />
+      {isClient && (
+        <ReactPlayer
+          url="https://www.youtube.com/watch?v=yaHf1FwMYA4"
+          className="absolute left-0 top-0 h-full w-full object-cover"
+          playing={true}
+          muted={true}
+          loop={true}
+          playsinline={true}
+          width="100%"
+          height="100%"
+        />
+      )}
       <div
         className="absolute inset-0 transition-all duration-300"
         style={{

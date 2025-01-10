@@ -9,13 +9,13 @@ import { HomeIcon, MessageSquare, Users2, Layout, Image, Settings, HouseIcon } f
 
 const navItems = [
   {
-    title: "News Feed",
-    href: "/",
+    title: "Noticias",
+    href: "/pages/news",
     icon: HomeIcon,
   },
   {
-    title: "Messages",
-    href: "/pages/mensajes",
+    title: "Mensajes",
+    href: "/pages/chats",
     icon: MessageSquare,
     badge: 6,
   },
@@ -36,8 +36,8 @@ const navItems = [
     icon: Image,
   },
   {
-    title: "Settings",
-    href: "/settings",
+    title: "Ajustes",
+    href: "/pages/settings",
     icon: Settings,
   },
   {

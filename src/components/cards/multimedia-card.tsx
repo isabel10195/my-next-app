@@ -1,16 +1,44 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardBody, Image, Button, Slider } from "@nextui-org/react"
-import { HeartIcon, PauseCircleIcon, NextIcon, PreviousIcon, RepeatOneIcon, ShuffleIcon } from './iconos'
+import { HeartIcon, PauseCircleIcon, NextIcon, PreviousIcon, RepeatOneIcon, ShuffleIcon, PlayCircleIcon } from './iconos_multimediacard'
 
 const MultimediaCard = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [liked, setLiked] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
+  // Función para iniciar/pausar la música
   const togglePlayPause = () => {
-    setIsPlaying(!isPlaying)
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  // Función para manejar el cambio de tiempo
+  const handleSeek = (value: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value
+      setCurrentTime(value)
+    }
+  }
+
+  // Función para actualizar el progreso de la música
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime)
+      setDuration(audioRef.current.duration)
+    }
   }
 
   return (
@@ -63,12 +91,13 @@ const MultimediaCard = () => {
                     thumb: "w-2 h-2 after:w-2 after:h-2 after:bg-white",
                   }}
                   color="foreground"
-                  defaultValue={33}
+                  value={currentTime}
+                  onChange={handleSeek}
                   size="sm"
                 />
                 <div className="flex justify-between">
-                  <p className="text-xs text-gray-200">1:23</p>
-                  <p className="text-xs text-gray-200">4:32</p>
+                  <p className="text-xs text-gray-200">{new Date(currentTime * 1000).toISOString().substr(14, 5)}</p>
+                  <p className="text-xs text-gray-200">{new Date(duration * 1000).toISOString().substr(14, 5)}</p>
                 </div>
               </div>
 
@@ -101,7 +130,7 @@ const MultimediaCard = () => {
                   {isPlaying ? (
                     <PauseCircleIcon size={32} />
                   ) : (
-                    <NextIcon size={32} />
+                    <PlayCircleIcon size={32} />
                   )}
                 </Button>
                 <Button
@@ -125,6 +154,15 @@ const MultimediaCard = () => {
               </div>
             </div>
           </div>
+
+          {/* Audio player */}
+          <audio
+            ref={audioRef}
+            src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Cambia este enlace al archivo que desees
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleTimeUpdate}
+            preload="auto"
+          />
         </CardBody>
       </Card>
     </motion.div>
@@ -132,4 +170,3 @@ const MultimediaCard = () => {
 }
 
 export default MultimediaCard
-
