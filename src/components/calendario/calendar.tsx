@@ -134,8 +134,8 @@ export function Calendar() {
   return (
     <div className="flex h-screen flex-col p-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Calendario</h1>
-        <Button onClick={() => handleSelectSlot({ start: new Date(), end: new Date() })}>
+      <h1 className="text-2xl font-bold dark:text-white">Calendario</h1>
+      <Button onClick={() => handleSelectSlot({ start: new Date(), end: new Date() })}>
           <Plus className="mr-2 h-4 w-4" />
           Nuevo Evento
         </Button>

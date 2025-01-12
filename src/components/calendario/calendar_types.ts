@@ -4,7 +4,7 @@ export type EventType = 'default' | 'important' | 'personal' | 'work' | 'holiday
 
 export interface EventProps {
   id: string
-  title: string
+  title?: string
   start: Date
   end: Date
   description?: string

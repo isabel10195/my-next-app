@@ -31,9 +31,17 @@ export const buttonVariants = ({
 };
 
 // Botón principal
-export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'small' | 'medium' | 'large';
+}
+
+export const Button: React.FC<ButtonProps> = ({
   className,
+  variant = 'default',
+  size = 'medium',
   ...props
 }) => {
-  return <button className={cn(buttonVariants(props), className)} {...props} />;
+  return <button className={cn(buttonVariants({ variant, size }), className)} {...props} />;
 };
