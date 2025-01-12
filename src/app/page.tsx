@@ -9,28 +9,34 @@ import { SocialLinks } from "@/components/ui/social-links"
 import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
 
 import MultimediaCard from "@/components/cards/multimedia-card"
-import Calendar from "@/components/cards/calendario-card"
+import { Calendar } from '@/components/calendario/calendar'
 import CardAutorizacion from "@/components/ui/cardAutorizacion"
 
-import CombinnedNavbar from "@/components/navbar/combinnednavbar" 
+import CombinnedNavbar from "@/components/navbar/combinnednavbar"
 
 import Footer from "@/components/footer"
 
+// Definir el tipo de los objetos en currencyPairs
+interface CurrencyPair {
+  base: string
+  quote: string
+  value: number
+  change: number
+}
 
-
-const currencyPairs = [
+const currencyPairs: CurrencyPair[] = [
   { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
   { base: 'ethereum', quote: 'usd', value: 3.8, change: 1.0937 },
   { base: 'USD', quote: 'usd', value: 3.8, change: 1.0937 },
-];
-
+]
 
 export default function HomePage() {
-  const [expandedArticle, setExpandedArticle] = useState(null)
+  // El tipo del estado `expandedArticle` es `React.ReactNode | null` para aceptar cualquier tipo de contenido
+  const [expandedArticle, setExpandedArticle] = useState<React.ReactNode | null>(null)
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
-      <CombinnedNavbar/>
+      <CombinnedNavbar />
       <AnimatePresence>
         {expandedArticle ? (
           <motion.div
@@ -59,7 +65,7 @@ export default function HomePage() {
             className="container mx-auto p-4"
           >
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <ArticleCard
+              <ArticleCard
                 large
                 title="Turn Your Devices From Distractions Into Time Savers Either"
                 excerpt="Every January, I usually purge old snail mail, clothes and unwanted knickknacks to start the year anew. This time, I focused on my digital spaces instead."
@@ -73,6 +79,7 @@ export default function HomePage() {
 
               <div className="space-y-6">
                 <ArticleCard
+                  large
                   title="Draw Inspiration From Vibrancy"
                   excerpt="Finding beauty in the simplest forms of nature"
                   author="Lind Tailor"
@@ -85,28 +92,26 @@ export default function HomePage() {
                 <TideOfThoughts />
                 <CardAutorizacion />
               </div>
-              
+
               <div className="space-y-6">
-                <Calendar/>
+                <Calendar />
               </div>
-              <div className="relative grid grid-cols-2 gap-4"> 
+              <div className="relative grid grid-cols-2 gap-4">
                 {currencyPairs.map((pair) => (
-                <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                  <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
                 ))}
               </div>
 
-                <div>
-                  <MultimediaCard/> 
-                  <br />
-                  <SocialLinks />
-                </div>
+              <div>
+                <MultimediaCard />
+                <br />
+                <SocialLinks />
+              </div>
             </div>
-            
           </motion.main>
         )}
       </AnimatePresence>
-      <Footer/>
+      <Footer />
     </div>
   )
 }
-

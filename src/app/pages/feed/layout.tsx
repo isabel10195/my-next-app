@@ -7,7 +7,7 @@ import { ThemeProvider } from 'next-themes'
 
 const inter = Inter({ subsets: ["latin"] })
 
-export default function RootLayout({
+export default function FeedLayout({
   children,
 }: {
   children: React.ReactNode
