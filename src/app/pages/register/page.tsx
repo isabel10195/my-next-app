@@ -1,25 +1,30 @@
 'use client'
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import Axios from 'axios';
 
 import './register.css';
 import 'font-awesome/css/font-awesome.min.css';
 
-function Register({ onRegisterSuccess, onToggleLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+interface RegisterProps {
+  onRegisterSuccess: () => void;
+  onToggleLogin: () => void;
+}
 
-  const handleSubmit = (e) => {
+const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onToggleLogin }) => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!username || !password || !confirmPassword || !email || !firstName || !lastName || !phoneNumber) {
       setError('Por favor, completa todos los campos.');
@@ -75,8 +80,7 @@ function Register({ onRegisterSuccess, onToggleLogin }) {
         <p className="subheading">Crea una cuenta para continuar</p>
         <form onSubmit={handleSubmit} className="register-form">
           {/* Input fields */}
-          {/* Aquí están las nuevas entradas con los estados correspondientes */}
-          <label htmlFor="">Usuario</label>
+          <label htmlFor="username">Usuario</label>
           <input
             type="text"
             placeholder="Nombre de usuario"
@@ -127,7 +131,7 @@ function Register({ onRegisterSuccess, onToggleLogin }) {
           />
 
           {/* Contraseñas */}
-          <label htmlFor="">Contraseña</label>
+          <label htmlFor="password">Contraseña</label>
           <div className="password-container">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -146,7 +150,7 @@ function Register({ onRegisterSuccess, onToggleLogin }) {
             </button>
           </div>
 
-          <label htmlFor="">Confirmar Contraseña</label>
+          <label htmlFor="confirm_password">Confirmar Contraseña</label>
           <div className="password-container">
             <input
               type={showConfirmPassword ? 'text' : 'password'}

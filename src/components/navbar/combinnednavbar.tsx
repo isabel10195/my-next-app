@@ -28,8 +28,8 @@ export default function CombinedNavbar() {
   }, []);
 
   return (
-    <Navbar shouldHideOnScroll className="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-      <div className="container mx-auto flex items-center justify-between p-4">
+    <Navbar className="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+      <div className="container mx-auto flex items-center justify-between p-6">
         <NavbarBrand className="flex items-center gap-8">
           <Image 
             src="/logo.png" 
@@ -39,7 +39,7 @@ export default function CombinedNavbar() {
           />
         </NavbarBrand>
         
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarContent className="hidden sm:flex gap-4 flex-grow justify-center mr-64">
           <NavbarItem>
             <Link href="/pages/feed" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Feed</Link>
           </NavbarItem>
@@ -47,14 +47,14 @@ export default function CombinedNavbar() {
             <Link href="/pages/profile" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Perfil</Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="/pages/settings" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Settings</Link>
+            <Link href="/pages/settings" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Configuración</Link>
           </NavbarItem>
           <NavbarItem>
             <Link href="/pages/chats" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Mensajes</Link>
           </NavbarItem>
         </NavbarContent>
         
-        <NavbarContent className="flex items-center gap-4" justify="end">
+        <NavbarContent className="flex items-center gap-4">
           <NavbarItem>
             <div className="flex items-center gap-2 cursor-pointer" onClick={togglePlayPause}>
               {isPlaying ? (
@@ -65,10 +65,11 @@ export default function CombinedNavbar() {
               <span className="text-gray-600 dark:text-gray-400">5,810</span>
             </div>
           </NavbarItem>
+
           <NavbarItem>
             <Link href="/pages/planes">
               <button className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">
-              Mejorar a Premium
+                Mejorar a Premium
               </button>
             </Link>
           </NavbarItem>

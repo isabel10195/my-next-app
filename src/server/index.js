@@ -11,8 +11,8 @@ const SECRET_KEY = "lure";
 
 // Configuración para SQL Server
 const dbConfig = {
-    user: "LureAdmin",    // Usuario de SQL Server
-    password: "LureAdmin",// Contraseña de SQL Server
+    user: "root",    // Usuario de SQL Server
+    password: "root",// Contraseña de SQL Server
     server: "localhost",  // Servidor SQL, "localhost" si es local
     database: "LURE",     // Nombre de tu base de datos
     port: 1433,           // Puerto predeterminado de SQL Server

@@ -116,7 +116,7 @@ export default function LoginPage() {
 
             <div className="space-y-4">
               <div className="text-center">
-                <span className="text-sm text-gray-500">No tienes contraseña? </span>
+                <span className="text-sm text-gray-500">No tienes cuenta? </span>
                 <Link href="/pages/register" className="text-sm text-cyan-500 hover:text-cyan-600">
                   Regístrate
                 </Link>
