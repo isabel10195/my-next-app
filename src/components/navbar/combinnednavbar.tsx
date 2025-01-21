@@ -41,9 +41,6 @@ export default function CombinedNavbar() {
         
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link href="/pages/faqs" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">FAQs</Link>
-          </NavbarItem>
-          <NavbarItem>
             <Link href="/pages/feed" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Feed</Link>
           </NavbarItem>
           <NavbarItem>

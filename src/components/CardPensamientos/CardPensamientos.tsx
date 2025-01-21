@@ -7,7 +7,7 @@ interface TideOfThoughtsProps {
   onClick?: (content: ReactNode) => void;
 }
 
-export function TideOfThoughts({ onClick }: TideOfThoughtsProps) {
+export function CardPensamientos({ onClick }: TideOfThoughtsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const content = (

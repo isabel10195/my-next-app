@@ -81,16 +81,4 @@
   }
 }
 
-/* Estilos adicionales para el calendario */
-.rbc-calendar {
-  min-height: 600px;
-}
 
-.rbc-event {
-  background-color: #3182ce;
-  border-color: #2c5282;
-}
-
-.rbc-today {
-  background-color: #ebf8ff;
-}

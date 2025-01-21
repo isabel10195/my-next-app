@@ -1,10 +1,22 @@
-'use client'
+"use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
-import { Icons } from "./icons"
+import { useState, ReactNode } from "react"
+import { Iconos } from "../ui/Iconos"
 
-export function ArticleCard({ title, excerpt, author, date, readTime, views, image, large, onClick }) {
+interface ArticleCardProps {
+  title: string;
+  excerpt: string;
+  author: string;
+  date: string;
+  readTime: string;
+  views: number;
+  image?: string;
+  large?: boolean;
+  onClick?: (content: ReactNode) => void;
+}
+
+export function ArticleCard({ title, excerpt, author, date, readTime, views, image, large, onClick }: ArticleCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const content = (
@@ -21,7 +33,7 @@ export function ArticleCard({ title, excerpt, author, date, readTime, views, ima
 
       <div className="p-6">
         <div className="mb-4 flex items-center gap-2">
-          <Icons.avatar className="h-8 w-8 rounded-full text-gray-900 dark:text-white" />
+          <Iconos.avatar className="h-8 w-8 rounded-full text-gray-900 dark:text-white" />
           <div>
             <h4 className="text-sm font-medium text-gray-900 dark:text-white">{author}</h4>
             <p className="text-xs text-gray-500 dark:text-gray-300">{date}</p>
@@ -33,11 +45,11 @@ export function ArticleCard({ title, excerpt, author, date, readTime, views, ima
         <p className="mb-4 text-gray-600 dark:text-gray-300">{excerpt}</p>
         <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center gap-1">
-            <Icons.views className="h-4 w-4" />
+            <Iconos.views className="h-4 w-4" />
             {views}
           </div>
           <div className="flex items-center gap-1">
-            <Icons.clock className="h-4 w-4" />
+            <Iconos.clock className="h-4 w-4" />
             {readTime}
           </div>
         </div>

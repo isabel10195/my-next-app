@@ -1,9 +1,15 @@
-'use client'
+"use client"
 
 import { motion } from "framer-motion"
-import { Icons } from "./icons"
+import { Iconos } from "../ui/Iconos"
 
-const socialLinks = [
+interface SocialLink {
+  icon: keyof typeof Iconos;
+  url: string;
+  color: string;
+}
+
+const socialLinks: SocialLink[] = [
   { icon: 'telegram', url: 'https://web.telegram.org/', color: 'bg-blue-500' },
   { icon: 'youtube', url: 'https://www.youtube.com', color: 'bg-red-500' },
   { icon: 'facebook', url: 'https://www.facebook.com/?locale=es_ES', color: 'bg-blue-600' },
@@ -12,7 +18,7 @@ const socialLinks = [
 
 export function SocialLinks() {
   return (
-    <div className="grid grid-cols-4 gap-4 align place-items-center">
+    <div className="grid grid-cols-4 gap-4 place-items-center">
       {socialLinks.map((link) => (
         <motion.a
           key={link.icon}
@@ -22,10 +28,9 @@ export function SocialLinks() {
           className={`flex h-12 w-12 items-center justify-center rounded-full ${link.color} 
             text-white transition-shadow hover:shadow-lg `}
         >
-          {Icons[link.icon]({ className: "h-5 w-5" })}
+          {Iconos[link.icon]({ className: "h-5 w-5" })}
         </motion.a>
       ))}
     </div>
   )
 }
-

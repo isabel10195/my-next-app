@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { SettingsNav } from "@/components/settings_C/settings-nav"
 import { ActivityHeatmap } from "@/components/settings_C/activity-heatmap"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/cards/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/MultimediaCard/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 

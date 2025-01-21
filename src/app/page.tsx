@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { ArticleCard } from "@/components/ui/article-card"
-import { CurrencyCard } from "@/components/ui/currency-card"
-import { SocialLinks } from "@/components/ui/social-links"
-import { TideOfThoughts } from "@/components/ui/tide-of-thoughts"
+import { CurrencyCard } from "@/components/CardsMonedas/currency-card"
+import { SocialLinks } from "@/components/CardRedesSociales/social-links"
+import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos"
 
-import MultimediaCard from "@/components/cards/multimedia-card"
-import { Calendar } from '@/components/calendario/calendar'
+import MultimediaCard from "@/components/MultimediaCard/multimedia-card"
+
 import CardAutorizacion from "@/components/ui/cardAutorizacion"
 
 import CombinnedNavbar from "@/components/navbar/combinnednavbar"
@@ -89,13 +89,13 @@ export default function HomePage() {
                   image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
                   onClick={setExpandedArticle}
                 />
-                <TideOfThoughts />
+                <CardPensamientos />
                 <CardAutorizacion />
               </div>
 
               <div className="space-y-6">
-                <Calendar />
-              </div>
+               {/* <CalendarCard/>               */}
+               </div>
               <div className="relative grid grid-cols-2 gap-4">
                 {currencyPairs.map((pair) => (
                   <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />

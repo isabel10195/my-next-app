@@ -4,7 +4,7 @@
 import HeroSection from "@/components/planespremiun/hero.section";
 import TextSection from "@/components/planespremiun/text-section";
 import PricingSection from "@/components/planespremiun/pricing-section";
-import PagoCard from "@/components/ui/pagocard";
+import PagoCard from "@/components/planes_c/pagocard";
 import Link from "next/link"; // Importamos Link para navegación
 
 export default function PlanesPage() {

@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from "react"
-import { Card } from "@/components/cards/card"
+import { Card } from "@/components/MultimediaCard/card"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 

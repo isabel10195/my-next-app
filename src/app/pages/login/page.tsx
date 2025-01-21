@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Axios from 'axios'
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/cards/card"
+import { Card } from "@/components/MultimediaCard/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Facebook, Twitter } from 'lucide-react'

@@ -4,14 +4,14 @@ import Link from 'next/link'
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Global Banner */}
-      <div className="bg-[#f5f5f7] text-sm py-3 px-4 text-center">
-        <p>Choose another country or region to see content specific to your location</p>
+      <div className="bg-[#f5f5f7] dark:bg-gray-900 text-sm py-3 px-4 text-center text-gray-900 dark:text-white">
+        <p>Elige otro país o región para ver contenido específico de tu ubicación</p>
       </div>
 
       {/* Navigation */}
-      <nav className="bg-[rgba(255,255,255,0.8)] backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(26,26,26,0.8)] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
         <div className="max-w-[980px] mx-auto px-4 h-[44px] flex items-center justify-between">
           <Link href="/" className="opacity-80 hover:opacity-100 transition-opacity">
             <Image
@@ -21,79 +21,79 @@ export default function Page() {
               height={14}
               className="w-3.5 h-4"
             />
-            <span className="sr-only">Home</span>
+            <span className="sr-only">Inicio</span>
           </Link>
           
           <div className="hidden md:flex space-x-8 text-sm">
-            <Link href="/" className="text-gray-900 hover:text-gray-600">Home</Link>
-            <Link href="#" className="text-gray-900 hover:text-gray-600">Solutions</Link>
-            <Link href="#" className="text-gray-900 hover:text-gray-600">Services</Link>
-            <Link href="#" className="text-gray-900 hover:text-gray-600">Support</Link>
+            <Link href="/" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Inicio</Link>
+            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Soluciones</Link>
+            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Servicios</Link>
+            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Soporte</Link>
           </div>
 
           <div className="flex items-center space-x-4">
             <button className="opacity-80 hover:opacity-100 transition-opacity">
-              <Search className="w-4 h-4" />
-              <span className="sr-only">Search</span>
+              <Search className="w-4 h-4 dark:text-gray-400" />
+              <span className="sr-only">Buscar</span>
             </button>
             <button className="opacity-80 hover:opacity-100 transition-opacity">
-              <ShoppingBag className="w-4 h-4" />
-              <span className="sr-only">Shopping Bag</span>
+              <ShoppingBag className="w-4 h-4 dark:text-gray-400" />
+              <span className="sr-only">Carrito</span>
             </button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4">
+      <section className="pt-20 pb-16 px-4 bg-white dark:bg-gray-950">
         <div className="max-w-[980px] mx-auto text-center">
-          <h2 className="text-sm font-semibold text-gray-900 mb-4">About Us</h2>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 tracking-tight">
-            Innovation is in 
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-400 mb-4">Sobre Nosotros</h2>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold text-gray-900 dark:text-white mb-4 tracking-tight">
+            La innovación está en
             <br />
-            our DNA.
+            nuestro ADN.
           </h1>
-          <p className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
-            We believe in challenging the status quo and thinking differently. 
-            Our mission is to bring the best user experience through innovative hardware, 
-            software, and services.
+          <p className="text-xl md:text-2xl text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Creemos en desafiar el statu quo y pensar de manera diferente.
+            Nuestra misión es brindar la mejor experiencia de usuario a través de hardware, 
+            software y servicios innovadores.
           </p>
         </div>
       </section>
 
       {/* Content Sections */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-white dark:bg-gray-950">
         <div className="max-w-[980px] mx-auto">
           <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900">Our Story</h3>
-              <p className="text-gray-500 leading-relaxed">
-                Founded in a garage in 1976, our company has grown to become one of 
-                the world's most valuable technology companies. We're committed to 
-                bringing the best user experience to our customers through innovative 
-                hardware, software, and services.
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Nuestra Historia</h3>
+              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                Fundada en un garaje en 1976, nuestra compañía ha crecido hasta convertirse en una de 
+                las empresas de tecnología más valiosas del mundo. Estamos comprometidos a 
+                ofrecer la mejor experiencia de usuario a nuestros clientes a través de hardware, 
+                software y servicios innovadores.
               </p>
               <Link 
                 href="#" 
-                className="inline-flex items-center text-blue-600 hover:underline"
+                className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Learn more about our history
+                Aprende más sobre nuestra historia
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-gray-900">Our Values</h3>
-              <p className="text-gray-500 leading-relaxed">
-                We believe that technology should be accessible to everyone and that 
-                the best products come from the intersection of technology and liberal 
-                arts. Our commitment to environmental responsibility drives us to 
-                innovate in sustainable ways.
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Nuestros Valores</h3>
+              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                Creemos que la tecnología debe ser accesible para todos y que 
+                los mejores productos provienen de la intersección entre la tecnología y las artes liberales.
+                Nuestro compromiso con la responsabilidad ambiental nos impulsa a 
+                innovar de manera sostenible.
               </p>
               <Link 
                 href="#" 
-                className="inline-flex items-center text-blue-600 hover:underline"
+                className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Discover our environmental initiatives
+                Descubre nuestras iniciativas ambientales
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
@@ -102,32 +102,31 @@ export default function Page() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 bg-[#f5f5f7]">
+      <section className="py-16 px-4 bg-[#f5f5f7] dark:bg-gray-900">
         <div className="max-w-[980px] mx-auto text-center">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="space-y-2">
-              <h4 className="text-4xl font-semibold text-gray-900">100K+</h4>
-              <p className="text-gray-500">Employees Worldwide</p>
+              <h4 className="text-4xl font-semibold text-gray-900 dark:text-white">100K+</h4>
+              <p className="text-gray-500 dark:text-gray-400">Empleados en todo el mundo</p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-4xl font-semibold text-gray-900">50+</h4>
-              <p className="text-gray-500">Countries</p>
+              <h4 className="text-4xl font-semibold text-gray-900 dark:text-white">50+</h4>
+              <p className="text-gray-500 dark:text-gray-400">Países</p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-4xl font-semibold text-gray-900">1B+</h4>
-              <p className="text-gray-500">Active Devices</p>
+              <h4 className="text-4xl font-semibold text-gray-900 dark:text-white">1B+</h4>
+              <p className="text-gray-500 dark:text-gray-400">Dispositivos activos</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t border-gray-200">
-        <div className="max-w-[980px] mx-auto text-sm text-gray-500">
-          <p>Copyright © 2024 Company, Inc. All rights reserved.</p>
+      <footer className="py-8 px-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
+        <div className="max-w-[980px] mx-auto text-sm text-gray-500 dark:text-gray-400">
+          <p>Copyright © 2024 Compañía, Inc. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
   )
 }
-

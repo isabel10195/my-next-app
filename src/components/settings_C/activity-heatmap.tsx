@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/cards/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/MultimediaCard/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/settings_C/tooltip";
 
 // Generar datos de actividad con valores predecibles
 const generateActivityData = () => {

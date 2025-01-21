@@ -1,18 +1,10 @@
 "use client"
 
-import { 
-  Navbar, 
-  NavbarBrand, 
-  NavbarContent, 
-  NavbarItem, 
-  Link,
-} from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react';
-import Image from 'next/image';
 
 export default function Footer() {
   return (
-        
     <footer className="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 pt-10 pb-10">
       <div className="container mx-auto px-4">
 
@@ -23,16 +15,15 @@ export default function Footer() {
             <ul className="space-y-3">
               <li><Link href="/pages/about" className="hover:text-gray-900 dark:hover:text-white">Sobre Nosotros</Link></li>
               <li><Link href="/offerings" className="hover:text-gray-900 dark:hover:text-white">Nuestros Servicios</Link></li>
-              <li><Link href="/news" className="hover:text-gray-900 dark:hover:text-white">Noticias</Link></li>
-              <li><Link href="/blog" className="hover:text-gray-900 dark:hover:text-white">FAQs</Link></li>
-
+              <li><Link href="https://www.abc.es" className="hover:text-gray-900 dark:hover:text-white">Noticias</Link></li>
+              <li><Link href="/pages/faqs" className="hover:text-gray-900 dark:hover:text-white">FAQs</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Productos</h3>
             <ul className="space-y-3">
-              <li><Link href="/services" className="hover:text-gray-900 dark:hover:text-white">Servicios</Link></li>
+              <li><Link href="/pages/planes" className="hover:text-gray-900 dark:hover:text-white">Servicios</Link></li>
               <li><Link href="/business" className="hover:text-gray-900 dark:hover:text-white">Para Empresas</Link></li>
               <li><Link href="/premium" className="hover:text-gray-900 dark:hover:text-white">Premium</Link></li>
             </ul>

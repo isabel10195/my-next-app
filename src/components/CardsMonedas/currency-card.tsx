@@ -1,3 +1,5 @@
+"use client"
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
@@ -5,17 +7,28 @@ import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-export function CurrencyCard({ pair }) {
+interface Pair {
+  base: string;
+  quote: string;
+  value: number;
+  change: number;
+}
+
+interface CurrencyCardProps {
+  pair: Pair;
+}
+
+export function CurrencyCard({ pair }: CurrencyCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [chartData, setChartData] = useState(null);
-  const [error, setError] = useState(null); // Para manejar errores
+  const [chartData, setChartData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null); // Para manejar errores
 
   useEffect(() => {
     async function fetchChartData() {
       try {
         const baseCurrency = pair.base.toLowerCase();
         const quoteCurrency = pair.quote.toLowerCase();
-  
+
         const response = await fetch(
           `https://api.coingecko.com/api/v3/coins/${baseCurrency}/market_chart?vs_currency=${quoteCurrency}&days=7`
         );
@@ -23,12 +36,12 @@ export function CurrencyCard({ pair }) {
           throw new Error("Error al obtener los datos del gráfico");
         }
         const data = await response.json();
-  
-        const prices = data.prices.map((point) => point[1]);
-        const labels = data.prices.map((point) =>
+
+        const prices = data.prices.map((point: [number, number]) => point[1]);
+        const labels = data.prices.map((point: [number, number]) =>
           new Date(point[0]).toLocaleDateString()
         );
-  
+
         setChartData({
           labels,
           datasets: [
@@ -47,10 +60,10 @@ export function CurrencyCard({ pair }) {
         setError("Error al cargar los datos. Intenta de nuevo.");
       }
     }
-  
+
     fetchChartData();
   }, [pair.base, pair.quote]);
-  
+
   return (
     <motion.div
       layout

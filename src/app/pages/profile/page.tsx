@@ -42,12 +42,7 @@ const posts = [
     avatar: "https://via.placeholder.com/50",
   },
 ];
-
-
 export default function ProfilePage() {
-
-
-
   const profileData = {
     avatar: "https://via.placeholder.com/150",
     coverPhoto: "https://via.placeholder.com/300x150",
@@ -127,8 +122,8 @@ export default function ProfilePage() {
      
     >
       {
-         <div className="profile-page">
-         <div className="content">
+         <div className="profile-page min-h-screen flex flex-col">
+         <div className="content flex-grow">
            {/* Card 1: Imagen y datos del usuario */}
            <div className="profile-card">
              <Card className="profile-cover-card" cover={<img alt="cover" src={profileData.coverPhoto} />}>
@@ -182,6 +177,31 @@ export default function ProfilePage() {
    
            {/* Cards adicionales */}   
            <div className="other-cards">
+           <div className="menu-bar">
+                 <Menu mode="horizontal">
+                   <Menu.Item key="1"><a href="/">Inicio</a></Menu.Item>
+                   <Menu.Item key="2">Perfil</Menu.Item>
+                   <Menu.Item key="3"><a href="/page/settings">Configuracion</a></Menu.Item>
+                   <Menu.Item key="4">
+                     <Badge count={5} dot>
+                       <BellOutlined />
+                     </Badge>
+                   </Menu.Item>
+                   <Menu.Item key="5">
+                     <MessageOutlined />
+                   </Menu.Item>
+                   <Menu.Item key="6" onClick={handleLogout}>
+                     <StopOutlined />
+                   </Menu.Item>
+                   <Menu.Item key="7"> 
+                     <UsergroupAddOutlined />
+                   </Menu.Item>
+                   <Menu.Item key="8">
+                     <SettingOutlined />
+                   </Menu.Item>
+                 </Menu>
+             </div>
+             <br />
               {/* Card de Posts */}
           <div className="posts-card">
           <Card title="Tweets">
@@ -311,30 +331,6 @@ export default function ProfilePage() {
                    </Col>
                  </Row>
                </div>
-             </div>
-               <div className="menu-bar">
-                 <Menu mode="horizontal">
-                   <Menu.Item key="1"><a href="/">Inicio</a></Menu.Item>
-                   <Menu.Item key="2">Perfil</Menu.Item>
-                   <Menu.Item key="3"><a href="/page/settings">Configuracion</a></Menu.Item>
-                   <Menu.Item key="4">
-                     <Badge count={5} dot>
-                       <BellOutlined />
-                     </Badge>
-                   </Menu.Item>
-                   <Menu.Item key="5">
-                     <MessageOutlined />
-                   </Menu.Item>
-                   <Menu.Item key="6" onClick={handleLogout}>
-                     <StopOutlined />
-                   </Menu.Item>
-                   <Menu.Item key="7"> 
-                     <UsergroupAddOutlined />
-                   </Menu.Item>
-                   <Menu.Item key="8">
-                     <SettingOutlined />
-                   </Menu.Item>
-                 </Menu>
              </div>
            </div>
          </div>

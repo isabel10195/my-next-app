@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/cards/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/MultimediaCard/card"
 import { Button } from "@/components/ui/button"
 
 export default function PricingSection() {

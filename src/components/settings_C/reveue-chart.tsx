@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/cards/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/MultimediaCard/card"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
 const data = [
