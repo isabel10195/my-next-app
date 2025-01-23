@@ -12,7 +12,7 @@ import MultimediaCard from "@/components/MultimediaCard/multimedia-card"
 
 import CardAutorizacion from "@/components/ui/cardAutorizacion"
 
-import CombinnedNavbar from "@/components/navbar/combinnednavbar"
+import CombinedNavbar from "@/components/navbar/combinednavbar"
 
 import Footer from "@/components/footer"
 
@@ -36,7 +36,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
-      <CombinnedNavbar />
+      <CombinedNavbar />
       <AnimatePresence>
         {expandedArticle ? (
           <motion.div

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Menu } from 'lucide-react';
 import Image from 'next/image';
 import ReactPlayer from 'react-player';
 import {
@@ -17,9 +17,14 @@ export default function CombinedNavbar() {
   const [playingUrl, setPlayingUrl] = useState<string>('https://www.youtube.com/watch?v=L8gGHqPBuZM'); // URL del video de YouTube
   const [isVisible, setIsVisible] = useState(false);
   const [isClient, setIsClient] = useState(false);  // Nuevo estado para comprobar si estamos en el cliente
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar la visibilidad del menú
 
   const togglePlayPause = (): void => {
     setIsPlaying(!isPlaying);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Alternar el estado del menú al hacer clic en el icono de hamburguesa
   };
 
   useEffect(() => {
@@ -29,8 +34,13 @@ export default function CombinedNavbar() {
 
   return (
     <Navbar className="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-      <div className="container mx-auto flex items-center justify-between p-6">
-        <NavbarBrand className="flex items-center gap-8">
+      <div className="container mx-auto flex items-center justify-between p-6 md:p-6">
+         {/* Icono de hamburguesa */}
+        <div className="md:hidden cursor-pointer mr-5" onClick={toggleMenu}>
+          <Menu className="h-7 w-7 text-gray-600 dark:text-gray-400 " />
+        </div>
+        
+        <NavbarBrand className="flex items-center gap-4 md:gap-8">
           <Image 
             src="/logo.png" 
             alt="Logo de LA ISLA DE LURE" 
@@ -38,8 +48,9 @@ export default function CombinedNavbar() {
             height={150} 
           />
         </NavbarBrand>
-        
-        <NavbarContent className="hidden sm:flex gap-4 flex-grow justify-center mr-64">
+
+        {/* Menu pantallas grandes */}
+        <NavbarContent className="hidden md:flex gap-2 lg:gap-4 flex-grow justify-center mr-4 lg:mr-64">
           <NavbarItem>
             <Link href="/pages/feed" className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Feed</Link>
           </NavbarItem>
@@ -54,7 +65,7 @@ export default function CombinedNavbar() {
           </NavbarItem>
         </NavbarContent>
         
-        <NavbarContent className="flex items-center gap-4">
+        <NavbarContent className="flex items-center gap-4 md:gap-4">
           <NavbarItem>
             <div className="flex items-center gap-2 cursor-pointer" onClick={togglePlayPause}>
               {isPlaying ? (
@@ -66,7 +77,7 @@ export default function CombinedNavbar() {
             </div>
           </NavbarItem>
 
-          <NavbarItem>
+          <NavbarItem className="hidden sm:flex">
             <Link href="/pages/planes">
               <button className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">
                 Mejorar a Premium
@@ -75,6 +86,11 @@ export default function CombinedNavbar() {
           </NavbarItem>
         </NavbarContent>
       </div>
+
+      {/* Menu desplegable () */}
+      {/*{isMenuOpen && (
+     
+      )}*/}
 
       {/* Reproducir solo en cliente */}
       {isClient && (
