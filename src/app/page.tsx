@@ -64,7 +64,8 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             className="container mx-auto p-4"
           >
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Diseño ordenador y tablet */}
+            <div className="hidden lg:grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               <ArticleCard
                 large
                 title="Turn Your Devices From Distractions Into Time Savers Either"
@@ -106,6 +107,54 @@ export default function HomePage() {
                 <MultimediaCard />
                 <br />
                 <SocialLinks />
+              </div>
+            </div>
+
+            {/* Diseño movil */}
+            <div className="grid grid-cols-1 gap-6 lg:hidden">
+              <div className="space-y-6">
+                <ArticleCard
+                  large
+                  title="Turn Your Devices From Distractions Into Time Savers Either"
+                  excerpt="Every January, I usually purge old snail mail, clothes and unwanted knickknacks to start the year anew. This time, I focused on my digital spaces instead."
+                  author="Yagami Souichirou"
+                  date="January 30, 2024"
+                  readTime="7 min read"
+                  views={38}
+                  image="https://img.freepik.com/vector-premium/fondo-gradiente-color-azul-sencillo-textura-suave_768131-988.jpg?semt=ais_hybrid"
+                  onClick={setExpandedArticle}
+                />
+
+                <ArticleCard
+                  large
+                  title="Draw Inspiration From Vibrancy"
+                  excerpt="Finding beauty in the simplest forms of nature"
+                  author="Lind Tailor"
+                  date="January 28, 2024"
+                  readTime="3 min read"
+                  views={17}
+                  image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
+                  onClick={setExpandedArticle}
+                />
+                <CardPensamientos />
+                <CardAutorizacion />
+
+                <div className="space-y-6">
+                  {/* <CalendarCard/> */}
+                </div>
+
+                <div className="relative grid grid-cols-2 gap-4 mt-6">
+                  {currencyPairs.map((pair) => (
+                    <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                  ))}
+                </div>
+
+                <div className="flex justify-center items-center">
+                  <MultimediaCard />
+                </div>
+                <div className="flex justify-center items-center">
+                  <SocialLinks />
+                </div>
               </div>
             </div>
           </motion.main>
