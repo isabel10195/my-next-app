@@ -88,7 +88,7 @@ export function SettingsNav({ className, ...props }: SettingsNavProps) {
   return (
     <nav className={cn("space-y-6", className)} {...props}>
   {settingsNav.map((section) => (
-    <div key={section.section} className="rounded-lg bg-white dark:bg-gray-900 p-4 shadow-lg">
+    <div key={section.section} className="rounded-lg bg-white dark:bg-gray-800 p-4 shadow-lg">
       <h3 className="px-3 text-sm font-semibold text-gray-900 dark:text-gray-400 mb-2">
         {section.section}
       </h3>
