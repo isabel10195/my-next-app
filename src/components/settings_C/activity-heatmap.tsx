@@ -37,7 +37,7 @@ function ActivityCell({ date, count }: ActivityCellProps) {
 
   return (
     <TooltipTrigger asChild>
-      <div className={`h-3 w-3 rounded-sm ${getActivityColor(count)}`} data-date={date} />
+      <div className={`h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-3 md:w-3 rounded-sm ${getActivityColor(count)}`} data-date={date} />
     </TooltipTrigger>
   );
 }
@@ -60,11 +60,11 @@ export function ActivityHeatmap() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Activity</CardTitle>
+        <CardTitle className="dark:text-white">Activity</CardTitle>
       </CardHeader>
       <CardContent>
         <TooltipProvider>
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1 justify-center ">
             {weeks.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col gap-1">
                 {week.map((day) => (
