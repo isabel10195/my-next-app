@@ -7,10 +7,14 @@ const SECRET_KEY = "lure";
 
 // Registro de usuario
 const registerUser = async (req, res) => {
+    console.log("📩 Registro solicitado:", req.body); // Log del cuerpo recibido
+
     const { user_handle, email_address, first_name, last_name, phone_number, password } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("🔑 Contraseña cifrada:", hashedPassword);
+
         const query = `
             INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password)
             VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password)
@@ -25,12 +29,14 @@ const registerUser = async (req, res) => {
             { name: "password", type: db.NVarChar, value: hashedPassword },
         ]);
 
+        console.log("✅ Usuario registrado correctamente");
         res.send("Usuario registrado correctamente");
     } catch (error) {
         console.error("❌ Error al registrar el usuario:", error);
         res.status(500).send("Error al registrar el usuario");
     }
 };
+
 
 // Login de usuario
 const loginUser = async (req, res) => {

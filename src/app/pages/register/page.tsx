@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
   // Función para registrar un nuevo usuario
   const addUser = () => {
-    Axios.post("http://localhost:3001/create", {
+    Axios.post("http://localhost:3001/api/auth/create", {
       user_handle: username,
       email_address: email,
       first_name: firstName,
