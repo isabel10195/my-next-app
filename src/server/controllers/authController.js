@@ -1,0 +1,87 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { executeQuery } = require("../config/database");
+const db = require("mssql");
+
+const SECRET_KEY = "lure";
+
+// Registro de usuario
+const registerUser = async (req, res) => {
+    const { user_handle, email_address, first_name, last_name, phone_number, password } = req.body;
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const query = `
+            INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password)
+            VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password)
+        `;
+
+        await executeQuery(query, [
+            { name: "user_handle", type: db.NVarChar, value: user_handle },
+            { name: "email_address", type: db.NVarChar, value: email_address },
+            { name: "first_name", type: db.NVarChar, value: first_name },
+            { name: "last_name", type: db.NVarChar, value: last_name },
+            { name: "phone_number", type: db.NVarChar, value: phone_number },
+            { name: "password", type: db.NVarChar, value: hashedPassword },
+        ]);
+
+        res.send("Usuario registrado correctamente");
+    } catch (error) {
+        console.error("❌ Error al registrar el usuario:", error);
+        res.status(500).send("Error al registrar el usuario");
+    }
+};
+
+// Login de usuario
+const loginUser = async (req, res) => {
+    const { user_handle, password } = req.body;
+
+    try {
+        const query = `SELECT * FROM users WHERE user_handle = @user_handle`;
+        const result = await executeQuery(query, [
+            { name: "user_handle", type: db.NVarChar, value: user_handle },
+        ]);
+
+        if (result.recordset.length === 0) {
+            return res.status(401).send("Usuario no encontrado");
+        }
+
+        const user = result.recordset[0];
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
+            return res.status(401).send("Contraseña incorrecta");
+        }
+
+        const token = jwt.sign(
+            { id: user.user_id, user_handle: user.user_handle },
+            SECRET_KEY,
+            { expiresIn: "1h" }
+        );
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // Cambia a true si usas HTTPS
+            sameSite: "lax",
+        });
+
+        res.send("Login exitoso");
+    } catch (error) {
+        console.error("❌ Error en el login:", error);
+        res.status(500).send("Error en el servidor");
+    }
+};
+
+// Perfil del usuario
+const getUserProfile = (req, res) => {
+    const user = req.user; // Obtenido del middleware de autenticación
+    res.send(`Bienvenido, ${user.user_handle}`);
+};
+
+// Logout de usuario
+const logout = (req, res) => {
+    res.clearCookie("token", { path: "/" });
+    res.send("Logout exitoso");
+};
+
+module.exports = { registerUser, loginUser, getUserProfile, logout };
