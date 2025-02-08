@@ -1,0 +1,62 @@
+
+ Descripción del proyecto
+Lure es una innovadora red social diseñada para ser el compañero ideal de los usuarios al comenzar su día. Su enfoque principal está en la comunicación textual e informativa, similar a Twitter, pero con la capacidad de integrar contenido en video, tanto en formato horizontal como vertical, como en YouTube.
+
+Nuestra visión es convertir Lure en una plataforma que no solo permita la publicación de información y opiniones, sino que también sirva como un centro de contenido multimedia accesible y dinámico. La página principal de Lure funcionará como una aplicación matutina, mostrando datos clave como el clima, la hora, eventos programados y notificaciones importantes, facilitando así la planificación diaria de los usuarios.
+
+En cuanto al diseño, nos inspiramos en la estética y usabilidad de Apple, reconocido por su excelencia en diseño web y experiencia de usuario. Esto nos permitirá ofrecer una interfaz limpia, intuitiva y atractiva, optimizando la interacción y navegación dentro de la plataforma.
+
+Lure busca ser un hub de información donde converjan diversas formas de comunicación, integrando APIs de servicios como Spotify, YouTube y X (Twitter) para brindar una experiencia más rica y personalizada. Con esto, pretendemos crear un ecosistema donde la información fluya de manera ágil y eficiente, combinando lo mejor del texto y el contenido multimedia.
+
+
+
+ Funcionalidad básica
+Lure ofrecerá una experiencia enfocada en la publicación y consumo de contenido textual y multimedia. Entre sus principales características se incluyen:
+Publicaciones: Los usuarios podrán escribir y compartir publicaciones de texto, acompañadas de imágenes, enlaces y videos en formato horizontal o vertical.
+Exploración y comunidades: Secciones dedicadas a descubrir contenido relevante, noticias y comunidades temáticas organizadas por intereses.
+Página principal interactiva: Al ingresar a la plataforma, los usuarios recibirán información útil como el clima, la hora, eventos programados y notificaciones importantes.
+Reproductor multimedia integrado: Capacidad de reproducir contenido en video sin necesidad de salir de la plataforma.
+Interacción social: Opciones para dar "me gusta", comentar, compartir y seguir a otros usuarios.
+Integración de APIs: Conexión con servicios externos como Spotify, YouTube y X (Twitter) para enriquecer la experiencia del usuario.
+
+
+
+
+
+
+ Tecnologías a utilizar
+El desarrollo de Lure se basa en tecnologías modernas para garantizar una plataforma rápida, estable y escalable:
+FrontEnd:
+React con Next.js para aprovechar el rendimiento del server-side rendering (SSR) y la generación estática (SSG).
+Librerías de UI como NextUI y AntD para un diseño optimizado y responsive.
+BackEnd:
+Node.js con Express para gestionar la lógica del servidor y las API.
+Base de Datos:
+SQL Server con SSMS para el almacenamiento de información.
+Control de versiones y gestión:
+GitHub para control de versiones.
+Notion para la planificación y organización de tareas bajo metodología 
+
+ Estructura básica de la base de datos
+Lure utilizará una base de datos relacional en SQL Server, diseñada para gestionar eficientemente publicaciones, usuarios e interacciones. Algunas de las principales tablas serán:
+Usuarios: Almacena información del usuario como ID, nombre, email, foto de perfil…
+Publicaciones: Contiene el contenido publicado por los usuarios (texto, imágenes, videos, enlaces).
+Comentarios: Relacionados con publicaciones, permite interacción entre usuarios.
+Reacciones: Almacena "me gusta" y otras interacciones de los usuarios 
+Eventos y notificaciones: Gestión de eventos personales y alertas importantes
+Integraciones: Registra información sobre contenido proveniente de APIs externas como YouTube o Spotify.
+
+
+ Posibles mejoras
+A medida que avance el desarrollo de Lure, algunas mejoras o modificaciones podrían incluir:
+Algoritmo de recomendación: Implementación de un sistema basado en IA para personalizar el contenido mostrado a cada usuario..
+Chat en tiempo real: Posibilidad de comunicación directa entre usuarios.
+Monetización: Inclusión de publicidad segmentada o modelo premium para funcionalidades avanzadas.
+Lógicamente es una aplicación ambiciosa y tenemos una estimación de aproximadamente 10 a 12 tablas en la base de datos.
+ Otros comentarios.
+El desarrollo de Lure está alineado con las mejores prácticas en diseño y accesibilidad, garantizando una experiencia fluida en distintos dispositivos. A lo largo del proceso, se evaluarán mejoras y optimizaciones para ofrecer una plataforma innovadora y eficiente
+Seguimos el método Métrica V3.
+
+
+
+
