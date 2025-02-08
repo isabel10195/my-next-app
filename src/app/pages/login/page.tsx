@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Facebook, Twitter } from 'lucide-react'
+import Image from "next/image";
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -48,29 +49,35 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200">
-      <div className="flex w-full max-w-5xl h-[600px] bg-white rounded-xl shadow-2xl overflow-hidden">
-        {/* Left side - Illustration */}
-        <div className="relative w-1/2 bg-cyan-900 text-white p-12 overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="flex w-full max-w-5xl h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+        {/* Sección izquierda - Ilustración */}
+        <div className="relative w-1/2 bg-blue-800 dark:bg-blue-900 text-white p-12 overflow-hidden">
           <div className="relative z-10">
             <h1 className="text-5xl font-bold mb-2">Bienvenido a Lure</h1>
-            <p className="text-lg text-cyan-100">Porfavor, inicia sesión.</p>
+            <p className="text-lg text-blue-200">Por favor, inicia sesión.</p>
           </div>
         </div>
-
-        {/* Right side - Login form */}
-        <Card className="w-1/2 p-12 flex flex-col justify-center bg-gradient-to-br from-blue-50/50 to-purple-50/50">
+  
+        {/* Sección derecha - Formulario de inicio de sesión */}
+        <Card className="w-1/2 p-12 flex flex-col justify-center bg-gray-50 dark:bg-gray-800">
           <form onSubmit={handleLogin} className="w-full max-w-sm mx-auto space-y-6">
             <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-gray-900">Iniciar Sesión</h2>
+                     <Image 
+                          src="/logo.png" 
+                          alt="Logo de LA ISLA DE LURE" 
+                          width={150} 
+                          height={150} 
+                        />
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Iniciar Sesión</h2>
             </div>
-
+  
             <div className="space-y-4">
               <div>
                 <Input
                   type="text"
-                  placeholder="Correo Electrónico"
-                  className="w-full px-3 py-2"
+                  placeholder="Nombre de Usuario"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
@@ -79,66 +86,89 @@ export default function LoginPage() {
                 <Input
                   type="password"
                   placeholder="Contraseña"
-                  className="w-full px-3 py-2"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              
+  
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="remember"
                   checked={rememberMe}
                   onCheckedChange={(checked) => setRememberMe(!!checked)}
+                  className="text-blue-500 dark:text-blue-400"
                 />
                 <label
                   htmlFor="remember"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none text-gray-700 dark:text-gray-300"
                 >
-                  Remember me
+                  Recuerdame
                 </label>
               </div>
-
+  
               <Button
-                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md transition"
                 type="submit"
                 disabled={loading}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {loading ? "Signing In..." : "Sign In"}
               </Button>
             </div>
-
+  
             {error && (
               <div className="text-red-500 text-sm text-center">
                 {error}
               </div>
             )}
-
+  
             <div className="space-y-4">
               <div className="text-center">
-                <span className="text-sm text-gray-500">No tienes cuenta? </span>
-                <Link href="/pages/register" className="text-sm text-cyan-500 hover:text-cyan-600">
+                <span className="text-sm text-gray-500 dark:text-gray-300">
+                  No tienes cuenta?{" "}
+                </span>
+                <Link
+                  href="/pages/register"
+                  className="text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+                >
                   Regístrate
                 </Link>
               </div>
-              
+  
               <div className="text-center">
-                <Link href="/forgot-password" className="text-sm text-blue-500 hover:text-gray-600">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+                >
                   He olvidado mi contraseña
                 </Link>
               </div>
-
+  
               <div className="space-y-2">
-                <div className="text-center text-sm text-gray-500">Iniciar sesion con...</div>
-
+                <div className="text-center text-sm text-gray-500 dark:text-gray-300">
+                  Iniciar sesión con...
+                </div>
+  
                 <div className="flex justify-center space-x-3">
-                  <Button variant="outline" size="icon" className="rounded-full w-12 h-12 flex items-center justify-center">
-                    <Facebook className="w-6 h-6 text-blue-600" />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-400"
+                  >
+                    <Facebook className="w-6 h-6" />
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-full w-12 h-12 flex items-center justify-center">
-                    <Twitter className="w-6 h-6 text-blue-400" />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-blue-400 dark:text-blue-300"
+                  >
+                    <Twitter className="w-6 h-6" />
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-full w-12 h-12 flex items-center justify-center">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700"
+                  >
                     <svg className="w-6 h-6" viewBox="0 0 24 24">
                       <path
                         fill="#EA4335"
@@ -160,12 +190,19 @@ export default function LoginPage() {
                   </Button>
                 </div>
               </div>
-
-
             </div>
+             {/* Botón para ir al Home */}
+          <div className="mt-6">
+            <Link href="/" className="block text-center">
+              <Button className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md transition">
+                Ir al Home
+              </Button>
+            </Link>
+          </div>
           </form>
         </Card>
       </div>
     </div>
-  )
+  );
+  
 }
