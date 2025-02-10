@@ -15,7 +15,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li><Link href="/pages/about" className="hover:text-gray-900 dark:hover:text-white">Sobre Nosotros</Link></li>
               <li><Link href="/offerings" className="hover:text-gray-900 dark:hover:text-white">Nuestros Servicios</Link></li>
-              <li><Link href="https://www.abc.es" className="hover:text-gray-900 dark:hover:text-white">Noticias</Link></li>
+              <li><Link href="/pages/noticiasDesarrollo" className="hover:text-gray-900 dark:hover:text-white">Noticias Desarrollo</Link></li>
               <li><Link href="/pages/faqs" className="hover:text-gray-900 dark:hover:text-white">FAQs</Link></li>
             </ul>
           </div>

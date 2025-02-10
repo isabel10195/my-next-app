@@ -1,44 +1,35 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import ReactPlayer from 'react-player'
+import React, { useState, useEffect } from 'react';
 
 export default function HeroSection() {
-  const [scrollY, setScrollY] = useState(0)
-  const [isClient, setIsClient] = useState(false)
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    // Marca como cliente después de la hidratación
-    setIsClient(true)
-
     const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
+      setScrollY(window.scrollY);
+    };
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // A medida que se hace scroll, el gradiente se va modificando para dar el efecto de difuminado
-  const blurAmount = Math.min(scrollY / 5, 40) // Ajusta la velocidad de difuminado
+  const blurAmount = Math.min(scrollY / 5, 40); // Ajusta la velocidad de difuminado
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {isClient && (
-        <ReactPlayer
-          url="https://www.youtube.com/watch?v=yaHf1FwMYA4"
-          className="absolute left-0 top-0 h-full w-full object-cover"
-          playing={true}
-          muted={true}
-          loop={true}
-          playsinline={true}
-          width="100%"
-          height="100%"
-        />
-      )}
+      <video
+        src="/video.mp4" // Asegúrate de colocar tu archivo en public/video.mp4
+        className="absolute left-0 top-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
       <div
         className="absolute inset-0 transition-all duration-300"
         style={{
@@ -55,5 +46,5 @@ export default function HeroSection() {
         </p>
       </div>
     </div>
-  )
+  );
 }

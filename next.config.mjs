@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'sjc.microlink.io',
       },
+      {
+        protocol: 'https',
+        hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com', // Nuevo dominio agregado
+      },
     ],
   },
 };
