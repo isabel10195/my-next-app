@@ -23,7 +23,7 @@ export default function LoginPage() {
     e.preventDefault()
 
     if (!username || !password) {
-      setError('Please fill in all fields.')
+      setError('Porfavor rellena todos los campos.')
       return
     }
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
       setError('') // Reset error message before trying
 
       const response = await Axios.post(
-        'http://localhost:3001/login',
+        'http://localhost:3001/api/auth/login',
         { user_handle: username, password, rememberMe },
         { withCredentials: true }
       )
@@ -41,7 +41,7 @@ export default function LoginPage() {
         router.push('/dashboard') // Redirect after successful login
       }
     } catch (err: any) {
-      setError(err.response?.data || 'Error logging in. Please try again.')
+      setError(err.response?.data || 'Error al logear. Porfavor prueba de nuevo.')
     } finally {
       setLoading(false)
     }

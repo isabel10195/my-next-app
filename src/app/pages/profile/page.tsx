@@ -56,7 +56,7 @@ export default function ProfilePage() {
 
   const fetchProfileData = async () => {
     try {
-        const response = await fetch('http://localhost:3001/get-user-data', {
+        const response = await fetch('http://localhost:3001/api/users/data', {
             method: 'GET',
             credentials: 'include',
         });
@@ -87,7 +87,7 @@ export default function ProfilePage() {
 
   const followUser = useCallback(async (follow_user_id) => {
     try {
-      const response = await fetch('http://localhost:3001/follow-user', {
+      const response = await fetch('http://localhost:3001/api/followers/follow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -114,7 +114,7 @@ export default function ProfilePage() {
 
   const unfollowUser = useCallback(async (follow_user_id) => {
     try {
-      const response = await fetch('http://localhost:3001/unfollow-user', {
+      const response = await fetch('http://localhost:3001/api/followers/unfollow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -140,7 +140,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchRecomendaciones = async () => {
       try {
-        const response = await fetch('http://localhost:3001/recommendations', {
+        const response = await fetch('http://localhost:3001/api/followers/recommendations', {
           method: 'GET',
           credentials: 'include',
         });
@@ -165,7 +165,7 @@ export default function ProfilePage() {
   useEffect(() => {
     // Obtener seguidores
     const fetchSeguidores = async () => {
-      const response = await fetch('http://localhost:3001/followers', {
+      const response = await fetch('http://localhost:3001/api/followers/followers', {
         method: 'GET',
         credentials: 'include', // Asegura que las cookies se incluyan
       });
@@ -179,7 +179,7 @@ export default function ProfilePage() {
 
     // Obtener seguidos
     const fetchSeguidos = async () => {
-      const response = await fetch('http://localhost:3001/following', {
+      const response = await fetch('http://localhost:3001/api/followers/following', {
         method: 'GET',
         credentials: 'include',
       });
@@ -200,7 +200,7 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     try {
       // Realiza la petición al backend para cerrar sesión
-      const response = await fetch('http://localhost:3001/logout', {
+      const response = await fetch('http://localhost:3001/api/auth/logout', {
         method: 'POST',
         credentials: 'include', // Incluye cookies
       });
@@ -218,7 +218,7 @@ export default function ProfilePage() {
 
   const fetchTweets = async () => {
     try {
-      const response = await fetch('http://localhost:3001/get-tweets', {
+      const response = await fetch('http://localhost:3001/api/tweets', {
         method: 'GET',
         credentials: 'include',
       });
@@ -248,7 +248,7 @@ const [isSaving, setIsSaving] = useState(false);
 
 const handleSaveTweet = async (tweet_id) => {
   try {
-    const response = await fetch(`http://localhost:3001/edit-tweet/${tweet_id}`, {
+    const response = await fetch(`http://localhost:3001/api/tweets/edit/${tweet_id}`, { 
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -279,7 +279,7 @@ const handleSaveTweet = async (tweet_id) => {
 
   const handleDeleteTweet = async (tweet_id) => {
     try {
-      const response = await fetch(`http://localhost:3001/delete-tweet/${tweet_id}`, {
+      const response = await fetch(`http://localhost:3001/api/tweets/delete/${tweet_id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -315,7 +315,7 @@ const handleSaveTweet = async (tweet_id) => {
   
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch('http://localhost:3001/get-user-details', {
+      const response = await fetch('http://localhost:3001/api/users/details', {
         method: 'GET',
         credentials: 'include',
       });

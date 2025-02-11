@@ -129,7 +129,7 @@ const getFollowers = async (req, res) => {
         const inputs = [{ name: "userId", type: db.Int, value: userId }];
         const results = await executeQuery(query, inputs);
 
-        res.send({ followers: results.recordset });
+        res.send({ seguidores: results.recordset });
     } catch (error) {
         console.error("Error al obtener seguidores:", error);
         res.status(500).send("Error al obtener seguidores");
@@ -150,7 +150,7 @@ const getFollowing = async (req, res) => {
         const inputs = [{ name: "userId", type: db.Int, value: userId }];
         const results = await executeQuery(query, inputs);
 
-        res.send({ following: results.recordset });
+        res.send({ seguidos: results.recordset });
     } catch (error) {
         console.error("Error al obtener seguidos:", error);
         res.status(500).send("Error al obtener seguidos");
