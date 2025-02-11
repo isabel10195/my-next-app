@@ -12,34 +12,22 @@ export default function Page() {
 
       {/* Navigation */}
       <nav className="bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(26,26,26,0.8)] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="max-w-[980px] mx-auto px-4 h-[44px] flex items-center justify-between">
-          <Link href="/" className="opacity-80 hover:opacity-100 transition-opacity">
-            <Image
-              src="https://sjc.microlink.io/7MJDJ0tLfbH4RyjWyxYnncchNvkBklzie4mBAnBCy9ZdEgEdNxWRaRZFROZg31nX7IXnr-urE-jMVfuAtOw9EQ.jpeg"
-              alt="Logo"
-              width={14}
-              height={14}
-              className="w-3.5 h-4"
-            />
+      <div className="max-w-[980px] mx-auto px-4 h-[44px] flex items-center justify-between">
+      <Link href="/" className="opacity-80 hover:opacity-100 transition-opacity">
+            <Image 
+                        src="/logo.png" 
+                        alt="Logo de LA ISLA DE LURE" 
+                        width={150} 
+                        height={150} 
+                      />
             <span className="sr-only">Inicio</span>
           </Link>
           
           <div className="hidden md:flex space-x-8 text-sm">
             <Link href="/" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Inicio</Link>
-            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Soluciones</Link>
-            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Servicios</Link>
+            <Link href="/pages/profile" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Perfil</Link>
+            <Link href="/pages/planes" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Planes</Link>
             <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Soporte</Link>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button className="opacity-80 hover:opacity-100 transition-opacity">
-              <Search className="w-4 h-4 dark:text-gray-400" />
-              <span className="sr-only">Buscar</span>
-            </button>
-            <button className="opacity-80 hover:opacity-100 transition-opacity">
-              <ShoppingBag className="w-4 h-4 dark:text-gray-400" />
-              <span className="sr-only">Carrito</span>
-            </button>
           </div>
         </div>
       </nav>
@@ -74,10 +62,10 @@ export default function Page() {
                 software y servicios innovadores.
               </p>
               <Link 
-                href="#" 
+                href="/pages/login" 
                 className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Aprende más sobre nuestra historia
+                Inicia sesion y empieza tu aventura
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
@@ -90,10 +78,10 @@ export default function Page() {
                 innovar de manera sostenible.
               </p>
               <Link 
-                href="#" 
+                href="/pages/feed" 
                 className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Descubre nuestras iniciativas ambientales
+                Descubre nuestras comunidades
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
@@ -124,7 +112,7 @@ export default function Page() {
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
         <div className="max-w-[980px] mx-auto text-sm text-gray-500 dark:text-gray-400">
-          <p>Copyright © 2024 Compañía, Inc. Todos los derechos reservados.</p>
+          <p>Copyright © 2024 Lure, Inc. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

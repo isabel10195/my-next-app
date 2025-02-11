@@ -27,8 +27,10 @@ interface CurrencyPair {
 const currencyPairs: CurrencyPair[] = [
   { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
   { base: 'ethereum', quote: 'usd', value: 3.8, change: 1.0937 },
-  { base: 'USD', quote: 'usd', value: 3.8, change: 1.0937 },
-]
+  { base: 'eur', quote: 'usd', value: 1.1, change: 0.8745 }, // Agregada EUR/USD
+  { base: 'usd', quote: 'eur', value: 0.92, change: 1.0321 }, // Agregada USD/EUR
+];
+
 
 export default function HomePage() {
   // El tipo del estado `expandedArticle` es `React.ReactNode | null` para aceptar cualquier tipo de contenido

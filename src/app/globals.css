@@ -18,55 +18,55 @@
       "Times New Roman", Times, serif;
 
     /* Colores globales */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --background: 220 15% 95%; /* Fondo claro */
+    --foreground: 222.2 84% 4.9%; /* Texto claro */
+    --card: 0 0% 100%; /* Fondo tarjetas claro */
+    --card-foreground: 222.2 84% 4.9%; /* Texto en tarjetas claro */
+    --popover: 0 0% 100%; /* Fondo popover claro */
+    --popover-foreground: 222.2 84% 4.9%; /* Texto en popover claro */
+    --primary: 220 80% 56%; /* Azul brillante para enlaces */
+    --primary-foreground: 210 40% 98%; /* Texto sobre primario */
+    --secondary: 210 40% 96.1%; /* Fondo secundario claro */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* Texto en secundario claro */
+    --muted: 210 40% 96.1%; /* Fondo apagado */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Texto apagado */
+    --accent: 220 80% 56%; /* Azul brillante para acentos */
+    --accent-foreground: 222.2 47.4% 11.2%; /* Texto sobre acentos */
+    --destructive: 0 84.2% 60.2%; /* Rojo para errores */
+    --destructive-foreground: 210 40% 98%; /* Texto sobre destructivo */
+    --border: 214.3 31.8% 85%; /* Bordes claros */
+    --input: 214.3 31.8% 85%; /* Input claro */
+    --ring: 222.2 84% 4.9%; /* Anillos claros */
     --radius: 0.5rem;
 
     /* Colores específicos para texto y fondo */
-    --text-color: #000000; /* Tema claro */
-    --bg-color: #ffffff;   /* Tema claro */
+    --text-color: #1a1a1a; /* Texto más oscuro para mejor contraste */
+    --bg-color: #f5f5f5;   /* Fondo claro */
   }
 
   /* Tema oscuro */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --text-color: #ffffff; /* Tema oscuro */
-    --bg-color: #121212;   /* Tema oscuro */
+    --background: 220 15% 10%; /* Fondo oscuro azul profundo */
+    --foreground: 210 40% 98%; /* Texto claro */
+    --card: 220 15% 12%; /* Fondo de tarjetas oscuro */
+    --card-foreground: 210 40% 98%; /* Texto en tarjetas oscuro */
+    --popover: 220 15% 12%; /* Fondo popover oscuro */
+    --popover-foreground: 210 40% 98%; /* Texto en popover oscuro */
+    --primary: 220 80% 56%; /* Azul brillante para enlaces */
+    --primary-foreground: 210 40% 98%; /* Texto sobre primario */
+    --secondary: 220 15% 18%; /* Fondo secundario oscuro */
+    --secondary-foreground: 210 40% 98%; /* Texto en secundario oscuro */
+    --muted: 220 15% 14%; /* Fondo apagado oscuro */
+    --muted-foreground: 215 20.2% 65.1%; /* Texto apagado oscuro */
+    --accent: 220 80% 56%; /* Azul brillante para acentos */
+    --accent-foreground: 210 40% 98%; /* Texto sobre acentos */
+    --destructive: 0 62.8% 30.6%; /* Rojo oscuro para errores */
+    --destructive-foreground: 210 40% 98%; /* Texto sobre destructivo */
+    --border: 220 15% 25%; /* Bordes oscuros */
+    --input: 220 15% 25%; /* Input oscuro */
+    --ring: 212.7 26.8% 70%; /* Anillos oscuros */
+    --text-color: #ffffff; /* Texto blanco */
+    --bg-color: #0d0d2b;   /* Fondo azul-negro profundo */
   }
 
   /* Aplicación de fuentes a todo el documento */
@@ -80,5 +80,3 @@
     font-family: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   }
 }
-
-
