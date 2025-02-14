@@ -49,11 +49,11 @@ export default function RightSidebar() {
   }
 
   return (
-    <aside className="w-80 h-screen p-2 bg-apple-blur fixed right-24 top-20 rounded-2xl overflow-y-auto transition-apple">
+    <aside className="w-full md:w-80 mt-4 md:mt-0 p-2 bg-gray-200 dark:bg-gray-900 rounded-2xl overflow-y-auto">
       <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-        <Card className="mb-6">
+        <Card className="mb-6 bg-white dark:bg-gray-800">
           <CardHeader>
-            <CardTitle>Stories</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">Stories</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
@@ -73,9 +73,9 @@ export default function RightSidebar() {
           </CardContent>
         </Card>
 
-        <Card className="mb-6">
+        <Card className="mb-6 bg-white dark:bg-gray-800">
           <CardHeader>
-            <CardTitle>Popular Topics</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">Popular Topics</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative overflow-hidden">
@@ -86,7 +86,7 @@ export default function RightSidebar() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -100 }}
                   transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
-                  className="text-center text-xl font-bold text-blue-500 my-4"
+                  className="text-center text-xl font-bold text-blue-500 dark:text-blue-300 my-4"
                 >
                   {popularTopics[currentTopic]}
                 </motion.div>
@@ -94,7 +94,7 @@ export default function RightSidebar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-0 top-1/2 transform -translate-y-1/2"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-900 dark:text-white"
                 onClick={prevTopic}
               >
                 <ChevronLeft className="h-6 w-6" />
@@ -102,7 +102,7 @@ export default function RightSidebar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 top-1/2 transform -translate-y-1/2"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-900 dark:text-white"
                 onClick={nextTopic}
               >
                 <ChevronRight className="h-6 w-6" />
@@ -111,16 +111,16 @@ export default function RightSidebar() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
-            <CardTitle>Communities</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">Communities</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
               {communities.map((community) => (
-                <li key={community.name} className="flex items-center justify-between">
+                <li key={community.name} className="flex items-center justify-between text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600">
                   <span>{community.name}</span>
-                  <span className="text-sm text-gray-500">{community.members.toLocaleString()} members</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-300 ">{community.members.toLocaleString()} members</span>
                 </li>
               ))}
             </ul>

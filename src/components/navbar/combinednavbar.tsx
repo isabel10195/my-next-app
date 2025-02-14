@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Play, Pause, Menu } from 'lucide-react';
 import Image from 'next/image';
 import ReactPlayer from 'react-player';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react"
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
+import { HiX  } from "react-icons/hi"
 
 export default function CombinedNavbar() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -85,15 +86,22 @@ export default function CombinedNavbar() {
       {isMenuOpen && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" onClick={() => setIsMenuOpen(false)} />
       )}
-        <div className={`fixed top-0 left-0 w-full bg-gray-50 dark:dark:bg-gray-950 backdrop-blur-sm transform transition-all duration-300 ease-in-out z-50 ${
+        <div className={`fixed top-1 left-1 right-1 bg-gray-50 dark:dark:bg-gray-950 backdrop-blur-sm transform transition-all duration-300 ease-in-out z-50 rounded-2xl ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}>
-          <div className="flex flex-col py-2 max-w-lg mx-auto"> 
-            <Link href="/pages/feed" className="px-6 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">Feed</Link>
-            <Link href="/pages/profile" className="px-6 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">Perfil</Link>
-            <Link href="/pages/settings" className="px-6 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">Configuración</Link>
-            <Link href="/pages/chats" className="px-6 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">Mensajes</Link>
-            <Link href="/pages/premium" className="px-6 py-3 text-blue-400 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-gray-800">Mejorar a Premium</Link>
+         {/* Boton X para cerrar menu */}
+          <div className="flex items-center justify-between px-6 mt-3">
+            <button onClick={() => setIsMenuOpen(false)} className="ml-auto text-xl dark:text-white text-gray-900">
+              < HiX  />
+            </button>
+          </div>
+
+          <div className="flex flex-col px-3 py-2 mx-auto"> 
+            <Link href="/pages/feed" className="px-2 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">Feed</Link>
+            <Link href="/pages/profile" className="px-2 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">Perfil</Link>
+            <Link href="/pages/settings" className="px-2 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">Configuración</Link>
+            <Link href="/pages/chats" className="px-2 py-3 text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">Mensajes</Link>
+            <Link href="/pages/premium" className="px-2 py-3 text-blue-400 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-gray-800 rounded-lg">Mejorar a Premium</Link>
           </div>
         </div>
 

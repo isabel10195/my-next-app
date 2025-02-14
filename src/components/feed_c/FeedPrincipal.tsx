@@ -18,39 +18,14 @@ interface Tweet {
 const initialTweets: Tweet[] = [
   { id: 1, author: "Tim Cook", content: "Excited about our latest innovations!", avatar: "/tim-cook.jpg" },
   { id: 2, author: "Jony Ive", content: "Simplicity is the ultimate sophistication.", avatar: "/jony-ive.jpg" },
-  {
-    id: 3,
-    author: "Craig Federighi",
-    content: "Software and hairstyle, both on point.",
-    avatar: "/craig-federighi.jpg",
-  },
+  { id: 3, author: "Craig Federighi", content: "Software and hairstyle, both on point.", avatar: "/craig-federighi.jpg"},
   { id: 4, author: "Steve Wozniak", content: "Remember, great things start small.", avatar: "/steve-wozniak.jpg" },
-  {
-    id: 5,
-    author: "Angela Ahrendts",
-    content: "Retail is not dead, but boring retail is.",
-    avatar: "/angela-ahrendts.jpg",
-  },
+  { id: 5, author: "Angela Ahrendts", content: "Retail is not dead, but boring retail is.", avatar: "/angela-ahrendts.jpg" },
   { id: 6, author: "Eddy Cue", content: "Music is life, and we're here to amplify it.", avatar: "/eddy-cue.jpg" },
-  {
-    id: 7,
-    author: "Phil Schiller",
-    content: "Innovation is not about saying yes to everything.",
-    avatar: "/phil-schiller.jpg",
-  },
-  {
-    id: 8,
-    author: "Lisa Jackson",
-    content: "Sustainability is not a buzzword, it's a responsibility.",
-    avatar: "/lisa-jackson.jpg",
-  },
+  { id: 7, author: "Phil Schiller", content: "Innovation is not about saying yes to everything.", avatar: "/phil-schiller.jpg" },
+  { id: 8, author: "Lisa Jackson", content: "Sustainability is not a buzzword, it's a responsibility.", avatar: "/lisa-jackson.jpg" },
   { id: 9, author: "John Ternus", content: "Hardware that pushes software to its limits.", avatar: "/john-ternus.jpg" },
-  {
-    id: 10,
-    author: "Johny Srouji",
-    content: "Chips that change the game, one nanometer at a time.",
-    avatar: "/johny-srouji.jpg",
-  },
+  { id: 10, author: "Johny Srouji", content: "Chips that change the game, one nanometer at a time.", avatar: "/johny-srouji.jpg" },
 ]
 
 export default function Feed() {
@@ -66,7 +41,7 @@ export default function Feed() {
   }
 
   const TweetList = () => (
-    <div className="space-y-4 overflow-y-auto h-[calc(100vh-250px)]">
+    <div className="">
       <AnimatePresence>
         {tweets.map((tweet) => (
           <motion.div
@@ -75,17 +50,17 @@ export default function Feed() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ type: "spring", stiffness: 100 }}
-            className="bg-white rounded-xl shadow-lg p-6 mb-4"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-4"
           >
             <div className="flex items-center mb-4">
               <Avatar className="h-10 w-10 mr-4">
                 <AvatarImage src={tweet.avatar} alt={tweet.author} />
                 <AvatarFallback>{tweet.author[0]}</AvatarFallback>
               </Avatar>
-              <h3 className="font-semibold">{tweet.author}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white">{tweet.author}</h3>
             </div>
-            <p className="text-gray-700 mb-4">{tweet.content}</p>
-            <div className="flex justify-between text-gray-500">
+            <p className="text-gray-700 dark:text-gray-300 mb-4">{tweet.content}</p>
+            <div className="flex justify-between text-gray-500 dark:text-gray-400">
               <Button variant="ghost" size="sm">
                 <Heart className="mr-2 h-4 w-4" />
                 Like
@@ -110,12 +85,12 @@ export default function Feed() {
   )
 
   return (
-    <div className="flex-1 max-w-2xl mx-auto px-4 py-8 overflow-hidden mt-4">
+    <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 bg-gray-200 dark:bg-gray-900  rounded-2xl ">
       <Tabs defaultValue="for-you" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="for-you">For You</TabsTrigger>
-          <TabsTrigger value="following">Following</TabsTrigger>
-          <TabsTrigger value="communities">Communities</TabsTrigger>
+          <TabsTrigger value="for-you" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">For You</TabsTrigger>
+          <TabsTrigger value="following" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">Following</TabsTrigger>
+          <TabsTrigger value="communities" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">Communities</TabsTrigger>
         </TabsList>
         <TabsContent value="for-you">
           <form onSubmit={handleSubmit} className="mb-8">
@@ -124,19 +99,19 @@ export default function Feed() {
               value={newTweet}
               onChange={(e) => setNewTweet(e.target.value)}
               placeholder="What's happening?"
-              className="mb-2"
+              className="mb-2 bg-gray-100"
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800">
               Tweet
             </Button>
           </form>
           <TweetList />
         </TabsContent>
         <TabsContent value="following">
-          <p className="text-center text-gray-500 mt-4">Here you'll see tweets from people you follow.</p>
+          <p className="text-center text-gray-500 dark:text-gray-300 mt mt-4">Here you'll see tweets from people you follow.</p>
         </TabsContent>
         <TabsContent value="communities">
-          <p className="text-center text-gray-500 mt-4">Explore and join communities based on your interests.</p>
+          <p className="text-center text-gray-500 dark:text-gray-300 mt mt-4">Explore and join communities based on your interests.</p>
         </TabsContent>
       </Tabs>
     </div>

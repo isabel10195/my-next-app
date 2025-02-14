@@ -1,8 +1,8 @@
 "use client"
 
-import { Home, User, Bell, Mail, Bookmark, List, MoreHorizontal } from "lucide-react"
-import { motion } from "framer-motion"
+import { Home, User, Bell, Mail, Bookmark, List, MoreHorizontal, Menu, X } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useState } from "react"
 
 const menuItems = [
   { icon: Home, label: "Home" },
@@ -15,43 +15,76 @@ const menuItems = [
 ]
 
 export default function LeftSidebar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleSidebar = () => setIsOpen(!isOpen)
+
   return (
-    <aside className="w-64 h-screen p-4 bg-apple-blur fixed left-4 top-4 bottom-4 rounded-2xl overflow-y-auto transition-apple flex flex-col justify-center">
-      <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center"
+    <>
+      {/* Icono hamburguesa*/}
+      <button
+        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg xl:hidden"
+        onClick={toggleSidebar}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
       >
-        <div className="flex items-center space-x-4 mb-6">
-          <Avatar>
-            <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-            <AvatarFallback>UN</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold">Username</p>
-            <p className="text-sm text-gray-500">@username</p>
+        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </button>
+
+      {/* Capa de fondo */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-md z-40 xl:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Menú lateral */}
+      <aside
+        className={`
+          fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto flex flex-col p-4 w-64 transition-transform duration-200 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} 
+          lg:translate-x-0  
+          xl:block xl:translate-x-0 
+        `}
+      >
+        <div className="flex items-center justify-between mb-6 mt-6">
+          <div className="flex items-center space-x-4 mb-4">
+            <Avatar>
+              <AvatarImage src="/placeholder-user.jpg" alt="@username" />
+              <AvatarFallback>UN</AvatarFallback>
+            </Avatar>
+            <div className="hidden sm:block">
+              <p className="font-semibold text-gray-900 dark:text-white">Username</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">@username</p>
+            </div>
           </div>
+          {/* Botón X solo dentro del menú cuando está abierto */}
+          {isOpen && (
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-gray-900 dark:text-white xl:hidden"
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          )}
         </div>
+
         <nav>
           <ul className="space-y-2">
-            {menuItems.map((item, index) => (
-              <motion.li
-                key={item.label}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <a href="#" className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-200 transition-apple">
-                  <item.icon className="h-6 w-6" />
-                  <span>{item.label}</span>
+            {menuItems.map((item) => (
+              <li key={item.label}>
+                <a
+                  href="#"
+                  className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600">
+                  <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                  <span className="text-gray-900 dark:text-white">{item.label}</span>
                 </a>
-              </motion.li>
+              </li>
             ))}
           </ul>
         </nav>
-      </motion.div>
-    </aside>
+      </aside>
+    </>
   )
 }
-
