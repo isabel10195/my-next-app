@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Phone, Mail, MessageSquare } from "lucide-react"
+import Link from "next/link"
 
 export default function ContactPage() {
   return (
@@ -83,6 +84,12 @@ export default function ContactPage() {
               </div>
 
               <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700">Enviar mensaje</Button>
+              
+              <Link href="/" style={{ marginLeft: "5px" }}>
+                <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700">
+                    Volver a inicio
+                </Button>
+            </Link>
             </form>
           </Card>
         </div>
