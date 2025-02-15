@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Card } from "@/components/ui/card";
-import { Building2, Clock, Mail, Phone } from "lucide-react";
+import { Building2, Clock, Link, Mail, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function MapaPage() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -35,6 +36,7 @@ export default function MapaPage() {
             <Card className="bg-[#1a1d24] border-0 overflow-hidden h-[600px]">
               <div ref={mapContainerRef} style={{ height: "100%", width: "100%" }} />
             </Card>
+            
 
             {/* Información de contacto */}
             <div className="space-y-6">
@@ -83,6 +85,7 @@ export default function MapaPage() {
                   </div>
                 </div>
               </Card>
+              
 
               <Card className="bg-[#1a1d24] border-0 p-6">
                 <h2 className="font-semibold text-xl mb-4">Cómo llegar</h2>
@@ -100,6 +103,11 @@ export default function MapaPage() {
               </Card>
             </div>
           </div>
+          <Link href="/" style={{ marginLeft: "5px" }}>
+                <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700">
+                    Volver a inicio
+                </Button>
+            </Link>
         </div>
       </div>
     </div>
