@@ -1,23 +1,24 @@
-"use client"
+"use client";
 
-import { Home, User, Bell, Mail, Bookmark, List, MoreHorizontal, Menu, X } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react"
+import { Home, User, Bell, Mail, Bookmark, Settings, MoreHorizontal, Menu, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+import Link from "next/link";
 
 const menuItems = [
-  { icon: Home, label: "Home" },
-  { icon: User, label: "Profile" },
-  { icon: Bell, label: "Notifications" },
-  { icon: Mail, label: "Messages" },
-  { icon: Bookmark, label: "Bookmarks" },
-  { icon: List, label: "Lists" },
-  { icon: MoreHorizontal, label: "More" },
-]
+  { icon: Home, label: "Home", path: "/" },
+  { icon: User, label: "Profile", path: "/pages/profile" },
+  { icon: Bell, label: "Notifications", path: "/pages/notifications" },
+  { icon: Mail, label: "Messages", path: "/pages/chats" },
+  { icon: Bookmark, label: "Bookmarks", path: "/pages/bookmarks" },
+  { icon: Settings, label: "Ajustes", path: "/pages/settings" },
+  { icon: MoreHorizontal, label: "More", path: "/pages/more" },
+];
 
 export default function LeftSidebar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSidebar = () => setIsOpen(!isOpen)
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
     <>
@@ -74,17 +75,17 @@ export default function LeftSidebar() {
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.label}>
-                <a
-                  href="#"
-                  className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600">
-                  <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
-                  <span className="text-gray-900 dark:text-white">{item.label}</span>
-                </a>
+                <Link href={item.path}>
+                  <div className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600 cursor-pointer">
+                    <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                    <span className="text-gray-900 dark:text-white">{item.label}</span>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
       </aside>
     </>
-  )
+  );
 }

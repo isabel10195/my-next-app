@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-300 flex-col lg:flex-row">
       {/* Sidebar izquierdo */}
-      <div className="w-[250px] flex-shrink-0">
+      <div className="w-[250px] flex-shrink-0 ml-6">
         <NavIzq />
       </div>
 
