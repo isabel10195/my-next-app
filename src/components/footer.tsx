@@ -23,7 +23,7 @@ export default function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Productos</h3>
             <ul className="space-y-3">
               <li><Link href="/pages/planes" className="hover:text-gray-900 dark:hover:text-white">Planes</Link></li>
-              <li><Link href="/business" className="hover:text-gray-900 dark:hover:text-white">Politicas de Privacicad</Link></li>
+              <li><Link href="/pages/politicasPrivacidad" className="hover:text-gray-900 dark:hover:text-white">Politicas de Privacicad</Link></li>
             </ul>
           </div>
           
