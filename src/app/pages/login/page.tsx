@@ -51,68 +51,80 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="flex w-full max-w-5xl h-[600px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-        {/* Sección izquierda - Degradado azul */}
-        <div className="relative w-1/2 bg-gradient-to-b from-blue-400 to-blue-900 text-white p-12 overflow-hidden">
-          <div className="relative z-10">
-            <h1 className="text-5xl font-bold mb-2">Bienvenido a Lure</h1>
-            <p className="text-lg text-blue-200">Por favor, inicia sesión.</p>
-          </div>
+    <div className="min-h-screen w-full flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-blue-300 via-blue-700 to-blue-950 dark:from-gray-950 dark:via-blue-900 dark:to-gray-950 relative overflow-hidden">
+
+      {/* Patrón de fondo animado */}
+      <div className="absolute inset-0 w-full h-full">
+          <svg className="w-full h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="white" strokeWidth="0.1">
+              <animate
+                attributeName="d"
+                dur="20s"
+                repeatCount="indefinite"
+                values="M0,0 L100,0 L100,100 L0,100 Z;
+                      M0,10 L90,0 L100,90 L10,100 Z;
+                      M0,0 L100,0 L100,100 L0,100 Z"
+              />
+            </path>
+          </svg>
         </div>
-  
-        {/* Sección derecha - Formulario de inicio de sesión */}
-        <Card className="w-1/2 p-12 flex flex-col justify-center bg-gray-50 dark:bg-gray-800">
+      
+      {/* Texto login lado izq */}
+      <div className="flex items-center lg:pl-16 lg:mr-16 lg:ml-10 mb-20">
+        <div className="text-white space-y-4">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold">Bienvenido a Lure</h1>
+          <p className="text-3sm md:text-lg lg:text-xl">Accede a tu cuenta</p>
+
+        </div>
+      </div>
+      
+      {/* Login Form */}
+      <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white/95 dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 sm:p-8 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0">
+        <div className="w-full space-y-8">
+          <div className="flex justify-center">
+            <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-3 lg:w-[180px]" />
+          </div>
+
           <form onSubmit={handleLogin} className="w-full max-w-sm mx-auto space-y-6">
             <div className="space-y-2">
-              <Image 
-                src="/logo.png" 
-                alt="Logo de LA ISLA DE LURE" 
-                width={150} 
-                height={150} 
-              />
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Iniciar Sesión</h2>
-            </div>
-  
-            <div className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Nombre de Usuario"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <Input
-                type="password"
-                placeholder="Contraseña"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-  
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(!!checked)}
-                  className="text-blue-500 dark:text-blue-400"
+                <Input
+                  type="text"
+                  placeholder="Nombre de Usuario"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
-                <label
-                  htmlFor="remember"
-                  className="text-sm font-medium leading-none text-gray-700 dark:text-gray-300"
+                <Input
+                  type="password"
+                  placeholder="Contraseña"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+    
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(!!checked)}
+                    className="text-blue-500 dark:text-blue-400"
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none text-gray-700 dark:text-gray-300"
+                  >
+                    Recuérdame
+                  </label>
+                </div>
+    
+                <Button
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md transition"
+                  type="submit"
+                  disabled={loading}
                 >
-                  Recuérdame
-                </label>
+                  {loading ? "Iniciando..." : "Iniciar sesión"}
+                </Button>
               </div>
-  
-              <Button
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md transition"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? "Iniciando..." : "Iniciar Sesión"}
-              </Button>
-            </div>
   
             {error && (
               <div className="text-red-500 text-sm text-center">
@@ -127,8 +139,13 @@ export default function LoginPage() {
               ← Volver al inicio
             </Link>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );
 }
+
+
+
+
+
