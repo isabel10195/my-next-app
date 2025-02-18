@@ -19,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/followers", followerRoutes);
+app.use(express.json()); // <-- IMPORTANTE para procesar JSON
 
 // Servidor
 app.listen(PORT, () => {

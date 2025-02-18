@@ -39,7 +39,7 @@ export default function LoginPage() {
       );
 
       if (response.status === 200) {
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch (err: any) {
 
@@ -68,6 +68,7 @@ export default function LoginPage() {
             </path>
           </svg>
         </div>
+        
       
       {/* Texto login lado izq */}
       <div className="flex items-center lg:pl-16 lg:mr-16 lg:ml-10 mb-20">
@@ -79,7 +80,7 @@ export default function LoginPage() {
       </div>
       
       {/* Login Form */}
-      <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white/95 dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 sm:p-8 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0">
+      <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white/95 dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 sm:p-8 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0 relative z-10">
         <div className="w-full space-y-8">
           <div className="flex justify-center">
             <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-3 lg:w-[180px]" />
@@ -137,8 +138,12 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <Link href="/" className="text-blue-500 hover:text-blue-600">
               ← Volver al inicio
+            </Link><br />
+            <Link href="/pages/register" className="text-blue-500 hover:text-blue-600">
+            No tienes una cuenta? Regístrate aquí
             </Link>
           </div>
+         
         </div>
       </div>
     </div>
