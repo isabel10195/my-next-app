@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import { Home, User, Bell, Mail, Bookmark, List, MoreHorizontal, Menu, X } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react"
+import { Home, User, Bell, Mail, Bookmark, List, MoreHorizontal, Menu, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState, useEffect } from "react";
+import { fetchUserData } from "@/server/service/userService";
 
 const menuItems = [
   { icon: Home, label: "Home" },
@@ -12,16 +13,28 @@ const menuItems = [
   { icon: Bookmark, label: "Bookmarks" },
   { icon: List, label: "Lists" },
   { icon: MoreHorizontal, label: "More" },
-]
+];
 
 export default function LeftSidebar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const toggleSidebar = () => setIsOpen(!isOpen)
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const data = await fetchUserData();
+        setUser(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getUserData();
+  }, []);
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
     <>
-      {/* Icono hamburguesa*/}
       <button
         className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg xl:hidden"
         onClick={toggleSidebar}
@@ -30,7 +43,6 @@ export default function LeftSidebar() {
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
-      {/* Capa de fondo */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-md z-40 xl:hidden"
@@ -38,7 +50,6 @@ export default function LeftSidebar() {
         />
       )}
 
-      {/* Menú lateral */}
       <aside
         className={`
           fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto flex flex-col p-4 w-64 transition-transform duration-200 ease-in-out
@@ -50,15 +61,18 @@ export default function LeftSidebar() {
         <div className="flex items-center justify-between mb-6 mt-6">
           <div className="flex items-center space-x-4 mb-4">
             <Avatar>
-              <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-              <AvatarFallback>UN</AvatarFallback>
+              <AvatarImage src={user?.avatar_url || "/placeholder-user.jpg"} alt={user?.user_handle || "Usuario"} />
+              <AvatarFallback>{user ? `${user.first_name[0]}${user.last_name[0]}` : "UN"}</AvatarFallback>
             </Avatar>
             <div className="hidden sm:block">
-              <p className="font-semibold text-gray-900 dark:text-white">Username</p>
-              <p className="text-sm text-gray-500 dark:text-gray-300">@username</p>
+              <p className="font-semibold text-gray-900 dark:text-white">
+                {user ? `${user.first_name} ${user.last_name}` : "Username"}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-300">
+                {user ? `@${user.user_handle}` : "@username"}
+              </p>
             </div>
           </div>
-          {/* Botón X solo dentro del menú cuando está abierto */}
           {isOpen && (
             <button
               onClick={() => setIsOpen(false)}
@@ -76,7 +90,8 @@ export default function LeftSidebar() {
               <li key={item.label}>
                 <a
                   href="#"
-                  className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600">
+                  className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600"
+                >
                   <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
                   <span className="text-gray-900 dark:text-white">{item.label}</span>
                 </a>
@@ -86,5 +101,5 @@ export default function LeftSidebar() {
         </nav>
       </aside>
     </>
-  )
+  );
 }

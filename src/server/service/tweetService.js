@@ -1,0 +1,87 @@
+const API_URL = "http://localhost:3001/api/tweets";
+
+export const fetchForYouTweets = async () => {
+  const response = await fetch(`${API_URL}/interest`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching tweets by interest");
+  }
+  const data = await response.json();
+  return data.tweets;
+};
+
+export const fetchFollowingTweets = async () => {
+  const response = await fetch(`${API_URL}/following`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching following tweets");
+  }
+  const data = await response.json();
+  return data.tweets;
+};
+
+export const createTweet = async (tweet_text) => {
+  const response = await fetch(`${API_URL}/create`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ tweet_text }),
+  });
+  if (!response.ok) {
+    throw new Error("Error creating tweet");
+  }
+  await response.json();
+};
+
+export const fetchTweets = async () => {
+    const response = await fetch(API_URL, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Error al obtener los tweets");
+    return response.json();
+  };
+  
+  export const editTweet = async (tweet_id, tweet_text) => {
+    const response = await fetch(`${API_URL}/edit/${tweet_id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ tweet_text }),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Error al actualizar el tweet");
+    }
+    return response.json();
+  };
+  
+  export const deleteTweet = async (tweet_id) => {
+    const response = await fetch(`${API_URL}/delete/${tweet_id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Error al eliminar el tweet");
+    }
+    return response.json();
+  };
+
+  export const likeTweet = async (tweet_id) => {
+    const response = await fetch(`${API_URL}/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ tweet_id }),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Error al dar like");
+    }
+    return response.json();
+  };

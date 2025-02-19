@@ -1,40 +1,36 @@
-'use client'; 
+'use client';
 
 import { useEffect, useState, useCallback } from 'react';
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from 'lucide-react';
 import { Card, Avatar, List, Button, Tag, Tabs, Row, Col, Menu, Badge, message, Input, Popconfirm } from 'antd';
 import { 
-  MailOutlined, 
   EnvironmentOutlined, 
   CalendarOutlined, 
   TeamOutlined, 
-  LikeOutlined, 
-  CommentOutlined, 
-  ShareAltOutlined, 
+  MailOutlined, 
+  EditOutlined, 
   SaveOutlined, 
-  SettingOutlined,
-  MessageOutlined,
-  BellOutlined,
-  StopOutlined,
-  UsergroupAddOutlined,
-  UserOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  CloseOutlined 
+  DeleteOutlined, 
+  CloseOutlined, 
+  BellOutlined, 
+  MessageOutlined, 
+  StopOutlined, 
+  UsergroupAddOutlined, 
+  SettingOutlined 
 } from '@ant-design/icons';
-
-import toast, { Toaster } from 'react-hot-toast';
-
-//import 'antd/dist/antd.css';
+import toast from 'react-hot-toast';
 import 'antd/es/style/reset.css';
-import './profile.css'; // Importa el archivo CSS
+import './profile.css';
+
+import { fetchUserData, fetchUserDetails } from '@/server/service/userService';
+import { fetchRecommendations, fetchFollowers, fetchFollowing, followUser, unfollowUser } from '@/server/service/followerService';
+import { fetchTweets, editTweet, deleteTweet } from '@/server/service/tweetService';
+import { logout } from '@/server/service/authService';
 
 const { Meta } = Card;
 
 export default function ProfilePage() {
-
   const [profileData, setProfileData] = useState({
     avatar: "",
     name: "",
@@ -46,257 +42,176 @@ export default function ProfilePage() {
     following: 0,
     user_handle: ""
   });
-
   const [seguidores, setSeguidores] = useState([]);
   const [seguidos, setSeguidos] = useState([]);
   const [recomendaciones, setRecomendaciones] = useState([]);
-  const [tweets, setTweets] = useState([]); // Estado para los tweets del usuario
-  const [editingTweetId, setEditingTweetId] = useState(null); // Tweet en edición
-  const [editedTweetText, setEditedTweetText] = useState(''); // Texto editado del tweet
+  const [tweets, setTweets] = useState([]);
+  const [editingTweetId, setEditingTweetId] = useState(null);
+  const [editedTweetText, setEditedTweetText] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    achievements: [],
+    interests: [],
+    skills: [],
+  });
 
-  const fetchProfileData = async () => {
-    try {
-        const response = await fetch('http://localhost:3001/api/users/data', {
-            method: 'GET',
-            credentials: 'include',
-        });
-        if (response.ok) {
-            const data = await response.json();
-            setProfileData({
-                avatar: data.avatarUrl || 'https://via.placeholder.com/150',
-                name: `${data.first_name} ${data.last_name}`,
-                bio: data.bio || 'No hay biografía disponible',
-                location: data.location || 'Ubicación no disponible',
-                birthday: data.date_of_birth || 'Fecha de nacimiento no disponible',
-                email: data.email_address || 'Correo no disponible',
-                followers: data.followers || 0,
-                following: data.following || 0,
-                user_handle: data.user_handle || 'usuario'
-            });
-        } else {
-            console.error('Error al obtener los datos del perfil');
-        }
-    } catch (error) {
-        console.error('Error al obtener los datos del perfil:', error);
-    }
-};
+  const router = useRouter();
 
+  // Cargar datos básicos del perfil
   useEffect(() => {
-    fetchProfileData();
-  }, []);
-
-  const followUser = useCallback(async (follow_user_id) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/followers/follow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ follow_user_id }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        message.success(`Has seguido a ${data.user.user_handle}`);
-        setSeguidores(prevSeguidores => [...prevSeguidores, data.user]);
-        setSeguidos(data.followedUsers);
-        setRecomendaciones(prevRecomendaciones => 
-          prevRecomendaciones.filter(user => user.user_id !== follow_user_id)
-        );
-      } else {
-        message.error('Error al seguir al usuario');
-      }
-    } catch (error) {
-      console.error('Error al seguir al usuario:', error);
-      message.error('Error al seguir al usuario');
-    }
-  }, []);
-
-  const unfollowUser = useCallback(async (follow_user_id) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/followers/unfollow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ follow_user_id }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        message.success(`Has dejado de seguir a ${data.user.user_handle}`);
-        setSeguidos(prevSeguidos => prevSeguidos.filter(user => user.user_id !== follow_user_id));
-        setSeguidores(prevSeguidores => prevSeguidores.filter(user => user.user_id !== follow_user_id));
-        setRecomendaciones(prevRecomendaciones => [...prevRecomendaciones, data.user]);
-      } else {
-        message.error('Error al dejar de seguir al usuario');
-      }
-    } catch (error) {
-      console.error('Error al dejar de seguir al usuario:', error);
-      message.error('Error al dejar de seguir al usuario');
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchRecomendaciones = async () => {
+    const getProfileData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/followers/recommendations', {
-          method: 'GET',
-          credentials: 'include',
+        const data = await fetchUserData();
+        setProfileData({
+          avatar: data.avatarUrl || 'https://via.placeholder.com/150',
+          name: `${data.first_name} ${data.last_name}`,
+          bio: data.bio || 'No hay biografía disponible',
+          location: data.location || 'Ubicación no disponible',
+          birthday: data.date_of_birth || 'Fecha de nacimiento no disponible',
+          email: data.email_address || 'Correo no disponible',
+          followers: data.followers || 0,
+          following: data.following || 0,
+          user_handle: data.user_handle || 'usuario'
         });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.recommendations && Array.isArray(data.recommendations)) {
-            setRecomendaciones(data.recommendations);
-          } else {
-            console.error('La propiedad "recommendations" no es un array o está vacía', data);
-          }
+      } catch (error) {
+        console.error('Error al obtener los datos del perfil:', error);
+      }
+    };
+    getProfileData();
+  }, []);
+
+  // Cargar detalles del usuario
+  useEffect(() => {
+    const getUserDetails = async () => {
+      try {
+        const data = await fetchUserDetails();
+        setUserDetails({
+          achievements: data.achievement || [],
+          interests: data.interest || [],
+          skills: data.skill || [],
+        });
+      } catch (error) {
+        console.error('Error al obtener los detalles del usuario:', error);
+      }
+    };
+    getUserDetails();
+  }, []);
+
+  // Cargar recomendaciones
+  useEffect(() => {
+    const getRecommendations = async () => {
+      try {
+        const data = await fetchRecommendations();
+        if (data.recommendations && Array.isArray(data.recommendations)) {
+          setRecomendaciones(data.recommendations);
         } else {
-          console.error('Error al obtener recomendaciones');
+          console.error('La propiedad "recommendations" no es un array o está vacía', data);
         }
       } catch (error) {
         console.error('Error al obtener recomendaciones:', error);
       }
     };
-
-    fetchRecomendaciones();
+    getRecommendations();
   }, []);
 
+  // Cargar seguidores y seguidos
   useEffect(() => {
-    // Obtener seguidores
-    const fetchSeguidores = async () => {
-      const response = await fetch('http://localhost:3001/api/followers/followers', {
-        method: 'GET',
-        credentials: 'include', // Asegura que las cookies se incluyan
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSeguidores(data.seguidores);
-      } else {
-        console.error('Error al obtener seguidores');
+    const getFollowersAndFollowing = async () => {
+      try {
+        const followersData = await fetchFollowers();
+        setSeguidores(followersData.seguidores);
+        const followingData = await fetchFollowing();
+        setSeguidos(followingData.seguidos);
+      } catch (error) {
+        console.error('Error al obtener seguidores y seguidos:', error);
       }
     };
-
-    // Obtener seguidos
-    const fetchSeguidos = async () => {
-      const response = await fetch('http://localhost:3001/api/followers/following', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSeguidos(data.seguidos);
-      } else {
-        console.error('Error al obtener seguidos');
-      }
-    };
-
-    fetchSeguidores();
-    fetchSeguidos();
+    getFollowersAndFollowing();
   }, []);
 
-  const router = useRouter();
+  // Cargar tweets
+  useEffect(() => {
+    const getTweets = async () => {
+      try {
+        const data = await fetchTweets();
+        setTweets(data.tweets);
+      } catch (error) {
+        console.error('Error al obtener los tweets:', error);
+      }
+    };
+    getTweets();
+  }, []);
 
   const handleLogout = async () => {
     try {
-      // Realiza la petición al backend para cerrar sesión
-      const response = await fetch('http://localhost:3001/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include', // Incluye cookies
-      });
-
-      if (response.ok) {
-        localStorage.removeItem('token'); // Elimina el token local
-        router.push('/'); // Redirige al login
-      } else {
-        console.error("Error al cerrar sesión", await response.text());
-      }
+      await logout();
+      localStorage.removeItem('token');
+      router.push('/');
     } catch (error) {
       console.error("Error al cerrar sesión", error);
     }
   };
 
-  const fetchTweets = async () => {
+  const handleFollowUser = useCallback(async (follow_user_id) => {
     try {
-      const response = await fetch('http://localhost:3001/api/tweets', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setTweets(data.tweets);
-      } else {
-        console.error("Error al obtener los tweets", await response.text());
-      }
+      const data = await followUser(follow_user_id);
+      message.success(`Has seguido a ${data.user.user_handle}`);
+      setSeguidores(prev => [...prev, data.user]);
+      setSeguidos(data.followedUsers);
+      setRecomendaciones(prev => prev.filter(user => user.user_id !== follow_user_id));
     } catch (error) {
-      console.error("Error en la solicitud", error);
+      message.error(error.message || 'Error al seguir al usuario');
     }
-  };
+  }, []);
 
-  useEffect(() => {
-
-    fetchTweets();
-    
-  }, [fetchTweets]);
+  const handleUnfollowUser = useCallback(async (follow_user_id) => {
+    try {
+      const data = await unfollowUser(follow_user_id);
+      message.success(`Has dejado de seguir a ${data.user.user_handle}`);
+      setSeguidos(prev => prev.filter(user => user.user_id !== follow_user_id));
+      setSeguidores(prev => prev.filter(user => user.user_id !== follow_user_id));
+      setRecomendaciones(prev => [...prev, data.user]);
+    } catch (error) {
+      message.error(error.message || 'Error al dejar de seguir al usuario');
+    }
+  }, []);
 
   const handleEditTweet = (tweet_id, currentText) => {
-    setEditingTweetId(tweet_id); // Activar el modo edición para este tweet
-    setEditedTweetText(currentText); // Prellenar el texto actual
+    setEditingTweetId(tweet_id);
+    setEditedTweetText(currentText);
   };
-  
-const [isSaving, setIsSaving] = useState(false);
 
-const handleSaveTweet = async (tweet_id) => {
-  try {
-    const response = await fetch(`http://localhost:3001/api/tweets/edit/${tweet_id}`, { 
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({ tweet_text: editedTweetText }),
-    });
-
-    if (response.ok) {
+  const handleSaveTweet = async (tweet_id) => {
+    try {
+      setIsSaving(true);
+      await editTweet(tweet_id, editedTweetText);
       toast.success('Tweet actualizado correctamente');
-      setEditingTweetId(null); // Salir del modo de edición
-      setEditedTweetText(''); // Limpiar el texto editado
-      await fetchTweets(); // Recargar los tweets después de la edición
-    } else {
-      const errorData = await response.json();
-      toast.error(errorData.message || 'Error al actualizar el tweet');
+      setEditingTweetId(null);
+      setEditedTweetText('');
+      const data = await fetchTweets();
+      setTweets(data.tweets);
+    } catch (error) {
+      toast.error(error.message || 'Error al actualizar el tweet');
+    } finally {
+      setIsSaving(false);
     }
-  } catch (error) {
-    console.error('Error al actualizar el tweet:', error);
-    toast.error('Error al actualizar el tweet');
-  }
-};
+  };
 
   const handleCancelEdit = () => {
-    setEditingTweetId(null); // Salir del modo edición sin guardar
+    setEditingTweetId(null);
     setEditedTweetText('');
   };
 
   const handleDeleteTweet = async (tweet_id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/tweets/delete/${tweet_id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-  
-      if (response.ok) {
-        toast.success('Tweet eliminado correctamente');
-        setTweets((prevTweets) => prevTweets.filter((tweet) => tweet.tweet_id !== tweet_id));
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || 'Error al eliminar el tweet');
-      }
+      await deleteTweet(tweet_id);
+      toast.success('Tweet eliminado correctamente');
+      setTweets(prevTweets => prevTweets.filter(tweet => tweet.tweet_id !== tweet_id));
     } catch (error) {
-      console.error('Error al eliminar el tweet:', error);
-      toast.error('Error al eliminar el tweet');
+      toast.error(error.message || 'Error al eliminar el tweet');
     }
   };
-  
+
   const formatDateForSpain = (dateString) => {
     if (!dateString) return 'Fecha de nacimiento no disponible';
     const date = new Date(dateString);
@@ -305,68 +220,31 @@ const handleSaveTweet = async (tweet_id) => {
       month: '2-digit',
       year: 'numeric',
     }).format(date);
-  };  
-
-  const [userDetails, setUserDetails] = useState({
-    achievements: [],
-    interests: [],
-    skills: [],
-  });
-  
-  const fetchUserDetails = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/api/users/details', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUserDetails({
-          achievements: data.achievement || [],
-          interests: data.interest || [],
-          skills: data.skill || [],
-        });
-      } else {
-        console.error('Error al obtener los detalles del usuario');
-      }
-    } catch (error) {
-      console.error('Error al obtener los detalles del usuario:', error);
-    }
   };
-  
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);  
-  
+
   const colors = ['blue', 'green', 'purple', 'gold', 'red', 'orange', 'lime', 'gray'];
-
-const renderTagsWithColors = (interests) =>
-  interests.map((interest, index) => {
-    const color = colors[index % colors.length]; // Asigna colores cíclicamente
-    return (
-      <Tag key={index} color={color}>
-        {interest}
-      </Tag>
-    );
-  });
-
+  const renderTagsWithColors = (interests) =>
+    interests.map((interest, index) => {
+      const color = colors[index % colors.length];
+      return (
+        <Tag key={index} color={color}>
+          {interest}
+        </Tag>
+      );
+    });
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <div className="profile-page">
         <div className="content">
-          {/* Card 1: Imagen y datos del usuario */}
+          {/* Card 1: Datos del usuario */}
           <div className="profile-card">
-          <Card className="profile-cover-card" cover={<img alt="cover" src="https://via.placeholder.com/300x150" />}>
-            <Meta
-              avatar={<Avatar size={64} src={profileData.avatar} />}
-              title={profileData.user_handle}
-              description={profileData.name}
-            />
+            <Card className="profile-cover-card" cover={<img alt="cover" src="https://via.placeholder.com/300x150" />}>
+              <Meta
+                avatar={<Avatar size={64} src={profileData.avatar} />}
+                title={profileData.user_handle}
+                description={profileData.name}
+              />
               <List itemLayout="horizontal">
                 <List.Item>
                   <List.Item.Meta
@@ -376,11 +254,11 @@ const renderTagsWithColors = (interests) =>
                   />
                 </List.Item>
                 <List.Item>
-                <List.Item.Meta
-                  avatar={<CalendarOutlined />}
-                  title="Fecha de nacimiento"
-                  description={formatDateForSpain(profileData.birthday)}
-                />
+                  <List.Item.Meta
+                    avatar={<CalendarOutlined />}
+                    title="Fecha de nacimiento"
+                    description={formatDateForSpain(profileData.birthday)}
+                  />
                 </List.Item>
                 <List.Item>
                   <List.Item.Meta
@@ -397,8 +275,7 @@ const renderTagsWithColors = (interests) =>
                   />
                 </List.Item>
               </List>
-          </Card>
-            {/* Card 2: Descripción del usuario */}
+            </Card>
             <div className="about-card">
               <Card title="Sobre mí">
                 <p>{profileData.bio}</p>
@@ -406,9 +283,9 @@ const renderTagsWithColors = (interests) =>
             </div>
           </div>
 
-          {/* Cards adicionales */}   
+          {/* Cards adicionales */}
           <div className="other-cards">
-            {/* Card de Posts */}
+            {/* Card de Tweets */}
             <div className="posts-card">
               <Card title="Tweets">
                 <List
@@ -440,7 +317,7 @@ const renderTagsWithColors = (interests) =>
                               type="text"
                               icon={<EditOutlined />}
                               onClick={() => handleEditTweet(tweet.tweet_id, tweet.tweet_text)}
-                              disabled={editingTweetId !== null} // Deshabilitar mientras se edita otro tweet
+                              disabled={editingTweetId !== null}
                               aria-label="Editar tweet"
                             />
                             <Popconfirm
@@ -449,23 +326,14 @@ const renderTagsWithColors = (interests) =>
                               okText="Sí"
                               cancelText="No"
                             >
-                              <Button
-                                type="text"
-                                icon={<DeleteOutlined />}
-                                aria-label="Eliminar tweet"
-                              />
+                              <Button type="text" icon={<DeleteOutlined />} aria-label="Eliminar tweet" />
                             </Popconfirm>
                           </>
                         ),
                       ]}
                     >
                       <List.Item.Meta
-                        avatar={
-                          <Avatar
-                            src={tweet.avatar_url || "https://via.placeholder.com/50"}
-                            alt="Avatar del usuario"
-                          />
-                        }
+                        avatar={<Avatar src={tweet.avatar_url || "https://via.placeholder.com/50"} alt="Avatar del usuario" />}
                         title={<a href="#!">{tweet.user_handle}</a>}
                         description={
                           editingTweetId === tweet.tweet_id ? (
@@ -485,79 +353,89 @@ const renderTagsWithColors = (interests) =>
               </Card>
             </div>
 
-            {/* Cards de Multimedia y Seguidores/Seguidos */}
+            {/* Card de Multimedia y Seguidores/Seguidos */}
             <div className="media-content">
               <div className="media-content-card">
                 <Card>
-                <Tabs defaultActiveKey="1" centered>
-                  {/* Tab de Seguidores */}
-                  <Tabs.TabPane tab="Seguidores" key="1">
-                    <List
-                      dataSource={seguidores}
-                      renderItem={item => (
-                        <List.Item
-                          actions={[
-                            seguidos.some(user => user.user_id === item.user_id) ? (
-                              <Button type="default" shape="round" onClick={() => unfollowUser(item.user_id)}>Dejar de seguir</Button>
-                            ) : (
-                              <Button type="primary" shape="round" onClick={() => followUser(item.user_id)}>Seguir</Button>
-                            )
-                          ]}
-                        >
-                          <List.Item.Meta
-                            avatar={<Avatar src={item.avatar_url} />}
-                            title={item.user_handle}
-                            description={`@${item.user_handle ? item.user_handle.toLowerCase() : 'desconocido'}`}
-                          />
-                        </List.Item>
-                      )}
-                    />
-                  </Tabs.TabPane>
-
-                  {/* Tab de Seguidos */}
-                  <Tabs.TabPane tab="Seguidos" key="2">
-                    <List
-                      dataSource={seguidos}
-                      renderItem={item => (
-                        <List.Item
-                          actions={[<Button type="default" shape="round" onClick={() => unfollowUser(item.user_id)}>Dejar de seguir</Button>]}
-                        >
-                          <List.Item.Meta
-                            avatar={<Avatar src={item.avatar_url} />}
-                            title={item.user_handle}
-                            description={`@${item.user_handle ? item.user_handle.toLowerCase() : 'desconocido'}`}
-                          />
-                        </List.Item>
-                      )}
-                    />
-                  </Tabs.TabPane>
-
-                  {/* Tab de Recomendaciones */}
-                  <Tabs.TabPane tab="Recomendaciones" key="3">
-                    {recomendaciones.length === 0 ? (
-                      <p>No hay recomendaciones disponibles.</p>
-                    ) : (
+                  <Tabs defaultActiveKey="1" centered>
+                    {/* Tab de Seguidores */}
+                    <Tabs.TabPane tab="Seguidores" key="1">
                       <List
-                        dataSource={recomendaciones}
-                        renderItem={item => (
+                        dataSource={seguidores}
+                        renderItem={(item) => (
                           <List.Item
-                            actions={[<Button type="primary" shape="round" onClick={() => followUser(item.user_id)}>Seguir</Button>]}
+                            actions={[
+                              seguidos.some(user => user.user_id === item.user_id) ? (
+                                <Button type="default" shape="round" onClick={() => handleUnfollowUser(item.user_id)}>
+                                  Dejar de seguir
+                                </Button>
+                              ) : (
+                                <Button type="primary" shape="round" onClick={() => handleFollowUser(item.user_id)}>
+                                  Seguir
+                                </Button>
+                              )
+                            ]}
                           >
                             <List.Item.Meta
-                              avatar={<Avatar src={item.avatar_url || 'default-avatar-url'} />}
+                              avatar={<Avatar src={item.avatar_url} />}
                               title={item.user_handle}
                               description={`@${item.user_handle ? item.user_handle.toLowerCase() : 'desconocido'}`}
                             />
                           </List.Item>
                         )}
                       />
-                    )}
-                  </Tabs.TabPane>
-                </Tabs>
+                    </Tabs.TabPane>
+                    {/* Tab de Seguidos */}
+                    <Tabs.TabPane tab="Seguidos" key="2">
+                      <List
+                        dataSource={seguidos}
+                        renderItem={(item) => (
+                          <List.Item
+                            actions={[
+                              <Button type="default" shape="round" onClick={() => handleUnfollowUser(item.user_id)}>
+                                Dejar de seguir
+                              </Button>
+                            ]}
+                          >
+                            <List.Item.Meta
+                              avatar={<Avatar src={item.avatar_url} />}
+                              title={item.user_handle}
+                              description={`@${item.user_handle ? item.user_handle.toLowerCase() : 'desconocido'}`}
+                            />
+                          </List.Item>
+                        )}
+                      />
+                    </Tabs.TabPane>
+                    {/* Tab de Recomendaciones */}
+                    <Tabs.TabPane tab="Recomendaciones" key="3">
+                      {recomendaciones.length === 0 ? (
+                        <p>No hay recomendaciones disponibles.</p>
+                      ) : (
+                        <List
+                          dataSource={recomendaciones}
+                          renderItem={(item) => (
+                            <List.Item
+                              actions={[
+                                <Button type="primary" shape="round" onClick={() => handleFollowUser(item.user_id)}>
+                                  Seguir
+                                </Button>
+                              ]}
+                            >
+                              <List.Item.Meta
+                                avatar={<Avatar src={item.avatar_url || 'default-avatar-url'} />}
+                                title={item.user_handle}
+                                description={`@${item.user_handle ? item.user_handle.toLowerCase() : 'desconocido'}`}
+                              />
+                            </List.Item>
+                          )}
+                        />
+                      )}
+                    </Tabs.TabPane>
+                  </Tabs>
                 </Card>
               </div>
 
-              {/* Cards de Logros, Intereses y Estadísticas */}
+              {/* Cards de Logros, Intereses, Estadísticas y Habilidades */}
               <div className="mid-cards">
                 <Row gutter={[16, 16]}>
                   <Col xs={24} sm={12} lg={12}>
@@ -575,9 +453,7 @@ const renderTagsWithColors = (interests) =>
                   <Col xs={24} sm={12} lg={12}>
                     <div className="tags-card">
                       <Card title="Intereses">
-                        <div>
-                          {renderTagsWithColors(userDetails.interests)}
-                        </div>
+                        <div>{renderTagsWithColors(userDetails.interests)}</div>
                       </Card>
                     </div>
                   </Col>
@@ -608,11 +484,12 @@ const renderTagsWithColors = (interests) =>
                 </Row>
               </div>
             </div>
+            {/* Menú inferior */}
             <div className="menu-bar">
               <Menu mode="horizontal">
                 <Menu.Item key="1"><a href="/">Inicio</a></Menu.Item>
                 <Menu.Item key="2">Perfil</Menu.Item>
-                <Menu.Item key="3"><a href="/page/settings">Configuracion</a></Menu.Item>
+                <Menu.Item key="3"><a href="/page/settings">Configuración</a></Menu.Item>
                 <Menu.Item key="4">
                   <Badge count={5} dot>
                     <BellOutlined />
@@ -624,7 +501,7 @@ const renderTagsWithColors = (interests) =>
                 <Menu.Item key="6" onClick={handleLogout}>
                   <StopOutlined />
                 </Menu.Item>
-                <Menu.Item key="7"> 
+                <Menu.Item key="7">
                   <UsergroupAddOutlined />
                 </Menu.Item>
                 <Menu.Item key="8">
