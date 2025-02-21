@@ -23,7 +23,7 @@ export default function SettingsPage() {
       <aside className={`md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 border-r dark:bg-gray-900 transition-all duration-300 ease-in-out ${isMenuOpen ? "block z-50" : "hidden"} md:block backdrop-blur-sm`}>
         {/* Boton X para cerrar menu */}
         <div className="flex justify-end p-4 md:hidden">
-          <button onClick={() => setIsMenuOpen(false)} aria-label="Close Menu" className="text-xl text-white">
+          <button onClick={() => setIsMenuOpen(false)} aria-label="Close Menu" className="text-xl text-gray-900 dark:text-white">
             <HiX />
           </button>
         </div>

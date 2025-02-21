@@ -83,6 +83,11 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
     fetchChartData();
   }, [pair.base, pair.quote]);
 
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   return (
     <motion.div
       layout
@@ -130,9 +135,9 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
                   </svg>
                 </button>
               </div>
-              <div className="h-60 rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div className="h-64 w-full">
                 {chartData ? (
-                  <Line data={chartData} />
+                  <Line data={chartData} options={chartOptions} />
                 ) : (
                   <p className="text-center text-gray-500">Cargando gráfico...</p>
                 )}
@@ -156,9 +161,9 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 h-64 w-full">
         {chartData ? (
-          <Line data={chartData} />
+          <Line data={chartData} options={chartOptions} />
         ) : (
           <p className="text-center text-gray-500">Cargando gráfico...</p>
         )}

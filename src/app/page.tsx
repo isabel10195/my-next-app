@@ -1,40 +1,43 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { ArticleCard } from "@/components/ui/article-card"
-import { CurrencyCard } from "@/components/CardsMonedas/currency-card"
-import { SocialLinks } from "@/components/CardRedesSociales/social-links"
-import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos"
+import { ArticleCard } from "@/components/ui/article-card";
+import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
+import { SocialLinks } from "@/components/CardRedesSociales/social-links";
+import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos";
 
-import MultimediaCard from "@/components/MultimediaCard/multimedia-card"
+import SpotifyRecommendationsCard from "@/components/MultimediaCard/spotifyrecomendationscard";
 
-import CardAutorizacion from "@/components/ui/cardAutorizacion"
+import CardAutorizacion from "@/components/ui/cardAutorizacion";
+import CardEventos from "@/components/CardEventosPorUsuario/CardEventos";
 
-import CombinedNavbar from "@/components/navbar/combinednavbar"
 
-import Footer from "@/components/footer"
+
+import CombinedNavbar from "@/components/navbar/combinednavbar";
+
+import Footer from "@/components/footer";
 
 // Definir el tipo de los objetos en currencyPairs
 interface CurrencyPair {
-  base: string
-  quote: string
-  value: number
-  change: number
+  base: string;
+  quote: string;
+  value: number;
+  change: number;
 }
 
 const currencyPairs: CurrencyPair[] = [
-  { base: 'bitcoin', quote: 'usd', value: 5.2, change: 0.9715 },
-  { base: 'ethereum', quote: 'usd', value: 3.8, change: 1.0937 },
-  { base: 'eur', quote: 'usd', value: 1.1, change: 0.8745 }, // Agregada EUR/USD
-  { base: 'usd', quote: 'eur', value: 0.92, change: 1.0321 }, // Agregada USD/EUR
+  { base: "bitcoin", quote: "usd", value: 5.2, change: 0.9715 },
+  { base: "ethereum", quote: "usd", value: 3.8, change: 1.0937 },
+  { base: "eur", quote: "usd", value: 1.1, change: 0.8745 }, // Agregada EUR/USD
+  { base: "usd", quote: "eur", value: 0.92, change: 1.0321 }, // Agregada USD/EUR
 ];
-
 
 export default function HomePage() {
   // El tipo del estado `expandedArticle` es `React.ReactNode | null` para aceptar cualquier tipo de contenido
-  const [expandedArticle, setExpandedArticle] = useState<React.ReactNode | null>(null)
+  const [expandedArticle, setExpandedArticle] =
+    useState<React.ReactNode | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
@@ -52,8 +55,18 @@ export default function HomePage() {
                 onClick={() => setExpandedArticle(null)}
                 className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
                 Back
               </button>
@@ -97,16 +110,19 @@ export default function HomePage() {
               </div>
 
               <div className="space-y-6">
-               {/* <CalendarCard/>               */}
-               </div>
+              <CardEventos/>
+              </div>
               <div className="relative grid grid-cols-2 gap-4">
                 {currencyPairs.map((pair) => (
-                  <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                  <CurrencyCard
+                    key={`${pair.base}-${pair.quote}`}
+                    pair={pair}
+                  />
                 ))}
               </div>
 
               <div>
-                <MultimediaCard />
+                <SpotifyRecommendationsCard />
                 <br />
                 <SocialLinks />
               </div>
@@ -142,17 +158,21 @@ export default function HomePage() {
                 <CardAutorizacion />
 
                 <div className="space-y-6">
-                  {/* <CalendarCard/> */}
+                
+                  <h1>TIU MAMA</h1>
                 </div>
 
                 <div className="relative grid grid-cols-2 gap-4 mt-6">
                   {currencyPairs.map((pair) => (
-                    <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                    <CurrencyCard
+                      key={`${pair.base}-${pair.quote}`}
+                      pair={pair}
+                    />
                   ))}
                 </div>
-
+                    
                 <div className="flex justify-center items-center">
-                  <MultimediaCard />
+                  <SpotifyRecommendationsCard />
                 </div>
                 <div className="flex justify-center items-center">
                   <SocialLinks />
@@ -164,5 +184,5 @@ export default function HomePage() {
       </AnimatePresence>
       <Footer />
     </div>
-  )
+  );
 }
