@@ -38,7 +38,6 @@ const registerUser = async (req, res) => {
 };
 
 
-// Login de usuario
 const loginUser = async (req, res) => {
     const { user_handle, password } = req.body;
 
@@ -71,6 +70,14 @@ const loginUser = async (req, res) => {
             sameSite: "lax",
         });
 
+        // 🔥 Guardar el último inicio de sesión en la base de datos
+        const updateLastLoginQuery = `
+            UPDATE users SET last_login = GETDATE() WHERE user_id = @user_id
+        `;
+        await executeQuery(updateLastLoginQuery, [
+            { name: "user_id", type: db.Int, value: user.user_id },
+        ]);
+
         res.send("Login exitoso");
     } catch (error) {
         console.error("❌ Error en el login:", error);
@@ -78,11 +85,37 @@ const loginUser = async (req, res) => {
     }
 };
 
+
 // Perfil del usuario
-const getUserProfile = (req, res) => {
-    const user = req.user; // Obtenido del middleware de autenticación
-    res.send(`Bienvenido, ${user.user_handle}`);
+const getUserProfile = async (req, res) => {
+    try {
+        const query = `SELECT * FROM users WHERE user_id = @user_id`;
+        const result = await executeQuery(query, [
+            { name: "user_id", type: db.Int, value: req.user.id },
+        ]);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        const user = result.recordset[0];
+
+        res.json({
+            user_id: user.user_id,
+            user_handle: user.user_handle,
+            email: user.email_address,
+            name: `${user.first_name} ${user.last_name}`,
+            avatarUrl: user.avatar_url || null,
+            lastLogin: user.last_login, // 🔥 Ahora devuelve la fecha del último login
+            isOnline: true,
+        });
+    } catch (error) {
+        console.error("❌ Error obteniendo perfil:", error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
 };
+
+
 
 // Logout de usuario
 const logout = (req, res) => {

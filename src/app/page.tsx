@@ -3,16 +3,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { ArticleCard } from "@/components/ui/article-card";
+import { ArticleCard } from "@/components/CardPrincipal/article-card";
 import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
 import { SocialLinks } from "@/components/CardRedesSociales/social-links";
 import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos";
 
 import CardAutorizacion from "@/components/ui/cardAutorizacion";
 import CardEventos from "@/components/CardEventosPorUsuario/CardEventos";
-
-
-
+import CardCerrarSesion from "@/components/CardCerrarSesion/card-cerrar-sesion";
+import CardinnfoSesion from "@/components/CardInfoSesion/card-infosesion";
 import CombinedNavbar from "@/components/navbar/combinednavbar";
 
 import Footer from "@/components/footer";
@@ -120,13 +119,14 @@ export default function HomePage() {
               </div>
 
               <div>
-                {/* <SpotifyRecommendationsCard /> */}
+                <CardinnfoSesion />
+                <br />
+                <CardCerrarSesion />
                 <br />
                 <SocialLinks />
               </div>
             </div>
-
-            {/* Diseño movil */}
+ {/*---------------------------------------------------------------------------------------------------------------------- Diseño movil ----------------------------------------------------------------------------------------------------------------------*/}
             <div className="grid grid-cols-1 gap-6 lg:hidden">
               <div className="space-y-6">
                 <ArticleCard
@@ -170,7 +170,8 @@ export default function HomePage() {
                 </div>
                     
                 <div className="flex justify-center items-center">
-                  {/* <SpotifyRecommendationsCard /> */}
+                  <CardinnfoSesion />
+                  <CardCerrarSesion />
                 </div>
                 <div className="flex justify-center items-center">
                   <SocialLinks />
