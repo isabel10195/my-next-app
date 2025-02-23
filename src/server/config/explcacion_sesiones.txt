@@ -1,0 +1,186 @@
+📌 Explicación Completa del Sistema de Inicio de Sesión en Next.js con Cookies y Contexto
+Tu sistema de inicio de sesión funciona de la siguiente manera:
+
+El usuario inicia sesión en LoginPage.tsx, enviando credenciales al backend.
+El backend valida las credenciales, genera un JWT (Token de Sesión) y lo guarda en cookies HTTP-only.
+El frontend guarda los datos del usuario en el contexto global de AuthContext.tsx.
+Los componentes protegidos dependen de useAuth() y solo se muestran si el usuario está autenticado.
+Al cerrar sesión, el backend elimina la cookie y el frontend actualiza el contexto.
+
+
+🗂️ Archivos involucrados
+Archivo	Función
+LoginPage.tsx	                Envia credenciales al backend, guarda el usuario en el contexto y redirige.
+AuthContext.tsx	                Maneja el estado global del usuario (user) y gestiona logout().
+authRoutes.js                   (backend)	Define las rutas /login, /logout y /profile.
+authController.js               (backend)	Valida credenciales, genera el token y maneja cookies.
+authMiddleware.js               (backend)	Protege rutas verificando la validez del token.
+server.js                       (backend)	Configura el servidor Express y usa las rutas de autenticación
+
+🔄 Paso a Paso: Flujo del Login
+1️⃣ El usuario ingresa credenciales en LoginPage.tsx
+Cuando el usuario llena el formulario y hace clic en "Iniciar sesión", se ejecuta:
+
+tsx
+Copiar
+Editar
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
+    const response = await Axios.post(
+      "http://localhost:3001/api/auth/login",
+      { user_handle: username, password, rememberMe },
+      { withCredentials: true } // 🔥 Importante para incluir cookies HTTP-only
+    );
+📌 Qué hace este código:
+✅ Envia los datos de username y password al backend (/api/auth/login).
+✅ Usa { withCredentials: true } para que el navegador reciba y guarde la cookie con el token JWT.
+
+2️⃣ El backend valida credenciales en authController.js
+Cuando el backend recibe la solicitud, ejecuta:
+
+js
+Copiar
+Editar
+const loginUser = async (req, res) => {
+    const { user_handle, password } = req.body;
+
+    try {
+        const query = `SELECT * FROM users WHERE user_handle = @user_handle`;
+        const result = await executeQuery(query, [
+            { name: "user_handle", type: db.NVarChar, value: user_handle },
+        ]);
+
+        if (result.recordset.length === 0) {
+            return res.status(401).send("Usuario no encontrado");
+        }
+
+        const user = result.recordset[0];
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
+            return res.status(401).send("Contraseña incorrecta");
+        }
+
+        const token = jwt.sign(
+            { id: user.user_id, user_handle: user.user_handle },
+            SECRET_KEY,
+            { expiresIn: "1h" }
+        );
+
+        res.cookie("token", token, {
+            httpOnly: true, 
+            secure: false, 
+            sameSite: "lax",
+        });
+
+        res.send("Login exitoso");
+    } catch (error) {
+        console.error("❌ Error en el login:", error);
+        res.status(500).send("Error en el servidor");
+    }
+};
+📌 Qué hace este código:
+✅ Busca el usuario en la base de datos con el user_handle.
+✅ Verifica la contraseña con bcrypt.compare().
+✅ Si es correcta, genera un token JWT con jwt.sign().
+✅ Guarda el token en una cookie HTTP-only para que no sea accesible desde JavaScript.
+✅ Responde con "Login exitoso".
+
+3️⃣ El frontend obtiene los datos del usuario en AuthContext.tsx
+Después del login, el frontend llama a /api/auth/me para obtener los datos del usuario:
+
+tsx
+Copiar
+Editar
+useEffect(() => {
+  fetch("/api/auth/me", { credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.authenticated) {
+        setUser(data.user);
+      }
+    })
+    .catch(() => setUser(null))
+    .finally(() => setLoading(false));
+}, []);
+📌 Qué hace este código:
+✅ Envía la cookie con el token al backend (credentials: "include").
+✅ Si el usuario está autenticado, guarda sus datos en setUser(user).
+✅ Si la sesión no es válida, borra setUser(null) y desloguea al usuario.
+
+4️⃣ /api/auth/me devuelve los datos del usuario en authRoutes.js
+Esta ruta obtiene la cookie y devuelve la información del usuario autenticado:
+
+js
+Copiar
+Editar
+router.get("/profile", authMiddleware, getUserProfile);
+📌 Qué hace este código:
+✅ Verifica el token con authMiddleware.js antes de acceder a los datos del usuario.
+✅ Devuelve la información del usuario si la autenticación es correcta.
+
+5️⃣ Solo se muestran las cards si el usuario está autenticado
+tsx
+Copiar
+Editar
+const { user } = useAuth();
+
+if (!user) return null; // 🔥 Oculta el componente si el usuario NO está logueado
+📌 Qué hace este código:
+✅ Si user es null, el botón de cerrar sesión y las cards no se renderizan.
+✅ Si user tiene datos, las cards aparecen.
+
+🔄 Flujo del Logout
+Cuando el usuario presiona "Cerrar Sesión", el frontend ejecuta:
+
+tsx
+Copiar
+Editar
+const logout = async () => {
+  await fetch("http://localhost:3001/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  setUser(null); // 🔥 Borra el usuario del contexto
+  router.push("/pages/login"); // 🔥 Redirige al login tras cerrar sesión
+};
+📌 Qué hace este código:
+✅ Borra la cookie del navegador (/logout) en el backend.
+✅ Borra los datos del usuario de setUser(null) en el frontend.
+✅ Redirige al login (/pages/login).
+
+Backend en authController.js
+js
+Copiar
+Editar
+const logout = (req, res) => {
+    res.clearCookie("token", { path: "/" });
+    res.send("Logout exitoso");
+};
+📌 Qué hace este código:
+✅ Borra la cookie token del usuario.
+✅ Devuelve "Logout exitoso".
+
+🚀 Resumen
+✅ Inicio de sesión
+
+Usuario ingresa credenciales en LoginPage.tsx.
+Se envían credenciales a authRoutes.js (/login).
+Si son correctas, el backend genera un JWT y lo guarda en cookies.
+El frontend obtiene el perfil del usuario (/api/auth/me) y lo guarda en AuthContext.
+Las cards protegidas ahora se muestran.
+✅ Cierre de sesión
+
+El usuario presiona "Cerrar Sesión" (logout).
+Se elimina la cookie en el backend (/logout).
+Se borra el usuario de AuthContext.
+Las cards protegidas desaparecen y se redirige al login.
+🔥 Conclusión
+🚀 El sistema de autenticación está bien implementado, basado en cookies HTTP-only y con estado global en AuthContext.tsx.
+📌 Los componentes protegidos solo se renderizan si user tiene datos.
+✅ Logout limpia el contexto y las cookies, asegurando que el usuario realmente se desloguea.
+
+Si tienes dudas o quieres mejorar algo, dime y lo vemos. ¡Buen trabajo! 🔥💪🚀
