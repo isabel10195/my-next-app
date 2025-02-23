@@ -21,30 +21,61 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("🔍 Enviando formulario..."); // <-- Confirmamos que `handleSubmit` se ejecuta
 
+    setError("");
+    setSuccessMessage("");
+
+    // 🔥 Validaciones antes de enviar la solicitud
     if (!username || !email || !firstName || !lastName || !phoneNumber || !password || !confirmPassword) {
-      console.log("❌ Faltan datos, deteniendo ejecución...");
-      setError("Por favor, completa todos los campos.");
-      setTimeout(() => setError(""), 3000);
+      setError("❌ Por favor, completa todos los campos.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("❌ La contraseña debe tener al menos 6 caracteres.");
       return;
     }
 
     if (password !== confirmPassword) {
-      console.log("❌ Las contraseñas no coinciden, deteniendo ejecución...");
-      setError("Las contraseñas no coinciden.");
-      setTimeout(() => setError(""), 3000);
+      setError("❌ Las contraseñas no coinciden.");
       return;
     }
 
-    console.log("📞 Llamando a addUser()..."); // <-- ¿Se muestra esto en consola?
-    setError("");
-    addUser();
+    try {
+      const response = await Axios.post("http://localhost:3001/api/auth/create", {
+        user_handle: username,
+        email_address: email,
+        first_name: firstName,
+        last_name: lastName,
+        phone_number: phoneNumber,
+        password: password,
+      });
+
+      if (response.status === 201) {
+        setSuccessMessage("✅ Registro exitoso. ¡Ahora puedes iniciar sesión!");
+        setUsername("");
+        setEmail("");
+        setFirstName("");
+        setLastName("");
+        setPhoneNumber("");
+        setPassword("");
+        setConfirmPassword("");
+
+        // 🔥 Ocultar el mensaje después de unos segundos
+        setTimeout(() => setSuccessMessage(""), 4000);
+      }
+    } catch (err: any) {
+      console.error("❌ Error en el registro:", err);
+
+      if (err.response?.status === 400) {
+        setError(err.response.data.error || "❌ El nombre de usuario, email o número de teléfono ya están en uso.");
+      } else {
+        setError("❌ Error al registrar el usuario. Inténtalo de nuevo.");
+      }
+    }
 };
-
-
 
   const addUser = () => {
     console.log("📡 Enviando solicitud a backend...");
@@ -116,7 +147,9 @@ export default function RegisterPage() {
             <div className="flex justify-center">
               <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-6 lg:w-[180px]" />
             </div>
-            
+                {/* 🔥 Mensajes de error y éxito */}
+                {error && <p className="text-red-500 text-center">{error}</p>}
+                {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
             {/* Inputs */}
             <Input
               type="text"
@@ -208,7 +241,4 @@ export default function RegisterPage() {
       </div>
     </div>
   );
-  
-  
-  
 }

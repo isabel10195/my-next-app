@@ -1,14 +1,16 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // ✅ Importación corregida
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter(); // ✅ Define el router dentro del contexto
 
-  // Verificar autenticación en el backend
+  // Verificar autenticación en el backend al cargar la app
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include" })
       .then((res) => res.json())
@@ -23,12 +25,21 @@ export function AuthProvider({ children }) {
 
   // Función para cerrar sesión
   const logout = async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-    setUser(null);
+    try {
+      await fetch("http://localhost:3001/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      setUser(null); // 🔥 Borra el usuario del contexto
+      router.push("/"); // 🔥 Redirige al home tras cerrar sesión
+    } catch (error) {
+      console.error("❌ Error al cerrar sesión:", error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

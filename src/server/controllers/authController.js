@@ -12,15 +12,35 @@ const registerUser = async (req, res) => {
     const { user_handle, email_address, first_name, last_name, phone_number, password } = req.body;
 
     try {
+        // 🔍 Comprobamos si el usuario ya existe
+        const checkQuery = `
+            SELECT * FROM users 
+            WHERE user_handle = @user_handle OR email_address = @email_address OR phone_number = @phone_number
+        `;
+        const existingUser = await executeQuery(checkQuery, [
+            { name: "user_handle", type: db.NVarChar, value: user_handle },
+            { name: "email_address", type: db.NVarChar, value: email_address },
+            { name: "phone_number", type: db.NVarChar, value: phone_number },
+        ]);
+
+        if (existingUser.recordset.length > 0) {
+            console.error("❌ Error: Usuario ya registrado.");
+            return res.status(400).json({
+                error: "El nombre de usuario, email o número de teléfono ya están en uso.",
+            });
+        }
+
+        // 🔑 Cifrar la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
         console.log("🔑 Contraseña cifrada:", hashedPassword);
 
-        const query = `
-            INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password)
-            VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password)
+        // 🚀 Insertar usuario en la BD
+        const insertQuery = `
+            INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password, created_at)
+            VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password, GETDATE())
         `;
 
-        await executeQuery(query, [
+        await executeQuery(insertQuery, [
             { name: "user_handle", type: db.NVarChar, value: user_handle },
             { name: "email_address", type: db.NVarChar, value: email_address },
             { name: "first_name", type: db.NVarChar, value: first_name },
@@ -30,12 +50,14 @@ const registerUser = async (req, res) => {
         ]);
 
         console.log("✅ Usuario registrado correctamente");
-        res.send("Usuario registrado correctamente");
+        res.status(201).json({ message: "✅ Registro exitoso. Ahora puedes iniciar sesión." });
+
     } catch (error) {
         console.error("❌ Error al registrar el usuario:", error);
-        res.status(500).send("Error al registrar el usuario");
+        res.status(500).json({ error: "❌ Error en el servidor al registrar el usuario." });
     }
 };
+
 
 
 const loginUser = async (req, res) => {

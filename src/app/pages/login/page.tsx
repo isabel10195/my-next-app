@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
+
 export default function LoginPage() {
   const { setUser } = useAuth(); // 🔥 Obtiene la función para actualizar el usuario en el contexto
   const [username, setUsername] = useState("");
@@ -39,12 +40,16 @@ export default function LoginPage() {
       );
 
       if (response.status === 200) {
-        const userData = await Axios.get("http://localhost:3001/api/auth/profile", {
-          withCredentials: true,
-        });
+        // 🔥 Obtiene el perfil del usuario después del login
+        const userData = await fetch("/api/auth/me", { credentials: "include" })
+          .then((res) => res.json());
 
-        setUser(userData.data); // 🔥 Guarda el usuario en el contexto global
-        router.push("/"); // 🔥 Redirige al home
+        if (userData.authenticated) {
+          setUser(userData.user); // ✅ Guarda el usuario en el contexto global
+          router.push("/"); // ✅ Redirige al home después del login
+        } else {
+          setError("❌ Error al recuperar el perfil. Inténtalo de nuevo.");
+        }
       }
     } catch (err: any) {
       setError(err.response?.data || "❌ Error al iniciar sesión. Intenta nuevamente.");
