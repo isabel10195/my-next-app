@@ -111,7 +111,10 @@ const loginUser = async (req, res) => {
 // Perfil del usuario
 const getUserProfile = async (req, res) => {
     try {
-        const query = `SELECT * FROM users WHERE user_id = @user_id`;
+        const query = `
+            SELECT user_id, user_handle, email_address, first_name, last_name, avatar_url, last_login, user_role
+            FROM users WHERE user_id = @user_id`;
+
         const result = await executeQuery(query, [
             { name: "user_id", type: db.Int, value: req.user.id },
         ]);
@@ -128,14 +131,16 @@ const getUserProfile = async (req, res) => {
             email: user.email_address,
             name: `${user.first_name} ${user.last_name}`,
             avatarUrl: user.avatar_url || null,
-            lastLogin: user.last_login, // 🔥 Ahora devuelve la fecha del último login
+            lastLogin: user.last_login,
             isOnline: true,
+            role: user.user_role, // 🔥 Ahora devuelve el rol del usuario
         });
     } catch (error) {
         console.error("❌ Error obteniendo perfil:", error);
         res.status(500).json({ error: "Error en el servidor" });
     }
 };
+
 
 
 
