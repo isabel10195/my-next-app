@@ -5,11 +5,10 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const tweetRoutes = require("./routes/tweetRoutes");
 const followerRoutes = require("./routes/followerRoutes");
-const spotifyRoutes = require("./routes/spotifyRoutes"); // 👈 Importar Spotify Routes
+
 
 const app = express();
 const PORT = 3001;
-
 // Middlewares
 app.use(corsMiddleware);
 app.use(express.json());
@@ -20,7 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/followers", followerRoutes);
-app.use("/api/spotify", spotifyRoutes); // 👈 Registrar rutas de Spotify
+
 
 // Servidor
 app.listen(PORT, () => {

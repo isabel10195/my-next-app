@@ -8,8 +8,6 @@ import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
 import { SocialLinks } from "@/components/CardRedesSociales/social-links";
 import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos";
 
-import SpotifyRecommendationsCard from "@/components/MultimediaCard/spotifyrecomendationscard";
-
 import CardAutorizacion from "@/components/ui/cardAutorizacion";
 import CardEventos from "@/components/CardEventosPorUsuario/CardEventos";
 
@@ -122,7 +120,7 @@ export default function HomePage() {
               </div>
 
               <div>
-                <SpotifyRecommendationsCard />
+                {/* <SpotifyRecommendationsCard /> */}
                 <br />
                 <SocialLinks />
               </div>
@@ -172,7 +170,7 @@ export default function HomePage() {
                 </div>
                     
                 <div className="flex justify-center items-center">
-                  <SpotifyRecommendationsCard />
+                  {/* <SpotifyRecommendationsCard /> */}
                 </div>
                 <div className="flex justify-center items-center">
                   <SocialLinks />
