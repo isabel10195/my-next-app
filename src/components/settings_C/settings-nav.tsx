@@ -88,8 +88,8 @@ export function SettingsNav({ className, ...props }: SettingsNavProps) {
   return (
     <nav className={cn("space-y-6", className)} {...props}>
   {settingsNav.map((section) => (
-    <div key={section.section} className="rounded-lg bg-white dark:bg-gray-800 p-4 shadow-lg">
-      <h3 className="px-3 text-sm font-semibold text-gray-900 dark:text-gray-400 mb-2">
+    <div key={section.section} className="rounded-lg bg-white dark:bg-gray-900 p-4 shadow-lg">
+      <h3 className="px-3 text-xl font-semibold text-gray-900 dark:text-gray-400 mb-2">
         {section.section}
       </h3>
       <div className="space-y-1">
@@ -97,9 +97,9 @@ export function SettingsNav({ className, ...props }: SettingsNavProps) {
           <Link
             key={item.href}
             href={item.href}
-            className="group flex items-center rounded-lg px-4 py-2 text-sm font-medium text-gray-900 hover:bg-blue-600 hover:text-white transition-colors ease-in-out duration-200 dark:text-gray-200 dark:hover:bg-blue-500"
+            className="group flex items-center rounded-lg px-4 py-2 transition-colors ease-in-out duration-200 text-gray-900 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-gray-600"
           >
-            <item.icon className="mr-3 h-5 w-5 text-gray-500 group-hover:text-white transition-colors ease-in-out duration-200 dark:text-gray-400 dark:group-hover:text-white" />
+            <item.icon className="mr-3 h-5 w-5 text-gray-500 transition-colors ease-in-out duration-200 dark:text-gray-400 dark:group-hover:text-white" />
             <span>{item.name}</span>
           </Link>
         ))}

@@ -18,12 +18,12 @@ export default function SettingsPage() {
 
   }
   return (
-    <div className="flex min-h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <div className="flex min-h-screen w-full overflow-hidden bg-gray-200 dark:bg-gray-950">
       {/* Aside para pantallas grandes oculto en pequeñas */}
-      <aside className={`md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 border-r dark:bg-gray-900 transition-all duration-300 ease-in-out ${isMenuOpen ? "block z-50" : "hidden"} md:block backdrop-blur-sm`}>
+      <aside className={`md:flex md:w-84 md:flex-col md:fixed md:inset-y-0 dark:bg-gray-950 transition-all duration-300 ease-in-out ${isMenuOpen ? "block z-50" : "hidden"} md:block backdrop-blur-sm`}>
         {/* Boton X para cerrar menu */}
         <div className="flex justify-end p-4 md:hidden">
-          <button onClick={() => setIsMenuOpen(false)} aria-label="Close Menu" className="text-xl text-white">
+          <button onClick={() => setIsMenuOpen(false)} aria-label="Close Menu" className="text-xl text-gray-900 dark:text-gray-300">
             <HiX />
           </button>
         </div>
@@ -45,24 +45,22 @@ export default function SettingsPage() {
         <button
           onClick={toggleMenu}
           aria-label="Toggle Menu"
-          className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg md:hidden"
+          className="fixed top-6 left-4 z-50 p-2 bg-none md:hidden"
         >
-          <HiMenu className="h-6 w-6 text-gray-900 dark:text-white" />
+          <HiMenu className="h-5 w-5 text-gray-900 dark:text-gray-300" />
         </button>
       )}
     
       {/* Main content */}
       <main className="flex-1 w-full md:pl-64 p-4 ml-4">
-        <div className="max-w-[1200px]">
+        <div className="max-w-[1500px]">
           <div className="flex items-center space-x-4">
-
-            {/* Título de la página (fuera del aside) */}
-            <div className="flex ml-4 mt-2 mb-4 items-center px-4 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-white">
+            <div className="flex ml-4 mt-2 mb-4 items-center px-4 text-gray-600 dark:text-white">
                 <span className="font-semibold text-xl sm:text-2xl lg:text-4xl ">Settings account</span>
             </div>
           </div>
 
-          <div className="grid gap-6 ">
+          <div className="grid gap-8 mt-4">
             <ActivityHeatmap />
 
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

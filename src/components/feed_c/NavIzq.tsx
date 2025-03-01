@@ -5,13 +5,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useState } from "react"
 
 const menuItems = [
-  { icon: Home, label: "Home" },
-  { icon: User, label: "Profile" },
-  { icon: Bell, label: "Notifications" },
-  { icon: Mail, label: "Messages" },
-  { icon: Bookmark, label: "Bookmarks" },
-  { icon: List, label: "Lists" },
-  { icon: MoreHorizontal, label: "More" },
+  { icon: Home, label: "Inicio" },
+  { icon: User, label: "Perfil" },
+  { icon: Bell, label: "Notificaciones" },
+  { icon: Mail, label: "Mensajes" },
+  { icon: Bookmark, label: "Marcados" },
+  { icon: List, label: "Listas" },
+  { icon: MoreHorizontal, label: "Más" },
 ]
 
 export default function LeftSidebar() {
@@ -23,11 +23,11 @@ export default function LeftSidebar() {
     <>
       {/* Icono hamburguesa*/}
       <button
-        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg xl:hidden"
+        className="fixed lg:hidden top-4 left-1 z-50 p-2 xl:hidden"
         onClick={toggleSidebar}
         aria-label={isOpen ? "Close menu" : "Open menu"}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5 text-gray-900 dark:text-gray-300" />}
       </button>
 
       {/* Capa de fondo */}
@@ -41,10 +41,10 @@ export default function LeftSidebar() {
       {/* Menú lateral */}
       <aside
         className={`
-          fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto flex flex-col p-4 w-64 transition-transform duration-200 ease-in-out
+          fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-900 shadow-lg overflow-y-auto flex flex-col p-4 w-64 -ml-6 transition-transform duration-200 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           lg:translate-x-0  
-          xl:block xl:translate-x-0 
+          xl:block xl:translate-x-0  
         `}
       >
         <div className="flex items-center justify-between mb-6 mt-6">

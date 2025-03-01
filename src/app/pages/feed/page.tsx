@@ -4,13 +4,13 @@ import PanelDerecho from "@/components/feed_c/PanelDerecho";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-300 flex-col lg:flex-row">
+    <main className="flex min-h-screen bg-gray-200 dark:bg-gray-950 transition-colors duration-300 flex-col lg:flex-row">
       {/* Sidebar izquierdo */}
-      <div className="w-[250px] flex-shrink-0">
+      <div className="ml-0 md:w-[250px] flex-shrink-0 ml-6">
         <NavIzq />
       </div>
 
-      {/* Contenedor para el feed y panel derecho */}
+      {/* Contenedor para el feed */}
       <div className="flex flex-grow flex-col lg:flex-row">
         <div className="flex-grow">
           <FeedPrincipal />
