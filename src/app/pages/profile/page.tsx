@@ -147,7 +147,7 @@ export default function ProfilePage() {
       }
     }
 
-    fetchRecomendaciones()
+    getRecommendations()
   }, [])
 
   // Cargar seguidores y seguidos
