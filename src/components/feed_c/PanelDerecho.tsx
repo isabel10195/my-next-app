@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Upload } from "lucide-react";
 import Image from "next/image";
-import {useStories} from "@/app/hooks/useStories";
+import { useStories } from "@/app/hooks/useStories";
 
 const popularTopics = [
   "#AppleEvent",
@@ -26,7 +26,7 @@ const communities = [
 ];
 
 export default function RightSidebar() {
-  const { stories, fetchStories, uploadStory } = useStories();
+  const { stories, fetchStories, uploadStory, followingUsers } = useStories();
   const [currentTopic, setCurrentTopic] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -114,6 +114,8 @@ export default function RightSidebar() {
                     </div>
                   </CardContent>
                 </motion.div>
+              ) : followingUsers.length === 0 ? (
+                <p className="text-center text-gray-500 dark:text-gray-400">Aún no sigues a nadie. ¡Sigue a usuarios para ver sus stories!</p>
               ) : (
                 <p className="text-center text-gray-500 dark:text-gray-400">No hay stories disponibles</p>
               )}

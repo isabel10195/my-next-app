@@ -10,8 +10,13 @@ export async function GET() {
             credentials: "include", // Incluye cookies si hay autenticación
         });
 
+        if (res.status === 401) {
+            return NextResponse.json({ message: "No autenticado" }, { status: 401 });
+        }
+
         if (!res.ok) {
-            throw new Error("Error al obtener stories");
+            console.error("❌ Error en GET /api/stories:", res.statusText);
+            return NextResponse.json({ message: "Error al obtener stories" }, { status: res.status });
         }
 
         const stories = await res.json();
@@ -25,7 +30,10 @@ export async function GET() {
 // Subir una nueva story (POST)
 export async function POST(req) {
     try {
-        const body = await req.json();
+        const body = await req.json().catch(() => null); // Captura errores si el JSON es inválido
+        if (!body) {
+            return NextResponse.json({ message: "Cuerpo de la solicitud inválido" }, { status: 400 });
+        }
 
         // Validar que la imagen es obligatoria
         if (!body.image_url) {
@@ -39,8 +47,13 @@ export async function POST(req) {
             body: JSON.stringify(body),
         });
 
+        if (res.status === 401) {
+            return NextResponse.json({ message: "No autenticado" }, { status: 401 });
+        }
+
         if (!res.ok) {
-            throw new Error("Error al subir la story");
+            console.error("❌ Error en POST /api/stories:", res.statusText);
+            return NextResponse.json({ message: "Error al subir la story" }, { status: res.status });
         }
 
         const data = await res.json();
