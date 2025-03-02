@@ -49,9 +49,9 @@ export default function RightSidebar() {
   }
 
   return (
-    <aside className="w-full md:w-80 mt-4 md:mt-0 p-2 bg-gray-200 dark:bg-gray-900 rounded-2xl overflow-y-auto">
+    <aside className="w-full md:w-80 mt-4 md:mt-0 p-2 bg-gray-200 dark:bg-gray-950 rounded-2xl overflow-y-auto">
       <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-        <Card className="mb-6 bg-white dark:bg-gray-800">
+        <Card className="mb-6 bg-white dark:bg-gray-900">
           <CardHeader>
             <CardTitle className="text-gray-900 dark:text-white">Stories</CardTitle>
           </CardHeader>
@@ -73,7 +73,7 @@ export default function RightSidebar() {
           </CardContent>
         </Card>
 
-        <Card className="mb-6 bg-white dark:bg-gray-800">
+        <Card className="mb-6 bg-white dark:bg-gray-900">
           <CardHeader>
             <CardTitle className="text-gray-900 dark:text-white">Popular Topics</CardTitle>
           </CardHeader>
@@ -111,7 +111,7 @@ export default function RightSidebar() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white dark:bg-gray-800">
+        <Card className="bg-white dark:bg-gray-900">
           <CardHeader>
             <CardTitle className="text-gray-900 dark:text-white">Communities</CardTitle>
           </CardHeader>

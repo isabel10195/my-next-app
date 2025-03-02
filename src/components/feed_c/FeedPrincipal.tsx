@@ -105,7 +105,7 @@ export default function Feed() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ type: "spring", stiffness: 100 }}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-4"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 mb-4"
           >
             <div className="flex items-center mb-4">
               <Avatar className="h-10 w-10 mr-4">
@@ -156,12 +156,12 @@ export default function Feed() {
   );
 
   return (
-    <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 bg-gray-200 dark:bg-gray-900 rounded-2xl ">
+    <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 bg-gray-200 dark:bg-gray-950 rounded-2xl ">
       <Tabs defaultValue="for-you" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="for-you" className="text-gray-900 dark:text-white data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">For You</TabsTrigger>
-          <TabsTrigger value="following" className="text-gray-900 dark:text-white data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">Following</TabsTrigger>
-          <TabsTrigger value="communities" className="text-gray-900 dark:text-white data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">Communities</TabsTrigger>
+          <TabsTrigger value="for-you" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-800 rounded-2xl">For You</TabsTrigger>
+          <TabsTrigger value="following" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-800 rounded-2xl">Following</TabsTrigger>
+          <TabsTrigger value="communities" className="text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-800 rounded-2xl">Communities</TabsTrigger>
         </TabsList>
         <TabsContent value="for-you">
           <form onSubmit={handleSubmit} className="mb-8">
@@ -172,11 +172,8 @@ export default function Feed() {
               placeholder="What's happening?"
               className="mb-2 bg-gray-100 text-black"
             />
-            <Button
-              type="submit"
-              className="w-full bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
-            >
-              Publicar
+            <Button type="submit" className="w-full bg-blue-500 text-white dark:bg-blue-800">
+              Tweet
             </Button>
           </form>
           <TweetList tweets={forYouTweets} />

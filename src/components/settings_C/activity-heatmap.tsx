@@ -58,7 +58,7 @@ export function ActivityHeatmap() {
   }, []);
 
   return (
-    <Card>
+    <Card className="bg-white dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="dark:text-white">Activity</CardTitle>
       </CardHeader>

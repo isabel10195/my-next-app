@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Play, Pause, Menu } from 'lucide-react';
+import { Play, Pause, Menu, Sun, Moon  } from 'lucide-react';
 import Image from 'next/image';
 import ReactPlayer from 'react-player';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
@@ -13,6 +13,7 @@ export default function CombinedNavbar() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClient, setIsClient] = useState(false);  // Nuevo estado para comprobar si estamos en el cliente
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar la visibilidad del menú
+  const [isDarkMode, setIsDarkMode] = useState(false) //Modo claro/oscuro
 
   const togglePlayPause = (): void => {
     setIsPlaying(!isPlaying);
@@ -22,9 +23,36 @@ export default function CombinedNavbar() {
     setIsMenuOpen(!isMenuOpen); // Alternar el estado del menú al hacer clic en el icono de hamburguesa
   };
 
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode
+    setIsDarkMode(newDarkMode)
+
+    // Toggle the dark class on the document element
+    if (newDarkMode) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("theme", "dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("theme", "light")
+    }
+  }
+
   useEffect(() => {
     setIsVisible(true); // Cambia la visibilidad solo en el cliente
     setIsClient(true);  // Marca que estamos en el cliente
+  
+  const savedTheme = localStorage.getItem("theme")
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+  const shouldUseDark = savedTheme === "dark" || (!savedTheme && prefersDark)
+
+  if (shouldUseDark) {
+    document.documentElement.classList.add("dark")
+    setIsDarkMode(true)
+  } else {
+    document.documentElement.classList.remove("dark")
+    setIsDarkMode(false)
+  }
   }, []);
 
   return (
@@ -61,6 +89,19 @@ export default function CombinedNavbar() {
         </NavbarContent>
         
         <NavbarContent className="flex items-center gap-4 md:gap-4">
+        <NavbarItem>
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+              aria-label={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              ) : (
+                <Moon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              )}
+            </button>
+          </NavbarItem>
           <NavbarItem>
             <div className="flex items-center gap-2 cursor-pointer" onClick={togglePlayPause}>
               {isPlaying ? (
