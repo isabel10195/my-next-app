@@ -2,25 +2,25 @@ import NavIzq from "@/components/feed_c/NavIzq";
 import FeedPrincipal from "@/components/feed_c/FeedPrincipal";
 import PanelDerecho from "@/components/feed_c/PanelDerecho";
 
-export default function Home() {
+export default function FeedPage() {
   return (
-    <main className="flex min-h-screen bg-gray-200 dark:bg-gray-950 transition-colors duration-300 flex-col lg:flex-row">
+    <main className="flex min-h-screen bg-gray-200 dark:bg-gray-950 transition-colors duration-300">
       {/* Sidebar izquierdo */}
-      <div className="ml-0 md:w-[250px] flex-shrink-0 ml-6">
+      <aside className="hidden md:flex md:w-[250px] flex-shrink-0">
         <NavIzq />
-      </div>
+      </aside>
 
-      {/* Contenedor para el feed */}
-      <div className="flex flex-grow flex-col lg:flex-row">
-        <div className="flex-grow">
+      {/* Contenedor principal del feed */}
+      <section className="flex flex-grow justify-center px-4">
+        <div className="w-full max-w-[700px]">
           <FeedPrincipal />
         </div>
+      </section>
 
-        {/* Panel derecho */}
-        <div className="w-[350px] flex-shrink-0 mt-4 lg:mt-0 mx-auto">
-          <PanelDerecho />
-        </div>
-      </div>
+      {/* Panel derecho */}
+      <aside className="hidden lg:flex w-[350px] flex-shrink-0">
+        <PanelDerecho />
+      </aside>
     </main>
   );
 }
