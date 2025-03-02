@@ -5,7 +5,8 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const tweetRoutes = require("./routes/tweetRoutes");
 const followerRoutes = require("./routes/followerRoutes");
-
+const communityRoutes = require("./routes/communityRoutes");
+//const imageIARoutes = require("./routes/imageIARoutes");
 
 const app = express();
 const PORT = 3001;
@@ -19,7 +20,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/followers", followerRoutes);
-
+app.use("/api/community", communityRoutes);
+//app.use("/api/imagesIA", imageIARoutes);
 
 // Servidor
 app.listen(PORT, () => {

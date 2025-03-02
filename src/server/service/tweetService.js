@@ -8,7 +8,10 @@ export const fetchForYouTweets = async () => {
     throw new Error("Error fetching tweets by interest");
   }
   const data = await response.json();
-  return data.tweets;
+  return data.tweets.map(tweet => ({
+    ...tweet,
+    comments: tweet.comments || [] // Asegurar que haya un array de comentarios
+  }));
 };
 
 export const fetchFollowingTweets = async () => {
@@ -85,3 +88,38 @@ export const fetchTweets = async () => {
     }
     return response.json();
   };
+
+  export const commentTweet = async (tweetId, commentText) => {
+    const response = await fetch(`${API_URL}/${tweetId}/comments`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comment_text: commentText }), // tweetId se pasa en la URL
+    });
+    if (!response.ok) throw new Error("Error al comentar");
+    return await response.json(); // Debe devolver { message, comment }
+  };
+  
+  export const fetchCommentsByTweet = async (tweetId) => {
+    const response = await fetch(`${API_URL}/${tweetId}/comments`, {
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Error al obtener comentarios");
+    return await response.json(); // Debe devolver { comments: [...] }
+  };
+
+  export const toggleRetweet = async (tweet_id) => {
+    const response = await fetch(`${API_URL}/retweet`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tweet_id }),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Error al hacer retweet");
+    }
+    return response.json();
+  };  

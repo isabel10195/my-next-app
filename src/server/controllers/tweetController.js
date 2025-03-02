@@ -27,8 +27,24 @@ const getTweetsByFollowing = async (req, res) => {
 
   try {
     const query = `
-      SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
-             users.user_handle, users.first_name, users.last_name, users.avatar_url
+      SELECT 
+        tweets.tweet_id, 
+        tweets.tweet_text, 
+        tweets.num_likes, 
+        tweets.num_retweets, 
+        tweets.num_comments, 
+        tweets.created_at, 
+        users.user_handle, 
+        users.first_name, 
+        users.last_name, 
+        users.avatar_url,
+        CASE 
+          WHEN EXISTS (
+            SELECT 1 FROM tweet_likes tl 
+            WHERE tl.tweet_id = tweets.tweet_id AND tl.user_id = @user_id
+          ) THEN 1 
+          ELSE 0 
+        END AS liked
       FROM tweets
       JOIN users ON tweets.user_id = users.user_id
       JOIN followers ON followers.following_id = tweets.user_id
@@ -106,6 +122,7 @@ const getFollowingTweets = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    // Obtener la lista de usuarios seguidos por el usuario actual
     const followingQuery = `SELECT following_id FROM followers WHERE follower_id = @userId`;
     const followingInputs = [{ name: "userId", type: db.Int, value: userId }];
     const followingResults = await executeQuery(followingQuery, followingInputs);
@@ -116,16 +133,54 @@ const getFollowingTweets = async (req, res) => {
       return res.send({ tweets: [] });
     }
 
+    // Consulta para obtener los tweets de los usuarios seguidos y la información del retweeter si existe
     const tweetsQuery = `
-      SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
-             user_handle, first_name, last_name, avatar_url 
-      FROM tweets
-      JOIN users ON tweets.user_id = users.user_id
-      WHERE tweets.user_id IN (${followingIds.join(",")})
-      ORDER BY tweets.created_at DESC
-    `;
-    const tweetsResults = await executeQuery(tweetsQuery);
-    res.send({ tweets: tweetsResults.recordset });
+           SELECT 
+              t.tweet_id, 
+              t.tweet_text, 
+              t.num_likes, 
+              t.num_retweets, 
+              t.num_comments, 
+              t.created_at, 
+              u.user_handle, 
+              u.first_name, 
+              u.last_name, 
+              u.avatar_url,
+              r.user_id AS retweeter_id, 
+              ru.user_handle AS retweeter_handle,
+              ot.user_id as original_user_id,
+              ou.user_handle as original_user_handle,
+              ot.tweet_text as original_tweet_text,
+              ot.created_at as original_created_at,
+              ou.avatar_url as original_avatar_url
+          FROM tweets t
+          JOIN users u ON t.user_id = u.user_id
+          LEFT JOIN retweets r ON t.tweet_id = r.original_tweet_id
+          LEFT JOIN users ru ON r.user_id = ru.user_id
+          LEFT JOIN tweets ot ON r.original_tweet_id = ot.tweet_id
+          LEFT JOIN users ou on ot.user_id = ou.user_id
+          WHERE t.user_id IN (SELECT following_id FROM followers WHERE follower_id = @userId)
+          OR t.tweet_id IN (
+              SELECT original_tweet_id 
+              FROM retweets 
+              WHERE user_id IN (
+                  SELECT following_id 
+                  FROM followers 
+                  WHERE follower_id = @userId
+              )
+          )
+          ORDER BY t.created_at DESC;
+        `;
+
+        const tweetsResults = await executeQuery(tweetsQuery, [{ name: "userId", type: db.Int, value: userId }]); // Aqui se pasa la variable userId
+
+    // Mapeamos los tweets para incluir la información del retweeter si existe
+    const tweets = tweetsResults.recordset.map(tweet => ({
+      ...tweet,
+      retweeter: tweet.retweeter_handle || null // Agregar el handle del retweeter solo si existe
+    }));
+
+    res.send({ tweets });
   } catch (error) {
     console.error("Error al obtener tweets de los usuarios seguidos:", error);
     res.status(500).send("Error al obtener tweets");
@@ -178,41 +233,194 @@ const editTweet = async (req, res) => {
 };
 
 const likeTweet = async (req, res) => {
-    const { tweet_id } = req.body;
-    const user_id = req.user.id;
+  const { tweet_id } = req.body;
+  const user_id = req.user.id;
 
-    try {
-        // Verificar si el usuario ya ha dado like a este tweet
-        const checkQuery = `
-            SELECT * FROM tweet_likes WHERE tweet_id = @tweet_id AND user_id = @user_id
-        `;
-        const checkInputs = [
-            { name: "tweet_id", type: db.Int, value: tweet_id },
-            { name: "user_id", type: db.Int, value: user_id },
-        ];
-        const checkResult = await executeQuery(checkQuery, checkInputs);
+  try {
+    // Verificar si el usuario ya ha dado like a este tweet
+    const checkQuery = `
+      SELECT * FROM tweet_likes WHERE tweet_id = @tweet_id AND user_id = @user_id
+    `;
+    const checkInputs = [
+      { name: "tweet_id", type: db.Int, value: tweet_id },
+      { name: "user_id", type: db.Int, value: user_id },
+    ];
+    const checkResult = await executeQuery(checkQuery, checkInputs);
 
-        if (checkResult.recordset.length > 0) {
-            // Si ya dio like, lo quitamos
-            const unlikeQuery = `
-                DELETE FROM tweet_likes WHERE tweet_id = @tweet_id AND user_id = @user_id
-            `;
-            await executeQuery(unlikeQuery, checkInputs);
+    if (checkResult.recordset.length > 0) {
+      // Si ya dio like, lo quitamos de tweet_likes
+      const unlikeQuery = `
+        DELETE FROM tweet_likes WHERE tweet_id = @tweet_id AND user_id = @user_id
+      `;
+      await executeQuery(unlikeQuery, checkInputs);
 
-            return res.status(200).json({ message: "Like eliminado correctamente", liked: false });
-        } else {
-            // Si no ha dado like, lo agregamos
-            const likeQuery = `
-                INSERT INTO tweet_likes (tweet_id, user_id) VALUES (@tweet_id, @user_id)
-            `;
-            await executeQuery(likeQuery, checkInputs);
+      // Actualizamos el contador de likes, asegurándonos que no baje de 0
+      const updateTweetQuery = `
+        UPDATE tweets 
+        SET num_likes = CASE WHEN num_likes > 0 THEN num_likes - 1 ELSE 0 END 
+        WHERE tweet_id = @tweet_id
+      `;
+      await executeQuery(updateTweetQuery, [{ name: "tweet_id", type: db.Int, value: tweet_id }]);
 
-            return res.status(200).json({ message: "Like agregado correctamente", liked: true });
-        }
-    } catch (error) {
-        console.error("Error al dar/quitar like:", error);
-        res.status(500).json({ message: "Error al dar/quitar like", error: error.message });
+      return res.status(200).json({ message: "Like eliminado correctamente", liked: false });
+    } else {
+      // Si no ha dado like, lo agregamos en tweet_likes
+      const likeQuery = `
+        INSERT INTO tweet_likes (tweet_id, user_id) VALUES (@tweet_id, @user_id)
+      `;
+      await executeQuery(likeQuery, checkInputs);
+
+      // Actualizamos el contador de likes aumentando en 1
+      const updateTweetQuery = `
+        UPDATE tweets SET num_likes = num_likes + 1 WHERE tweet_id = @tweet_id
+      `;
+      await executeQuery(updateTweetQuery, [{ name: "tweet_id", type: db.Int, value: tweet_id }]);
+
+      return res.status(200).json({ message: "Like agregado correctamente", liked: true });
     }
+  } catch (error) {
+    console.error("Error al dar/quitar like:", error);
+    res.status(500).json({ message: "Error al dar/quitar like", error: error.message });
+  }
+};
+
+const getCommentsByTweet = async (req, res) => {
+  const tweet_id = parseInt(req.params.tweetId, 10);
+
+  try {
+    const query = `
+      SELECT 
+        c.comment_id, 
+        c.tweet_id, 
+        c.comment_text, 
+        c.created_at,
+        u.user_handle, 
+        u.avatar_url
+      FROM tweet_comments c
+      JOIN users u ON c.user_id = u.user_id
+      WHERE c.tweet_id = @tweet_id
+      ORDER BY c.created_at ASC
+    `;
+    const inputs = [{ name: "tweet_id", type: db.Int, value: tweet_id }];
+    const result = await executeQuery(query, inputs);
+    res.status(200).json({ comments: result.recordset });
+  } catch (error) {
+    console.error("Error al obtener comentarios:", error);
+    res.status(500).json({ message: "Error al obtener comentarios", error: error.message });
+  }
+};
+
+const createComment = async (req, res) => {
+  // Usamos el tweet_id de los parámetros para mayor claridad
+  const tweet_id = parseInt(req.params.tweetId, 10);
+  const { comment_text } = req.body;
+  const user_id = req.user.id;
+
+  try {
+    // Inserta el comentario y obtiene el ID insertado
+    const insertQuery = `
+      INSERT INTO tweet_comments (tweet_id, user_id, comment_text)
+      OUTPUT INSERTED.comment_id
+      VALUES (@tweet_id, @user_id, @comment_text)
+    `;
+    const inputs = [
+      { name: "tweet_id", type: db.Int, value: tweet_id },
+      { name: "user_id", type: db.Int, value: user_id },
+      { name: "comment_text", type: db.NVarChar, value: comment_text },
+    ];
+    const insertResult = await executeQuery(insertQuery, inputs);
+    const newCommentId = insertResult.recordset[0].comment_id;
+
+    // Actualiza el contador de comentarios en la tabla tweets
+    const updateTweetQuery = `
+      UPDATE tweets SET num_comments = num_comments + 1 WHERE tweet_id = @tweet_id
+    `;
+    await executeQuery(updateTweetQuery, [
+      { name: "tweet_id", type: db.Int, value: tweet_id },
+    ]);
+
+    // Recupera los datos completos del comentario recién insertado, uniendo con la tabla de usuarios
+    const selectQuery = `
+      SELECT 
+        c.comment_id, 
+        c.tweet_id, 
+        c.comment_text, 
+        c.created_at,
+        u.user_handle, 
+        u.avatar_url
+      FROM tweet_comments c
+      JOIN users u ON c.user_id = u.user_id
+      WHERE c.comment_id = @comment_id
+    `;
+    const selectResult = await executeQuery(selectQuery, [
+      { name: "comment_id", type: db.Int, value: newCommentId },
+    ]);
+    const comment = selectResult.recordset[0];
+
+    res.status(200).json({ 
+      message: "Comentario agregado correctamente", 
+      comment 
+    });
+  } catch (error) {
+    console.error("Error al crear comentario:", error);
+    res.status(500).json({ message: "Error al agregar comentario", error: error.message });
+  }
+};
+
+const toggleRetweet = async (req, res) => {
+  const { tweet_id } = req.body;
+  const user_id = req.user.id;
+
+  try {
+    // Verificar si ya existe un retweet de este tweet por parte del usuario
+    const checkQuery = `
+      SELECT * FROM retweets 
+      WHERE original_tweet_id = @tweet_id AND user_id = @user_id
+    `;
+    const checkInputs = [
+      { name: "tweet_id", type: db.Int, value: tweet_id },
+      { name: "user_id", type: db.Int, value: user_id },
+    ];
+    const checkResult = await executeQuery(checkQuery, checkInputs);
+
+    if (checkResult.recordset.length > 0) {
+      // Si ya retweteó, se elimina el retweet
+      const deleteQuery = `
+        DELETE FROM retweets 
+        WHERE original_tweet_id = @tweet_id AND user_id = @user_id
+      `;
+      await executeQuery(deleteQuery, checkInputs);
+
+      // Actualizar contador (disminuir)
+      const updateQuery = `
+        UPDATE tweets 
+        SET num_retweets = CASE WHEN num_retweets > 0 THEN num_retweets - 1 ELSE 0 END 
+        WHERE tweet_id = @tweet_id
+      `;
+      await executeQuery(updateQuery, [{ name: "tweet_id", type: db.Int, value: tweet_id }]);
+
+      return res.status(200).json({ message: "Retweet eliminado correctamente", retweeted: false });
+    } else {
+      // Si no ha retweteado, se inserta el retweet
+      const insertQuery = `
+        INSERT INTO retweets (user_id, original_tweet_id) 
+        VALUES (@user_id, @tweet_id)
+      `;
+      await executeQuery(insertQuery, checkInputs);
+
+      // Actualizar contador (aumentar)
+      const updateQuery = `
+        UPDATE tweets SET num_retweets = num_retweets + 1 
+        WHERE tweet_id = @tweet_id
+      `;
+      await executeQuery(updateQuery, [{ name: "tweet_id", type: db.Int, value: tweet_id }]);
+
+      return res.status(200).json({ message: "Retweet agregado correctamente", retweeted: true });
+    }
+  } catch (error) {
+    console.error("Error al hacer retweet:", error);
+    res.status(500).json({ message: "Error al hacer retweet", error: error.message });
+  }
 };
 
 module.exports = {
@@ -224,4 +432,7 @@ module.exports = {
   deleteTweet,
   editTweet,
   likeTweet,
+  createComment,
+  getCommentsByTweet,
+  toggleRetweet
 };
