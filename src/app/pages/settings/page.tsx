@@ -1,112 +1,126 @@
-import { Metadata } from "next"
+
+
+"use client"
+import { useState } from "react"
 import { SettingsNav } from "@/components/settings_C/settings-nav"
 import { ActivityHeatmap } from "@/components/settings_C/activity-heatmap"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/cards/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { HiMenu, HiX } from "react-icons/hi"
 
-export const metadata: Metadata = {
-  title: "Settings",
-  description: "User settings and preferences",
-}
 
 export default function SettingsPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+
+  }
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <div className="hidden w-64 border-r bg-gray-100/40 lg:block">
-        <div className="flex h-full flex-col">
-          <div className="flex h-14 items-center border-b px-4">
-            <span className="font-semibold">Settings</span>
-          </div>
-          <div className="flex-1 p-4">
-            <SettingsNav />
-          </div>
+    <div className="flex min-h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-950">
+      {/* Aside para pantallas grandes oculto en pequeñas */}
+      <aside className={`md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 border-r dark:bg-gray-900 transition-all duration-300 ease-in-out ${isMenuOpen ? "block z-50" : "hidden"} md:block backdrop-blur-sm`}>
+        {/* Boton X para cerrar menu */}
+        <div className="flex justify-end p-4 md:hidden">
+          <button onClick={() => setIsMenuOpen(false)} aria-label="Close Menu" className="text-xl text-gray-900 dark:text-white">
+            <HiX />
+          </button>
         </div>
-      </div>
+        <div className="flex-1 overflow-y-auto p-4 text-sm sm:text-base">
+          <SettingsNav />
+        </div>
+      </aside>
 
+      {/* Capa de fondo */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-white/50 dark:bg-black/50 z-40 backdrop-blur-sm"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+      
+      {/* Icono de hamburguesa solo en pantallas pequeñas */}
+      {!isMenuOpen && (
+        <button
+          onClick={toggleMenu}
+          aria-label="Toggle Menu"
+          className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg md:hidden"
+        >
+          <HiMenu className="h-6 w-6 text-gray-900 dark:text-white" />
+        </button>
+      )}
+    
       {/* Main content */}
-      <div className="flex-1 space-y-4 p-4 md:p-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Account Settings</h2>
-        </div>
+      <main className="flex-1 w-full md:pl-64 p-4 ml-4">
+        <div className="max-w-[1200px]">
+          <div className="flex items-center space-x-4">
 
-        <div className="grid gap-4">
-          <ActivityHeatmap />
+            {/* Título de la página (fuera del aside) */}
+            <div className="flex ml-4 mt-2 mb-4 items-center px-4 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-white">
+                <span className="font-semibold text-xl sm:text-2xl lg:text-4xl ">Settings account</span>
+            </div>
+          </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Content Filters</CardTitle>
-                <CardDescription>
-                  Manage your content viewing preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="nsfw">NSFW Content</Label>
-                  <Switch id="nsfw" />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="analytics">Share Analytics</Label>
-                  <Switch id="analytics" defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="marketing">Marketing Emails</Label>
-                  <Switch id="marketing" />
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid gap-6 ">
+            <ActivityHeatmap />
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Privacy</CardTitle>
-                <CardDescription>
-                  Manage your privacy settings
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="public-profile">Public Profile</Label>
-                  <Switch id="public-profile" defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="show-activity">Show Activity</Label>
-                  <Switch id="show-activity" defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="third-party">Third-party Sharing</Label>
-                  <Switch id="third-party" />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <SettingsCard
+                title="Content Filters"
+                description="Manage your content viewing preferences"
+                settings={[
+                  { id: "nsfw", label: "NSFW Content" },
+                  { id: "analytics", label: "Share Analytics", defaultChecked: true },
+                  { id: "marketing", label: "Marketing Emails" },
+                ]}
+              />
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>
-                  Configure your notification preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="email-notif">Email Notifications</Label>
-                  <Switch id="email-notif" defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="push-notif">Push Notifications</Label>
-                  <Switch id="push-notif" defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="updates">Product Updates</Label>
-                  <Switch id="updates" defaultChecked />
-                </div>
-              </CardContent>
-            </Card>
+              <SettingsCard
+                title="Privacy"
+                description="Manage your privacy settings"
+                settings={[
+                  { id: "public-profile", label: "Public Profile", defaultChecked: true },
+                  { id: "show-activity", label: "Show Activity", defaultChecked: true },
+                  { id: "third-party", label: "Third-party Sharing" },
+                ]}
+              />
+
+              <SettingsCard
+                title="Notifications"
+                description="Configure your notification preferences"
+                settings={[
+                  { id: "email-notif", label: "Email Notifications", defaultChecked: true },
+                  { id: "push-notif", label: "Push Notifications", defaultChecked: true },
+                  { id: "updates", label: "Product Updates", defaultChecked: true },
+                ]}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
+  )
+}
+
+function SettingsCard({ title, description, settings }) {
+  return (
+    <Card className="bg-white dark:bg-gray-900 w-full">
+      <CardHeader className="p-4">
+        <CardTitle className="text-lg text-gray-900 dark:text-gray-100">{title}</CardTitle>
+        <CardDescription className="text-sm text-gray-600 dark:text-gray-400">{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-4 space-y-2">
+        {settings.map((setting) => (
+          <div key={setting.id} className="flex items-center justify-between gap-4">
+            <Label htmlFor={setting.id} className="text-sm text-gray-900 dark:text-gray-100 truncate">
+              {setting.label}
+            </Label>
+            <Switch id={setting.id} defaultChecked={setting.defaultChecked} className="shrink-0" />
+          </div>
+        ))}
+      </CardContent>
+    </Card>
   )
 }
 
