@@ -18,7 +18,7 @@ const menuItems = [
 
 export default function LeftSidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ first_name: string; last_name: string; user_handle: string; avatar_url: string } | null>(null);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -26,7 +26,7 @@ export default function LeftSidebar() {
         const data = await fetchUserData();
         setUser(data);
       } catch (error) {
-        console.error(error);
+        console.error("Error al obtener los datos del usuario:", error);
       }
     };
     getUserData();
@@ -36,71 +36,51 @@ export default function LeftSidebar() {
 
   return (
     <>
+      {/* Botón para abrir/cerrar menú en móvil */}
       <button
-        className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg xl:hidden"
+        className="fixed lg:hidden top-4 left-1 z-50 p-2"
         onClick={toggleSidebar}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5 text-gray-900 dark:text-gray-300" />}
       </button>
 
+      {/* Fondo oscuro cuando el menú está abierto */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-md z-40 xl:hidden"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-md z-40 lg:hidden" onClick={toggleSidebar} />
       )}
 
+      {/* Sidebar */}
       <aside
         className={`
-          fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto flex flex-col p-4 w-64 transition-transform duration-200 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-          lg:translate-x-0  
-          xl:block xl:translate-x-0 
+          fixed h-screen rounded-xl z-50 bg-white dark:bg-gray-900 shadow-lg overflow-y-auto flex flex-col p-4 w-64 transition-transform duration-200 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
         `}
       >
-        <div className="flex items-center justify-between mb-6 mt-6">
-          <div className="flex items-center space-x-4 mb-4">
-            <Avatar>
-              <AvatarImage src={user?.avatar_url || "/placeholder-user.jpg"} alt={user?.user_handle || "Usuario"} />
-              <AvatarFallback>{user ? `${user.first_name[0]}${user.last_name[0]}` : "UN"}</AvatarFallback>
-            </Avatar>
-            <div className="hidden sm:block">
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {user ? `${user.first_name} ${user.last_name}` : "Username"}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-300">
-                {user ? `@${user.user_handle}` : "@username"}
-              </p>
-            </div>
+        {/* Perfil de usuario */}
+        <div className="flex items-center space-x-4 mb-6 mt-6">
+          <Avatar>
+            <AvatarImage src={user?.avatar_url || "/placeholder-user.jpg"} alt={user?.user_handle || "Usuario"} />
+            <AvatarFallback>{user ? `${user.first_name[0]}${user.last_name[0]}` : "UN"}</AvatarFallback>
+          </Avatar>
+          <div className="hidden sm:block">
+            <p className="font-semibold text-gray-900 dark:text-white">
+              {user ? `${user.first_name} ${user.last_name}` : "Username"}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-300">
+              {user ? `@${user.user_handle}` : "@username"}
+            </p>
           </div>
-          {isOpen && (
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-gray-900 dark:text-white xl:hidden"
-              aria-label="Close menu"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          )}
         </div>
 
+        {/* Navegación */}
         <nav>
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.label}>
-                <a
-                  href="#"
-                  className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600"
-                >
+                <Link href={item.path} className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600 cursor-pointer">
                   <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
                   <span className="text-gray-900 dark:text-white">{item.label}</span>
-                </a>
-                <Link href={item.path}>
-                  <div className="flex items-center space-x-4 p-2 rounded-xl hover:bg-blue-200 dark:hover:bg-gray-600 cursor-pointer">
-                    <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
-                    <span className="text-gray-900 dark:text-white">{item.label}</span>
-                  </div>
                 </Link>
               </li>
             ))}
