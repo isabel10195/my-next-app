@@ -1,0 +1,17 @@
+📌 Puntos clave de tu backend:
+Autenticación con JWT:
+
+Se genera un token JWT después de hacer login y se almacena en una cookie httpOnly.
+La cookie se envía con httpOnly: true, lo que significa que el frontend no puede acceder directamente a ella con localStorage.
+Middleware de autenticación (authMiddleware)
+
+Verifica el token en las cookies (req.cookies.token).
+Si el token es válido, añade los datos del usuario (req.user) y deja pasar la petición.
+Si no hay token o es inválido, devuelve un 401 No autorizado.
+Logout (logout)
+
+Simplemente elimina la cookie del usuario con res.clearCookie("token", { path: "/" }).
+Base de datos SQL Server (executeQuery)
+
+Se usa MSSQL para almacenar usuarios.
+Contraseñas encriptadas con bcrypt.

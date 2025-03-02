@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
+import { AuthProvider } from './context/AuthContext';
 
 // Crear una instancia de QueryClient
 const queryClient = new QueryClient();
@@ -30,7 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans antialiased">
         <QueryClientProvider client={queryClient}>
-          {children}
+          <AuthProvider> {/* 🔥 Ahora toda la app tiene acceso a la autenticación */}
+            {children}
+          </AuthProvider>
         </QueryClientProvider>
       </body>
     </html>

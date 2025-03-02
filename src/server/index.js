@@ -6,9 +6,9 @@ const userRoutes = require("./routes/userRoutes");
 const tweetRoutes = require("./routes/tweetRoutes");
 const followerRoutes = require("./routes/followerRoutes");
 
+
 const app = express();
 const PORT = 3001;
-
 // Middlewares
 app.use(corsMiddleware);
 app.use(express.json());
@@ -19,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/followers", followerRoutes);
+
 
 // Servidor
 app.listen(PORT, () => {

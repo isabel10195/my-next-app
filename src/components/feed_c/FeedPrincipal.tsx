@@ -1,51 +1,106 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/feed_c/tabs"
-import { Heart, MessageCircle, Repeat2, Share } from "lucide-react"
-
-interface Tweet {
-  id: number
-  author: string
-  content: string
-  avatar: string
-}
-
-const initialTweets: Tweet[] = [
-  { id: 1, author: "Tim Cook", content: "Excited about our latest innovations!", avatar: "/tim-cook.jpg" },
-  { id: 2, author: "Jony Ive", content: "Simplicity is the ultimate sophistication.", avatar: "/jony-ive.jpg" },
-  { id: 3, author: "Craig Federighi", content: "Software and hairstyle, both on point.", avatar: "/craig-federighi.jpg"},
-  { id: 4, author: "Steve Wozniak", content: "Remember, great things start small.", avatar: "/steve-wozniak.jpg" },
-  { id: 5, author: "Angela Ahrendts", content: "Retail is not dead, but boring retail is.", avatar: "/angela-ahrendts.jpg" },
-  { id: 6, author: "Eddy Cue", content: "Music is life, and we're here to amplify it.", avatar: "/eddy-cue.jpg" },
-  { id: 7, author: "Phil Schiller", content: "Innovation is not about saying yes to everything.", avatar: "/phil-schiller.jpg" },
-  { id: 8, author: "Lisa Jackson", content: "Sustainability is not a buzzword, it's a responsibility.", avatar: "/lisa-jackson.jpg" },
-  { id: 9, author: "John Ternus", content: "Hardware that pushes software to its limits.", avatar: "/john-ternus.jpg" },
-  { id: 10, author: "Johny Srouji", content: "Chips that change the game, one nanometer at a time.", avatar: "/johny-srouji.jpg" },
-]
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/feed_c/tabs";
+import { Heart, MessageCircle, Repeat2, Share } from "lucide-react";
+import { 
+  fetchForYouTweets, 
+  fetchFollowingTweets, 
+  createTweet,
+  likeTweet
+} from "@/server/service/tweetService";
 
 export default function Feed() {
-  const [tweets, setTweets] = useState<Tweet[]>(initialTweets)
-  const [newTweet, setNewTweet] = useState("")
+  const [forYouTweets, setForYouTweets] = useState([]);
+  const [followingTweets, setFollowingTweets] = useState([]);
+  const [newTweet, setNewTweet] = useState("");
+  const [activeTab, setActiveTab] = useState("for-you");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (newTweet.trim()) {
-      setTweets([{ id: Date.now(), author: "You", content: newTweet, avatar: "/placeholder-user.jpg" }, ...tweets])
-      setNewTweet("")
+  // Carga los tweets de la pestaña "For You"
+  const loadForYouTweets = async () => {
+    try {
+      const tweets = await fetchForYouTweets();
+      setForYouTweets(tweets);
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
-  const TweetList = () => (
-    <div className="">
+  // Carga los tweets de los usuarios seguidos
+  const loadFollowingTweets = async () => {
+    try {
+      const tweets = await fetchFollowingTweets();
+      setFollowingTweets(tweets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Al montar el componente se cargan ambos conjuntos de tweets
+  useEffect(() => {
+    loadForYouTweets();
+    loadFollowingTweets();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "for-you") {
+      loadForYouTweets();
+    } else {
+      loadFollowingTweets();
+    }
+  }, [activeTab]);
+
+  // Cuando cambia a la pestaña "Following", se recargan sus tweets
+  useEffect(() => {
+    if (activeTab === "following") {
+      loadFollowingTweets();
+    }
+  }, [activeTab]);
+
+  // Crea un tweet al enviar el formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (newTweet.trim()) {
+      try {
+        await createTweet(newTweet);
+        setNewTweet("");
+        loadForYouTweets();
+        loadFollowingTweets();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  // Función para alternar el like
+  const toggleLike = async (tweet) => {
+    try {
+      let updatedTweet = { 
+        ...tweet, 
+        liked: !tweet.liked, 
+        num_likes: tweet.liked ? tweet.num_likes - 1 : tweet.num_likes + 1 
+      };
+  
+      setForYouTweets((prev) => prev.map((t) => (t.tweet_id === tweet.tweet_id ? updatedTweet : t)));
+      setFollowingTweets((prev) => prev.map((t) => (t.tweet_id === tweet.tweet_id ? updatedTweet : t)));
+  
+      await likeTweet(tweet.tweet_id); // Siempre llamamos a likeTweet
+    } catch (error) {
+      console.error(error);
+    }
+  };  
+
+  // Componente para listar tweets
+  const TweetList = ({ tweets }) => (
+    <div>
       <AnimatePresence>
         {tweets.map((tweet) => (
           <motion.div
-            key={tweet.id}
+            key={tweet.tweet_id}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
@@ -54,16 +109,32 @@ export default function Feed() {
           >
             <div className="flex items-center mb-4">
               <Avatar className="h-10 w-10 mr-4">
-                <AvatarImage src={tweet.avatar} alt={tweet.author} />
-                <AvatarFallback>{tweet.author[0]}</AvatarFallback>
+                <AvatarImage
+                  src={tweet.avatar_url || "/placeholder-user.jpg"}
+                  alt={tweet.user_handle || "User"}
+                />
+                <AvatarFallback>
+                  {tweet.user_handle ? tweet.user_handle[0] : "U"}
+                </AvatarFallback>
               </Avatar>
-              <h3 className="font-semibold text-gray-900 dark:text-white">{tweet.author}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                @{tweet.user_handle}
+              </h3>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">{tweet.content}</p>
-            <div className="flex justify-between text-gray-500 dark:text-gray-400">
-              <Button variant="ghost" size="sm">
-                <Heart className="mr-2 h-4 w-4" />
-                Like
+
+            <p className="text-gray-700 dark:text-gray-300 mb-4">{tweet.tweet_text}</p>
+            <div className="flex items-center justify-start space-x-4 text-gray-500 dark:text-gray-400">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => toggleLike(tweet)}
+              >
+                <Heart 
+                  className="mr-2 h-4 w-4" 
+                  color={tweet.liked ? "red" : "currentColor"}
+                  fill={tweet.liked ? "red" : "none"}
+                />
+                {tweet.num_likes || 0}
               </Button>
               <Button variant="ghost" size="sm">
                 <MessageCircle className="mr-2 h-4 w-4" />
@@ -82,7 +153,7 @@ export default function Feed() {
         ))}
       </AnimatePresence>
     </div>
-  )
+  );
 
   return (
     <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 bg-gray-200 dark:bg-gray-950 rounded-2xl ">
@@ -99,22 +170,23 @@ export default function Feed() {
               value={newTweet}
               onChange={(e) => setNewTweet(e.target.value)}
               placeholder="What's happening?"
-              className="mb-2 bg-gray-100"
+              className="mb-2 bg-gray-100 text-black"
             />
             <Button type="submit" className="w-full bg-blue-500 text-white dark:bg-blue-800">
               Tweet
             </Button>
           </form>
-          <TweetList />
+          <TweetList tweets={forYouTweets} />
         </TabsContent>
         <TabsContent value="following">
-          <p className="text-center text-gray-500 dark:text-gray-300 mt mt-4">Here you'll see tweets from people you follow.</p>
+          <TweetList tweets={followingTweets} />
         </TabsContent>
         <TabsContent value="communities">
-          <p className="text-center text-gray-500 dark:text-gray-300 mt mt-4">Explore and join communities based on your interests.</p>
+          <p className="text-center text-gray-500 dark:text-gray-300 mt-4">
+            Explore and join communities based on your interests.
+          </p>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

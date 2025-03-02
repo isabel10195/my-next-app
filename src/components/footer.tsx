@@ -13,8 +13,8 @@ export default function Footer() {
           <div>
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Compañía</h3>
             <ul className="space-y-3">
-              <li><Link href="/pages/about" className="hover:text-gray-900 dark:hover:text-white">Sobre Nosotros</Link></li>
-              <li><Link href="/pages/noticiasDesarrollo" className="hover:text-gray-900 dark:hover:text-white">Noticias Desarrollo</Link></li>
+              <li><Link href="/pages/about" className="hover:text-gray-900 dark:hover:text-white">Sobre nosotros</Link></li>
+              <li><Link href="/pages/noticiasDesarrollo" className="hover:text-gray-900 dark:hover:text-white">Noticias de desarrollo</Link></li>
               <li><Link href="/pages/faqs" className="hover:text-gray-900 dark:hover:text-white">FAQs</Link></li>
             </ul>
           </div>
@@ -23,7 +23,7 @@ export default function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Productos</h3>
             <ul className="space-y-3">
               <li><Link href="/pages/planes" className="hover:text-gray-900 dark:hover:text-white">Planes</Link></li>
-              <li><Link href="/pages/politicasPrivacidad" className="hover:text-gray-900 dark:hover:text-white">Politicas de Privacicad</Link></li>
+              <li><Link href="/pages/politicasPrivacidad" className="hover:text-gray-900 dark:hover:text-white">Política de privacidad</Link></li>
             </ul>
           </div>
           
@@ -31,7 +31,7 @@ export default function Footer() {
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Recursos</h3>
             <ul className="space-y-3">
               <li><Link href="/pages/mapa" className="hover:text-gray-900 dark:hover:text-white">Mapa</Link></li> 
-              <li><Link href="/pages/contacto" className="hover:text-gray-900 dark:hover:text-white">Informacion de Contacto</Link></li>
+              <li><Link href="/pages/contacto" className="hover:text-gray-900 dark:hover:text-white">Información de contacto</Link></li>
             </ul>
           </div>
         </div>

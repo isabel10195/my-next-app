@@ -12,15 +12,35 @@ const registerUser = async (req, res) => {
     const { user_handle, email_address, first_name, last_name, phone_number, password } = req.body;
 
     try {
+        // 🔍 Comprobamos si el usuario ya existe
+        const checkQuery = `
+            SELECT * FROM users 
+            WHERE user_handle = @user_handle OR email_address = @email_address OR phone_number = @phone_number
+        `;
+        const existingUser = await executeQuery(checkQuery, [
+            { name: "user_handle", type: db.NVarChar, value: user_handle },
+            { name: "email_address", type: db.NVarChar, value: email_address },
+            { name: "phone_number", type: db.NVarChar, value: phone_number },
+        ]);
+
+        if (existingUser.recordset.length > 0) {
+            console.error("❌ Error: Usuario ya registrado.");
+            return res.status(400).json({
+                error: "El nombre de usuario, email o número de teléfono ya están en uso.",
+            });
+        }
+
+        // 🔑 Cifrar la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
         console.log("🔑 Contraseña cifrada:", hashedPassword);
 
-        const query = `
-            INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password)
-            VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password)
+        // 🚀 Insertar usuario en la BD
+        const insertQuery = `
+            INSERT INTO users (user_handle, email_address, first_name, last_name, phone_number, password, created_at)
+            VALUES (@user_handle, @email_address, @first_name, @last_name, @phone_number, @password, GETDATE())
         `;
 
-        await executeQuery(query, [
+        await executeQuery(insertQuery, [
             { name: "user_handle", type: db.NVarChar, value: user_handle },
             { name: "email_address", type: db.NVarChar, value: email_address },
             { name: "first_name", type: db.NVarChar, value: first_name },
@@ -30,15 +50,16 @@ const registerUser = async (req, res) => {
         ]);
 
         console.log("✅ Usuario registrado correctamente");
-        res.send("Usuario registrado correctamente");
+        res.status(201).json({ message: "✅ Registro exitoso. Ahora puedes iniciar sesión." });
+
     } catch (error) {
         console.error("❌ Error al registrar el usuario:", error);
-        res.status(500).send("Error al registrar el usuario");
+        res.status(500).json({ error: "❌ Error en el servidor al registrar el usuario." });
     }
 };
 
 
-// Login de usuario
+
 const loginUser = async (req, res) => {
     const { user_handle, password } = req.body;
 
@@ -71,6 +92,14 @@ const loginUser = async (req, res) => {
             sameSite: "lax",
         });
 
+        // 🔥 Guardar el último inicio de sesión en la base de datos
+        const updateLastLoginQuery = `
+            UPDATE users SET last_login = GETDATE() WHERE user_id = @user_id
+        `;
+        await executeQuery(updateLastLoginQuery, [
+            { name: "user_id", type: db.Int, value: user.user_id },
+        ]);
+
         res.send("Login exitoso");
     } catch (error) {
         console.error("❌ Error en el login:", error);
@@ -78,11 +107,42 @@ const loginUser = async (req, res) => {
     }
 };
 
+
 // Perfil del usuario
-const getUserProfile = (req, res) => {
-    const user = req.user; // Obtenido del middleware de autenticación
-    res.send(`Bienvenido, ${user.user_handle}`);
+const getUserProfile = async (req, res) => {
+    try {
+        const query = `
+            SELECT user_id, user_handle, email_address, first_name, last_name, avatar_url, last_login, user_role
+            FROM users WHERE user_id = @user_id`;
+
+        const result = await executeQuery(query, [
+            { name: "user_id", type: db.Int, value: req.user.id },
+        ]);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        const user = result.recordset[0];
+
+        res.json({
+            user_id: user.user_id,
+            user_handle: user.user_handle,
+            email: user.email_address,
+            name: `${user.first_name} ${user.last_name}`,
+            avatarUrl: user.avatar_url || null,
+            lastLogin: user.last_login,
+            isOnline: true,
+            role: user.user_role, // 🔥 Ahora devuelve el rol del usuario
+        });
+    } catch (error) {
+        console.error("❌ Error obteniendo perfil:", error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
 };
+
+
+
 
 // Logout de usuario
 const logout = (req, res) => {

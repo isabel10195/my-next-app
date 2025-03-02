@@ -124,8 +124,9 @@ export default function ProfilePage() {
     }
   }, [])
 
+  // Cargar recomendaciones
   useEffect(() => {
-    const fetchRecomendaciones = async () => {
+    const getRecommendations = async () => {
       try {
         const response = await fetch("http://localhost:3001/api/followers/recommendations", {
           method: "GET",
@@ -149,6 +150,7 @@ export default function ProfilePage() {
     fetchRecomendaciones()
   }, [])
 
+  // Cargar seguidores y seguidos
   useEffect(() => {
     // Obtener seguidores
     const fetchSeguidores = async () => {
