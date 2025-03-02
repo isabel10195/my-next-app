@@ -26,7 +26,7 @@ const communities = [
 ];
 
 export default function RightSidebar() {
-  const { stories, fetchStories, uploadStory, followingUsers } = useStories();
+  const { stories = [], fetchStories, uploadStory, followingUsers = [] } = useStories();
   const [currentTopic, setCurrentTopic] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -39,7 +39,7 @@ export default function RightSidebar() {
 
   useEffect(() => {
     fetchStories();
-  }, []);
+}, [fetchStories]);
 
   const nextStory = () => {
     setCurrentIndex((prev) => (prev + 1) % stories.length);
@@ -81,9 +81,9 @@ export default function RightSidebar() {
               </Button>
 
               {/* Story actual */}
-              {stories.length > 0 ? (
+              {Array.isArray(stories) && stories.length > 0 ? (
                 <motion.div
-                  key={stories[currentIndex].story_id}
+                  key={stories[currentIndex]?.story_id}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
@@ -91,8 +91,8 @@ export default function RightSidebar() {
                   className="w-[250px] bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md"
                 >
                   <Image
-                    src={stories[currentIndex].image_url}
-                    alt={stories[currentIndex].description}
+                    src={stories[currentIndex]?.image_url || "/default-story.jpg"}
+                    alt={stories[currentIndex]?.description || "Sin descripción"}
                     width={250}
                     height={192}
                     className="w-full h-48 object-cover"
@@ -101,23 +101,31 @@ export default function RightSidebar() {
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
                       <Image
-                        src={stories[currentIndex].avatar_url}
-                        alt={stories[currentIndex].author}
+                        src={stories[currentIndex]?.avatar_url || "/default-avatar.png"}
+                        alt={stories[currentIndex]?.author || "Usuario desconocido"}
                         width={48}
                         height={48}
                         className="w-12 h-12 rounded-full border-2 border-gray-300"
                       />
                       <div>
-                        <p className="text-gray-900 dark:text-white font-medium">{stories[currentIndex].author}</p>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">{stories[currentIndex].description}</p>
+                        <p className="text-gray-900 dark:text-white font-medium">
+                          {stories[currentIndex]?.author || "Usuario desconocido"}
+                        </p>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                          {stories[currentIndex]?.description || "Sin descripción"}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
                 </motion.div>
-              ) : followingUsers.length === 0 ? (
-                <p className="text-center text-gray-500 dark:text-gray-400">Aún no sigues a nadie. ¡Sigue a usuarios para ver sus stories!</p>
+              ) : Array.isArray(followingUsers) && followingUsers.length === 0 ? (
+                <p className="text-center text-gray-500 dark:text-gray-400">
+                  Aún no sigues a nadie. ¡Sigue a usuarios para ver sus stories!
+                </p>
               ) : (
-                <p className="text-center text-gray-500 dark:text-gray-400">No hay stories disponibles</p>
+                <p className="text-center text-gray-500 dark:text-gray-400">
+                  No hay stories disponibles
+                </p>
               )}
 
               {/* Botón Derecho */}
