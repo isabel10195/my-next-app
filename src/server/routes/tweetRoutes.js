@@ -7,6 +7,9 @@ const {
     deleteTweet,
     editTweet,
     likeTweet,       
+    createComment,
+    getCommentsByTweet,
+    toggleRetweet
 } = require("../controllers/tweetController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -20,5 +23,8 @@ router.get("/interest", authMiddleware, getTweetsByInterest); // Obtener tweets 
 router.post("/like", authMiddleware, likeTweet);     // Endpoint para like
 router.delete("/delete/:tweet_id", authMiddleware, deleteTweet); // Eliminar tweet
 router.put("/edit/:tweet_id", authMiddleware, editTweet); // Editar tweet
+router.get("/:tweetId/comments", authMiddleware, getCommentsByTweet);
+router.post("/:tweetId/comments", authMiddleware, createComment); // Endpoint para comentar
+router.post("/retweet", authMiddleware, toggleRetweet); // Endpoint para retweet
 
 module.exports = router;
