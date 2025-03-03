@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from './context/AuthContext';
+import { ProfileProvider } from './context/ProfileContext'; // 🔥 Importa el contexto de perfil
 
 // Crear una instancia de QueryClient
 const queryClient = new QueryClient();
@@ -31,8 +32,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans antialiased">
         <QueryClientProvider client={queryClient}>
-          <AuthProvider> {/* 🔥 Ahora toda la app tiene acceso a la autenticación */}
-            {children}
+          <AuthProvider> {/* 🔥 Toda la app tiene acceso a la autenticación */}
+            <ProfileProvider> {/* 🔥 Ahora toda la app tiene acceso al perfil */}
+              {children}
+            </ProfileProvider>
           </AuthProvider>
         </QueryClientProvider>
       </body>
