@@ -1,29 +1,27 @@
-"use client";
-
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ Importación corregida
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null); // 🔥 Se agrega el estado del token
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // ✅ Define el router dentro del contexto
+  const router = useRouter();
 
-  // Verificar autenticación en el backend al cargar la app
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated) {
           setUser(data.user);
+          setToken(localStorage.getItem("token") || ""); // 🔥 Guardar el token
         }
       })
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
 
-  // Función para cerrar sesión
   const logout = async () => {
     try {
       await fetch("http://localhost:3001/api/auth/logout", {
@@ -31,21 +29,22 @@ export function AuthProvider({ children }) {
         credentials: "include",
       });
 
-      setUser(null); // 🔥 Borra el usuario del contexto
-      router.push("/"); // 🔥 Redirige al home tras cerrar sesión
+      setUser(null);
+      setToken(null); // 🔥 Eliminar token al cerrar sesión
+      localStorage.removeItem("token");
+      router.push("/");
     } catch (error) {
       console.error("❌ Error al cerrar sesión:", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, setUser, setToken, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Hook personalizado para usar el contexto
 export function useAuth() {
   return useContext(AuthContext);
 }

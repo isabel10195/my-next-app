@@ -3,11 +3,18 @@ import { NextResponse } from "next/server";
 const API_URL = "http://localhost:3001/api/stories"; // URL del backend
 
 // Obtener todas las stories (GET)
-export async function GET() {
+export async function GET(req) {
     try {
+        const cookieStore = cookies(); // Obtiene las cookies correctamente en Next.js 15
+        const token = cookieStore.get("token")?.value || "";
+
         const res = await fetch(API_URL, {
             method: "GET",
-            credentials: "include", // Incluye cookies si hay autenticación
+            credentials: "include",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         });
 
         if (res.status === 401) {
@@ -15,7 +22,6 @@ export async function GET() {
         }
 
         if (!res.ok) {
-            console.error("❌ Error en GET /api/stories:", res.statusText);
             return NextResponse.json({ message: "Error al obtener stories" }, { status: res.status });
         }
 
@@ -26,6 +32,8 @@ export async function GET() {
         return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
     }
 }
+
+
 
 // Subir una nueva story (POST)
 export async function POST(req) {

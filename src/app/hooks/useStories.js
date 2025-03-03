@@ -1,41 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@/app/context/AuthContext"; 
 
 export const useStories = () => {
+    const { token, user } = useAuth(); // Obtener token y usuario del contexto
     const [stories, setStories] = useState([]);
+    const [message, setMessage] = useState("");
 
-    // Obtener stories desde la API
-    const fetchStories = async () => {
-        try {
-            const res = await fetch("/api/stories");
-            if (!res.ok) throw new Error("Error al obtener stories");
-
-            const data = await res.json();
-            setStories(data);
-        } catch (error) {
-            console.error("❌ Error cargando stories:", error);
+    const fetchStories = useCallback(async () => {
+        if (!token) {
+            setMessage("No autenticado"); 
+            return;
         }
-    };
 
-    // Subir una nueva story
-    const uploadStory = async (imageUrl, description) => {
         try {
             const res = await fetch("/api/stories", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image_url: imageUrl, description }),
+                headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!res.ok) throw new Error("Error al subir la story");
+            const data = await res.json();
 
-            await fetchStories(); // Recargar stories después de subir
+            if (data.message) {
+                setMessage(data.message);
+            } else {
+                setStories(data);
+            }
         } catch (error) {
-            console.error("❌ Error subiendo la story:", error);
+            setMessage("Error al cargar stories");
         }
-    };
+    }, [token]);
 
     useEffect(() => {
         fetchStories();
-    }, []);
+    }, [fetchStories]);
 
-    return { stories, fetchStories, uploadStory };
+    return { stories, message, fetchStories };
 };

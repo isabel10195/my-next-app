@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers"; // API para manejar cookies en el servidor
+import { cookies } from "next/headers"; 
 
 export async function GET() {
   try {
-    const cookieStore = await cookies(); // 🔥 Usamos `await` para evitar errores
+    const cookieStore = cookies(); // ✅ Corrección aquí
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -15,7 +15,7 @@ export async function GET() {
 
     const response = await fetch("http://localhost:3001/api/auth/profile", {
       credentials: "include",
-      headers: { Authorization: `Bearer ${token}` }, // 🔥 Enviamos el token correctamente
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!response.ok) {

@@ -2,19 +2,25 @@ const storyService = require("../service/storyService");
 
 exports.getStories = async (req, res) => {
     try {
-        const userId = req.user.user_id; // Obtenemos el ID del usuario autenticado
+        const userId = req.user.user_id; // Puede ser null si no está autenticado
+
+        if (!userId) {
+            return res.status(200).json({ message: "Usuario no autenticado", stories: [] });
+        }
+
         const stories = await storyService.fetchStories(userId);
 
         if (!stories || stories.length === 0) {
-            return res.status(200).json([]); // Devuelve un array vacío en lugar de un error
+            return res.status(200).json({ message: "No sigues a nadie o nadie ha subido stories", stories: [] });
         }
 
-        res.status(200).json(stories);
+        res.status(200).json({ stories });
     } catch (error) {
         console.error("❌ Error al obtener las stories:", error);
         res.status(500).json({ message: "Error al obtener las stories" });
     }
 };
+
 
 exports.createStory = async (req, res) => {
     try {
