@@ -60,8 +60,8 @@ export default function LeftSidebar() {
         {/* Perfil de usuario */}
         <div className="flex items-center space-x-4 mb-6 mt-6">
           <Avatar>
-            <AvatarImage src={user?.avatar_url || "/placeholder-user.jpg"} alt={user?.user_handle || "Usuario"} />
-            <AvatarFallback>{user ? `${user.first_name[0]}${user.last_name[0]}` : "UN"}</AvatarFallback>
+          <AvatarImage src={user?.avatar_url || "/placeholder.jpg"} alt={user?.user_handle || "Usuario"} />
+          <AvatarFallback>{user ? `${user.first_name[0]}${user.last_name[0]}` : "UN"}</AvatarFallback>
           </Avatar>
           <div className="hidden sm:block">
             <p className="font-semibold text-gray-900 dark:text-white">

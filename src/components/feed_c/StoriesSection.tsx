@@ -1,17 +1,15 @@
-"use client";
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Upload } from "lucide-react";
 import Image from "next/image";
 import { useStories } from "@/app/hooks/useStories";
-import { useAuth } from "@/app/context/AuthContext"; // Importamos el contexto de autenticación
+import { useAuth } from "@/app/context/AuthContext";
 import { motion } from "framer-motion";
 
 export default function StoriesSection() {
-  const { user } = useAuth(); // Obtener usuario del contexto
-  const { stories = [], uploadStory, followingUsers = [] } = useStories();
+  const { user } = useAuth();
+  const { stories = [], followingUsers = [], uploadStory } = useStories();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextStory = () => {
@@ -22,13 +20,12 @@ export default function StoriesSection() {
     setCurrentIndex((prev) => (prev - 1 + stories.length) % stories.length);
   };
 
-  // Determinar el mensaje a mostrar
   let message = "";
   if (!user) {
     message = "No estás logueado. Inicia sesión para ver stories.";
   } else if (followingUsers.length === 0) {
     message = "No sigues a nadie, ¡anímate y sigue a alguien!";
-  } else if (stories.length === 0) {
+  } else if (followingUsers.length > 0 && stories.length === 0) {
     message = "Nadie de tus seguidos ha subido nada, ¡sé tú el primero!";
   }
 
@@ -36,7 +33,7 @@ export default function StoriesSection() {
     <Card className="mb-6 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg">
       <CardHeader className="flex justify-between items-center">
         <CardTitle className="text-gray-900 dark:text-white">Stories</CardTitle>
-        {user && ( // Solo permitir subir stories si el usuario está logueado
+        {user && (
           <label className="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded-lg text-sm flex items-center gap-2">
             <Upload size={16} />
             Subir Story
@@ -47,7 +44,7 @@ export default function StoriesSection() {
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
-                  const imageUrl = URL.createObjectURL(file);
+                  const imageUrl = URL.createObjectURL(file); // Simulación de carga (en un servidor real debes manejar el almacenamiento)
                   uploadStory(imageUrl, "Nueva historia");
                 }
               }}
