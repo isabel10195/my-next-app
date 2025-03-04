@@ -33,9 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans antialiased">
         <QueryClientProvider client={queryClient}>
           <AuthProvider> {/* 🔥 Toda la app tiene acceso a la autenticación */}
-            <ProfileProvider> {/* 🔥 Ahora toda la app tiene acceso al perfil */}
               {children}
-            </ProfileProvider>
           </AuthProvider>
         </QueryClientProvider>
       </body>

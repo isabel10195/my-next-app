@@ -1,0 +1,11 @@
+La expiración del token está definida en authController.js, específicamente en la función loginUser. Aquí es donde se genera el token con jwt.sign():
+
+js
+Copiar
+Editar
+const token = jwt.sign(
+    { id: user.user_id, user_handle: user.user_handle },
+    SECRET_KEY,
+    { expiresIn: "1h" }  // ⏳ El token expira en 1 hora
+);
+Si más adelante quieres mejorar esto, podemos implementar refresh tokens para que el usuario no tenga que loguearse cada hora. 🚀

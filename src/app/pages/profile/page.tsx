@@ -46,10 +46,10 @@ export default function ProfilePage() {
       className="bg-gray-200 dark:bg-gray-950 min-h-screen overflow-x-hidden"
     >
       <Toaster />
-      <div className="mx-auto px-4 lg:px-8">
+      <div className="mx-auto px-4 lg:px-8 flex justify-center">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           {/* Menú lateral */}
-          <div className="w-full lg:w-auto lg:flex-shrink-0 space-y-4 z-10 -ml-8 -mt-4">
+          <div className="w-full lg:w-[250px] lg:flex-shrink-0 space-y-4 z-10 -mt-4">
             <Menu />
           </div>
           <div className="flex-1 space-y-4 w-full relative">
