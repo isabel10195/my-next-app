@@ -112,9 +112,13 @@ const loginUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         const query = `
-            SELECT user_id, user_handle, email_address, first_name, last_name, 
-                   avatar_url, cover_url, last_login, user_role
-            FROM users WHERE user_id = @user_id`; // 🔥 Agregado cover_url aquí
+            SELECT 
+                u.user_id, u.user_handle, u.email_address, u.first_name, u.last_name, 
+                u.avatar_url, u.cover_url, u.last_login, u.user_role,
+                (SELECT COUNT(*) FROM followers WHERE following_id = u.user_id) AS followers,
+                (SELECT COUNT(*) FROM followers WHERE follower_id = u.user_id) AS following
+            FROM users u 
+            WHERE u.user_id = @user_id`;
 
         const result = await executeQuery(query, [
             { name: "user_id", type: db.Int, value: req.user.id },
@@ -132,16 +136,19 @@ const getUserProfile = async (req, res) => {
             email: user.email_address,
             name: `${user.first_name} ${user.last_name}`,
             avatarUrl: user.avatar_url || null,
-            coverUrl: user.cover_url || null, // 🔥 Ahora envía la portada al frontend
+            coverUrl: user.cover_url || null,
             lastLogin: user.last_login,
             isOnline: true,
             role: user.user_role,
+            followers: user.followers, // 🔥 Agregado
+            following: user.following, // 🔥 Agregado
         });
     } catch (error) {
         console.error("❌ Error obteniendo perfil:", error);
         res.status(500).json({ error: "Error en el servidor" });
     }
 };
+
 
 
 

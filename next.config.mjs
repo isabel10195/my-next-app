@@ -20,8 +20,17 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "i.imgur.com", // 🔥 Agregado dominio de Imgur
+        hostname: "i.imgur.com", // 🔥 Agregado para Imgur
       },
+      {
+        protocol: "https",
+        hostname: "seranking.com", // 🔥 Agregado para Seranking
+      },
+      {
+        protocol: "https",
+        hostname: "seranking.com",
+        pathname: "/es/blog/wp-content/uploads/**", // 🔥 Asegura permitir cualquier imagen dentro de esa ruta
+      }
     ],
   },
 };

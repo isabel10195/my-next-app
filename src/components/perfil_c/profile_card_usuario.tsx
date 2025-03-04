@@ -70,9 +70,9 @@ const CardUsuario: React.FC = () => {
           )}
           <div className="flex items-center gap-3">
             <Users className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-            <span className="text-gray-700 dark:text-gray-300">
-              {user.followers || 0} seguidores · {user.following || 0} seguidos
-            </span>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {user.followers} seguidores • {user.following} seguidos
+            </p>
           </div>
         </div>
       </CardContent>

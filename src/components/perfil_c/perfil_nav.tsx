@@ -34,7 +34,7 @@ export default function Sidebar() {
       });
   
       setUser(null); // Eliminamos el usuario del contexto
-      router.push("/login"); // Redirigimos al login
+      router.push("/pages/login"); // Redirigimos al login
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
