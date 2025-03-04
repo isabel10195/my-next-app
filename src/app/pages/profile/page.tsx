@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import useProfile from "@/app/hooks/useProfile";
-import CardUsuario from "@/components/perfil_c/card_usuario";
-import CardLogros from "@/components/perfil_c/card_logros";
-import CardIntereses from "@/components/perfil_c/card_intereses";
+import CardUsuario from "@/components/perfil_c/profile_card_usuario";
+import CardLogros from "@/components/perfil_c/profile_card_logros";
+import CardIntereses from "@/components/perfil_c/profile_card_intereses";
 import CardEstadisticas from "@/components/perfil_c/card_estadisticas";
-import CardHabilidades from "@/components/perfil_c/card_habilidades";
-import CardTweets from "@/components/perfil_c/card_tweets";
-import UserTabs from "@/components/perfil_c/tabs_perfil";
+import CardHabilidades from "@/components/perfil_c/profile_card_habilidades";
+import CardTweets from "@/components/perfil_c/profile_card_tweets";
+import UserTabs from "@/components/perfil_c/profile_tabs";
 import Menu from "@/components/perfil_c/perfil_nav";
 
 export default function ProfilePage() {
@@ -84,9 +84,9 @@ export default function ProfilePage() {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden mt-2"
                 >
-                  <CardLogros achievements={userDetails?.achievements} />
-                  <CardIntereses interests={userDetails?.interests} renderTagsWithColors={renderTagsWithColors} />
-                  <CardHabilidades skills={userDetails?.skills} />
+                  <CardLogros achievements={userDetails?.achievements??[]} />
+                  <CardIntereses interests={userDetails?.interests ?? []} renderTagsWithColors={renderTagsWithColors} />
+                  <CardHabilidades skills={userDetails?.skills ?? []} />
                   <CardEstadisticas stats={{ posts: 35, comments: 120, interactions: 500 }} />
                 </motion.div>
               </div>
@@ -110,9 +110,9 @@ export default function ProfilePage() {
               {/* DISPOSICIÓN PANTALLAS GRANDES */}
               <div className="hidden lg:block xl:block relative w-full xl:w-[300px] xl:ml-60 mt-2 space-y-4">
                 <CardUsuario profileData={profile} />
-                <CardLogros achievements={userDetails?.achievements} />
-                <CardIntereses interests={userDetails?.interests} renderTagsWithColors={renderTagsWithColors} />
-                <CardHabilidades skills={userDetails?.skills} />
+                <CardLogros achievements={userDetails?.achievements??[]} />
+                <CardIntereses interests={userDetails?.interests ?? []} renderTagsWithColors={renderTagsWithColors} />
+                <CardHabilidades skills={userDetails?.skills ?? []} />
                 <CardEstadisticas stats={{ posts: 35, comments: 120, interactions: 500 }} />
               </div>
               <div className="hidden lg:block xl:block relative w-full xl:w-[800px] mt-2 space-y-4">

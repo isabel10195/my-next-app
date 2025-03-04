@@ -74,7 +74,7 @@ export default function Sidebar() {
         ) : (
           <div className="text-center text-gray-500 dark:text-gray-300 my-6">
             <p>Inicia sesión para ver tu perfil</p>
-            <Link href="/login" className="text-blue-500 hover:underline">
+            <Link href="/pages/login" className="text-blue-500 hover:underline">
               Ir al login
             </Link>
           </div>

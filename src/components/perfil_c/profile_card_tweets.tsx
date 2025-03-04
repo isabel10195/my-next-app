@@ -1,28 +1,61 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Edit, Trash, Check, X } from "lucide-react"
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Edit, Trash, Check, X } from "lucide-react";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/app/context/AuthContext";
+import Image from "next/image";
 
-function CardTweets({ tweets, handleDeleteTweet, handleEditTweet, handleSaveTweet }) {
-  const [editingTweetId, setEditingTweetId] = useState(null)
-  const [editedTweetText, setEditedTweetText] = useState("")
+// Definimos la estructura de los tweets
+interface Tweet {
+  tweet_id: string;
+  avatar_url?: string;
+  user_handle: string;
+  tweet_text: string;
+}
 
-  const startEditing = (tweetId, text) => {
-    setEditingTweetId(tweetId)
-    setEditedTweetText(text)
-  }
+interface CardTweetsProps {
+  tweets: Tweet[];
+  handleDeleteTweet: (tweetId: string) => void;
+  handleEditTweet: (tweetId: string, text: string) => void;
+  handleSaveTweet: (tweetId: string, text: string) => void;
+}
+
+const CardTweets: React.FC<CardTweetsProps> = ({ tweets, handleDeleteTweet, handleEditTweet, handleSaveTweet }) => {
+  const { user } = useAuth(); // 🔥 Obtenemos el estado de autenticación
+  const [editingTweetId, setEditingTweetId] = useState<string | null>(null);
+  const [editedTweetText, setEditedTweetText] = useState<string>("");
+
+  const startEditing = (tweetId: string, text: string) => {
+    setEditingTweetId(tweetId);
+    setEditedTweetText(text);
+  };
 
   const cancelEditing = () => {
-    setEditingTweetId(null)
-    setEditedTweetText("")
+    setEditingTweetId(null);
+    setEditedTweetText("");
+  };
+
+  // 🔥 Si el usuario NO está logueado, mostramos un mensaje
+  if (!user) {
+    return (
+      <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xl">Tweets</CardTitle>
+        </CardHeader>
+        <Separator className="bg-gray-300 dark:bg-gray-800" />
+        <CardContent className="p-6 text-center">
+          <p className="text-gray-500 dark:text-gray-300">Inicia sesión para ver los tweets.</p>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
-    <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none  shadow-xl">
+    <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
       <CardHeader className="pb-3">
         <CardTitle className="text-xl">Tweets</CardTitle>
       </CardHeader>
@@ -32,7 +65,13 @@ function CardTweets({ tweets, handleDeleteTweet, handleEditTweet, handleSaveTwee
           {tweets.map((tweet) => (
             <li key={tweet.tweet_id} className="p-4 bg-blue-800 rounded-lg">
               <div className="flex items-start gap-3">
-                <img src={tweet.avatar_url || "/placeholder.svg"} alt="Avatar" className="w-12 h-12 rounded-full" />
+                <Image
+                  src={tweet.avatar_url || "/placeholder-user.jpg"}
+                  alt="Avatar"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
                 <div className="flex-1">
                   <h4 className="font-bold text-gray-200">{tweet.user_handle}</h4>
                   {editingTweetId === tweet.tweet_id ? (
@@ -94,8 +133,7 @@ function CardTweets({ tweets, handleDeleteTweet, handleEditTweet, handleSaveTwee
         </ul>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CardTweets
-
+export default CardTweets;
