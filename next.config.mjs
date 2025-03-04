@@ -30,7 +30,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "seranking.com",
         pathname: "/es/blog/wp-content/uploads/**", // 🔥 Asegura permitir cualquier imagen dentro de esa ruta
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "static.vecteezy.com", // 🔥 Añadido para permitir imágenes de vecteezy
+      },
     ],
   },
 };
