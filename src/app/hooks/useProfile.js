@@ -24,27 +24,28 @@ export default function useProfile(userId) {
 
   const fetchFollowers = useCallback(async () => {
     try {
-      const res = await fetch(`/api/followers/${userId}`);
+      const res = await fetch(`/api/followers`); // ❌ Antes: `/api/followers/${userId}`
       if (!res.ok) throw new Error("Error al obtener seguidores");
       const data = await res.json();
-      setFollowers(data);
+      setFollowers(data.seguidores ?? []);
     } catch (err) {
       console.error("Error al obtener seguidores:", err);
       setError(err.message);
     }
-  }, [userId]);
-
+  }, []);
+  
   const fetchFollowing = useCallback(async () => {
     try {
-      const res = await fetch(`/api/followers/following/${userId}`);
+      const res = await fetch(`/api/followers/following`); // ❌ Antes: `/api/followers/following/${userId}`
       if (!res.ok) throw new Error("Error al obtener seguidos");
       const data = await res.json();
-      setFollowing(data);
+      setFollowing(data.seguidos ?? []);
     } catch (err) {
       console.error("Error al obtener seguidos:", err);
       setError(err.message);
     }
-  }, [userId]);
+  }, []);
+  
 
   const fetchTweets = useCallback(async () => {
     try {

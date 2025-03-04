@@ -117,7 +117,9 @@ const getRecommendations = async (req, res) => {
 
 // Obtener seguidores
 const getFollowers = async (req, res) => {
-    const userId = req.user.id;
+    console.log("🔍 Usuario autenticado:", req.user); // 🔥 Agrega este log aquí
+
+    const userId = req.user.id; // 🔥 Asegúrate de que req.user existe
 
     try {
         const query = `
@@ -132,9 +134,11 @@ const getFollowers = async (req, res) => {
         res.send({ seguidores: results.recordset });
     } catch (error) {
         console.error("Error al obtener seguidores:", error);
-        res.status(500).send("Error al obtener seguidores");
+        res.status(500).send({ error: "Error al obtener seguidores" });
     }
 };
+
+
 
 // Obtener seguidos
 const getFollowing = async (req, res) => {

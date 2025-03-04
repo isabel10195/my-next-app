@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/components/CardPrincipal/article-card.tsx"  ],
+, "src/components/CardPrincipal/article-card.tsx", "src/app/api/followers/route.s"  ],
   "exclude": [
     "node_modules"
   ]

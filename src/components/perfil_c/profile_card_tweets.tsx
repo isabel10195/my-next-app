@@ -17,7 +17,17 @@ interface Tweet {
   tweet_text: string;
 }
 
-const CardTweets: React.FC = () => {
+interface CardTweetsProps {
+  handleDeleteTweet: (tweetId: string) => void;
+  handleEditTweet: (tweetId: string, text: string) => void;
+  handleSaveTweet: (tweetId: string, text: string) => void;
+}
+
+const CardTweets: React.FC<CardTweetsProps> = ({
+  handleDeleteTweet,
+  handleEditTweet,
+  handleSaveTweet,
+}) => {
   const { user } = useAuth(); // 🔥 Obtenemos el usuario autenticado
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +70,6 @@ const CardTweets: React.FC = () => {
     setEditedTweetText("");
   };
 
-  // 🔥 Si el usuario NO está logueado, mostramos un mensaje
   if (!user) {
     return (
       <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
@@ -120,6 +129,7 @@ const CardTweets: React.FC = () => {
                         <Button
                           size="icon"
                           variant="ghost"
+                          onClick={() => handleSaveTweet(tweet.tweet_id, editedTweetText)}
                           className="text-green-500 hover:text-green-400"
                         >
                           <Check className="h-4 w-4" />
@@ -146,6 +156,7 @@ const CardTweets: React.FC = () => {
                         <Button
                           size="icon"
                           variant="ghost"
+                          onClick={() => handleDeleteTweet(tweet.tweet_id)}
                           className="text-red-500 hover:text-red-400"
                         >
                           <Trash className="h-4 w-4" />
