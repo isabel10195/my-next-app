@@ -1,34 +1,29 @@
 📌 Puntos clave de tu backend:
-Autenticación con JWT:
-
+🔑 Autenticación con JWT:
 Se genera un token JWT después de hacer login y se almacena en una cookie httpOnly.
-La cookie se envía con httpOnly: true, lo que significa que el frontend no puede acceder directamente a ella con localStorage.
-Middleware de autenticación (authMiddleware)
-
+La cookie se envía con httpOnly: true, lo que impide el acceso directo desde el frontend con localStorage.
+🔐 Middleware de autenticación (authMiddleware):
 Verifica el token en las cookies (req.cookies.token).
-Si el token es válido, añade los datos del usuario (req.user) y deja pasar la petición.
-Si no hay token o es inválido, devuelve un 401 No autorizado.
-Logout (logout)
+Si el token es válido, añade los datos del usuario a req.user y deja pasar la petición.
+Si no hay token o es inválido, devuelve un 401 Unauthorized.
+🚪 Logout (logout):
+Elimina la cookie del usuario con res.clearCookie("token", { path: "/" }).
+🛢️ Base de datos SQL Server:
+Se usa MSSQL para almacenar usuarios y relaciones.
+Contraseñas encriptadas con bcrypt para mayor seguridad.
+🔍 Diferencias entre authController.js y userController.js
+Ambos controladores manejan información de los usuarios, pero con diferentes propósitos:
 
-Simplemente elimina la cookie del usuario con res.clearCookie("token", { path: "/" }).
-Base de datos SQL Server (executeQuery)
-
-Se usa MSSQL para almacenar usuarios.
-Contraseñas encriptadas con bcrypt.
-
-
-🔍 Diferencia entre authController.js y userController.js
-Ambos controladores gestionan información de los usuarios, pero desde enfoques distintos:
-
-1️⃣ authController.js (Autenticación y Sesión)
-Este controlador maneja todo lo relacionado con la autenticación: login, logout y recuperación del perfil del usuario autenticado.
-El endpoint /api/auth/me usa getUserProfile() para obtener los datos del usuario autenticado en base a su token.
-
-📌 Ejemplo de uso de authController.js
-Login: POST /api/auth/login
-Logout: POST /api/auth/logout
-Obtener perfil del usuario logueado: GET /api/auth/me
-Registro: POST /api/auth/register
+🛠️ authController.js (Autenticación y sesión)
+Maneja autenticación: login, logout y perfil del usuario autenticado.
+No devuelve datos de otros usuarios, solo del usuario en sesión.
+GET /api/auth/me usa getUserProfile() para obtener los datos del usuario autenticado mediante su token.
+📌 Endpoints de authController.js
+Acción	Endpoint	Método
+Login	/api/auth/login	POST
+Logout	/api/auth/logout	POST
+Obtener perfil del usuario autenticado	/api/auth/me	GET
+Registro de usuario	/api/auth/register	POST
 js
 Copiar
 Editar
@@ -54,14 +49,14 @@ const getUserProfile = async (req, res) => {
         role: user.user_role,
     });
 };
-2️⃣ userController.js (Información general de usuarios)
-Este controlador es más genérico y se usa para obtener información de otros usuarios, no solo del usuario autenticado.
-El endpoint /api/user/:id usa getUserData() para obtener información de cualquier usuario dado su user_id.
-
-📌 Ejemplo de uso de userController.js
-Obtener datos de cualquier usuario: GET /api/user/:id
-Obtener detalles adicionales del usuario: GET /api/user/:id/details
-Buscar usuarios: (si agregas un endpoint para esto)
+🔍 userController.js (Información general de usuarios)
+Obtiene información de otros usuarios, no solo del autenticado.
+Incluye datos como seguidores, seguidos, detalles adicionales, etc.
+GET /api/user/:id usa getUserData() para obtener la info de cualquier usuario dado su user_id.
+📌 Endpoints de userController.js
+Acción	Endpoint	Método
+Obtener datos de cualquier usuario	/api/user/:id	GET
+Obtener detalles adicionales del usuario	/api/user/:id/details	GET
 js
 Copiar
 Editar
@@ -91,13 +86,13 @@ const getUserData = async (req, res) => {
     res.send(result.recordset[0]);
 };
 📌 ¿Cuándo usar cada uno?
-Caso	Usar authController.js	Usar userController.js
-Obtener datos del usuario autenticado (sesión)	✅ GET /api/auth/me	❌ No aplica
+Caso	authController.js	userController.js
+Obtener datos del usuario autenticado	✅ GET /api/auth/me	❌ No aplica
 Obtener datos de otro usuario por user_id	❌ No aplica	✅ GET /api/user/:id
 Iniciar sesión	✅ POST /api/auth/login	❌ No aplica
 Cerrar sesión	✅ POST /api/auth/logout	❌ No aplica
 Obtener seguidores, seguidos, etc.	❌ No aplica	✅ GET /api/user/:id
 🔧 Conclusión
-authController.js se usa para autenticación y datos del usuario logueado.
-userController.js se usa para obtener datos de cualquier usuario.
-En tu caso, el problema era que authController.js no devolvía cover_url. Solucionado agregando cover_url en getUserProfile(). 🚀
+authController.js → Para autenticación y datos del usuario logueado.
+userController.js → Para obtener datos de cualquier usuario.
+El error de la portada (cover_url) se solucionó al agregarlo a getUserProfile() en authController.js. 🚀
