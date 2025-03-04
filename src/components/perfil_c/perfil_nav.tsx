@@ -6,14 +6,12 @@ import { Home, User, Bell, Mail, Settings, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/app/context/AuthContext";
 
-// Definimos una interfaz para los ítems del menú
 interface MenuItem {
   icon: React.ElementType;
   label: string;
   path: string;
 }
 
-// Lista de ítems del menú
 const menuItems: MenuItem[] = [
   { icon: Home, label: "Inicio", path: "/" },
   { icon: User, label: "Perfil", path: "/pages/profile" },
@@ -24,22 +22,21 @@ const menuItems: MenuItem[] = [
 
 export default function Sidebar() {
   const router = useRouter();
-  const { user, setUser } = useAuth(); // 🔥 Obtenemos el estado de autenticación
+  const { user, setUser } = useAuth();
 
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:3001/api/auth/logout", {
         method: "POST",
-        credentials: "include", // 🔥 Importante para enviar la cookie
+        credentials: "include",
       });
-  
-      setUser(null); // Eliminamos el usuario del contexto
-      router.push("/pages/login"); // Redirigimos al login
+
+      setUser(null);
+      router.push("/pages/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
-  
 
   return (
     <>
@@ -51,7 +48,6 @@ export default function Sidebar() {
               <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
             </Link>
           ))}
-          {/* Icono logout */}
           <button onClick={handleLogout}>
             <LogOut className="h-6 w-6 text-red-500" />
           </button>
@@ -59,14 +55,14 @@ export default function Sidebar() {
       </div>
 
       {/* Sidebar lateral en pantallas grandes */}
-      <aside className="hidden xl:flex flex-col fixed h-screen w-64 p-4 bg-white dark:bg-gray-900 shadow-lg overflow-y-auto">
-        {user ? ( // 🔥 Solo mostramos el perfil si el usuario está logueado
-          <div className="flex items-center space-x-4 mb-6 mt-6 text-gray-500 dark:text-gray-300">
-            <Avatar>
-              <AvatarImage src={user.avatar_url || "/placeholder-user.jpg"} alt={`@${user.user_handle}`} />
-              <AvatarFallback>{user.user_handle?.charAt(0).toUpperCase()}</AvatarFallback>
+      <aside className="hidden xl:flex flex-col fixed h-[90vh] w-64 p-4 bg-white dark:bg-gray-900 shadow-lg overflow-hidden rounded-xl">
+        {user ? (
+          <div className="flex flex-col items-center space-y-2 mb-6 mt-6 text-gray-500 dark:text-gray-300">
+            <Avatar className="w-20 h-20 border-2 border-gray-300 shadow-xl dark:border-gray-300">
+              <AvatarImage src={user.avatarUrl || "/placeholder.svg"} alt={user.name} />
+              <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="text-center">
               <p className="font-semibold text-gray-900 dark:text-white">{user.name}</p>
               <p className="text-sm text-gray-500 dark:text-gray-300">@{user.user_handle}</p>
             </div>
@@ -81,7 +77,7 @@ export default function Sidebar() {
         )}
 
         {/* Lista de navegación */}
-        <nav>
+        <nav className="flex-1">
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.label}>
@@ -94,20 +90,20 @@ export default function Sidebar() {
               </li>
             ))}
           </ul>
-
-          {/* Botón de Cerrar Sesión (solo si está logueado) */}
-          {user && (
-            <div className="mt-10">
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-4 p-2 rounded-xl text-red-400 hover:bg-red-100 dark:hover:bg-gray-700 cursor-pointer w-full"
-              >
-                <LogOut className="h-6 w-6" />
-                <span>Cerrar sesión</span>
-              </button>
-            </div>
-          )}
         </nav>
+
+        {/* Botón de Cerrar Sesión */}
+        {user && (
+          <div className="mt-auto">
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center w-full p-3 rounded-xl text-red-400 hover:bg-red-100 dark:hover:bg-gray-700 cursor-pointer"
+            >
+              <LogOut className="h-6 w-6" />
+              <span className="ml-2">Cerrar sesión</span>
+            </button>
+          </div>
+        )}
       </aside>
     </>
   );
