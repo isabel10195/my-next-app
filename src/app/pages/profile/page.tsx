@@ -56,7 +56,7 @@ export default function ProfilePage() {
             <div className="flex flex-col lg:flex-row gap-8 w-full">
               {/* DISPOSICIÓN PANTALLAS PEQUEÑAS */}
               <div className="lg:hidden w-full">
-                <CardUsuario profileData={profile} />
+                <CardUsuario/>
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   className="w-full flex py-1 px-2 bg-white dark:bg-gray-800 rounded-md shadow-sm"
@@ -109,7 +109,7 @@ export default function ProfilePage() {
               </div>
               {/* DISPOSICIÓN PANTALLAS GRANDES */}
               <div className="hidden lg:block xl:block relative w-full xl:w-[300px] xl:ml-60 mt-2 space-y-4">
-                <CardUsuario profileData={profile} />
+                <CardUsuario/>
                 <CardLogros achievements={userDetails?.achievements??[]} />
                 <CardIntereses interests={userDetails?.interests ?? []} renderTagsWithColors={renderTagsWithColors} />
                 <CardHabilidades skills={userDetails?.skills ?? []} />

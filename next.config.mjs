@@ -14,6 +14,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com', // Nuevo dominio agregado
       },
+      {
+        protocol: "https",
+        hostname: "blog.postman.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.imgur.com", // 🔥 Agregado dominio de Imgur
+      },
     ],
   },
 };
