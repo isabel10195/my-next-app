@@ -1,13 +1,15 @@
 const { executeQuery } = require("../config/database");
 const db = require("mssql");
 
-// Seguir a un usuario
+// 🔹 Seguir a un usuario
 const followUser = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: "No autenticado" });
+    }
     const { follow_user_id } = req.body;
     const userId = req.user.id;
 
     try {
-        // Verificar si ya sigue al usuario
         const result = await executeQuery(
             "SELECT * FROM followers WHERE follower_id = @userId AND following_id = @follow_user_id",
             [
@@ -17,10 +19,9 @@ const followUser = async (req, res) => {
         );
 
         if (result.recordset.length > 0) {
-            return res.status(400).send("Ya sigues a este usuario");
+            return res.status(400).json({ error: "Ya sigues a este usuario" });
         }
 
-        // Seguir al usuario
         await executeQuery(
             "INSERT INTO followers (follower_id, following_id) VALUES (@userId, @follow_user_id)",
             [
@@ -29,31 +30,27 @@ const followUser = async (req, res) => {
             ]
         );
 
-        // Obtener lista actualizada de seguidos
         const followedUsers = await executeQuery(
             "SELECT following_id, user_handle FROM followers JOIN users ON following_id = user_id WHERE follower_id = @userId",
-            [
-                { name: "userId", type: db.Int, value: userId },
-            ]
+            [{ name: "userId", type: db.Int, value: userId }]
         );
 
-        res.send({
-            message: "Usuario seguido correctamente",
-            followedUsers: followedUsers.recordset,
-        });
+        res.json({ message: "Usuario seguido correctamente", followedUsers: followedUsers.recordset });
     } catch (error) {
-        console.error("Error al seguir al usuario:", error);
-        res.status(500).send("Error al seguir al usuario");
+        console.error("❌ Error al seguir al usuario:", error);
+        res.status(500).json({ error: "Error al seguir al usuario" });
     }
 };
 
-// Dejar de seguir a un usuario
+// 🔹 Dejar de seguir a un usuario
 const unfollowUser = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: "No autenticado" });
+    }
     const { follow_user_id } = req.body;
     const userId = req.user.id;
 
     try {
-        // Verificar si el usuario sigue al usuario objetivo
         const result = await executeQuery(
             "SELECT * FROM followers WHERE follower_id = @userId AND following_id = @follow_user_id",
             [
@@ -63,10 +60,9 @@ const unfollowUser = async (req, res) => {
         );
 
         if (result.recordset.length === 0) {
-            return res.status(400).send("No estás siguiendo a este usuario");
+            return res.status(400).json({ error: "No estás siguiendo a este usuario" });
         }
 
-        // Dejar de seguir al usuario
         await executeQuery(
             "DELETE FROM followers WHERE follower_id = @userId AND following_id = @follow_user_id",
             [
@@ -75,26 +71,23 @@ const unfollowUser = async (req, res) => {
             ]
         );
 
-        // Obtener lista actualizada de seguidos
         const followedUsers = await executeQuery(
             "SELECT following_id, user_handle FROM followers JOIN users ON following_id = user_id WHERE follower_id = @userId",
-            [
-                { name: "userId", type: db.Int, value: userId },
-            ]
+            [{ name: "userId", type: db.Int, value: userId }]
         );
 
-        res.send({
-            message: "Usuario dejado de seguir correctamente",
-            followedUsers: followedUsers.recordset,
-        });
+        res.json({ message: "Usuario dejado de seguir correctamente", followedUsers: followedUsers.recordset });
     } catch (error) {
-        console.error("Error al dejar de seguir al usuario:", error);
-        res.status(500).send("Error al dejar de seguir al usuario");
+        console.error("❌ Error al dejar de seguir al usuario:", error);
+        res.status(500).json({ error: "Error al dejar de seguir al usuario" });
     }
 };
 
-// Obtener recomendaciones de usuarios para seguir
+// 🔹 Obtener recomendaciones de usuarios para seguir
 const getRecommendations = async (req, res) => {
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: "No autenticado" });
+    }
     const userId = req.user.id;
 
     try {
@@ -108,18 +101,21 @@ const getRecommendations = async (req, res) => {
         const inputs = [{ name: "userId", type: db.Int, value: userId }];
         const results = await executeQuery(query, inputs);
 
-        res.send({ recommendations: results.recordset });
+        res.json({ recommendations: results.recordset });
     } catch (error) {
-        console.error("Error al obtener recomendaciones:", error);
-        res.status(500).send("Error al obtener recomendaciones");
+        console.error("❌ Error al obtener recomendaciones:", error);
+        res.status(500).json({ error: "Error al obtener recomendaciones" });
     }
 };
 
-// Obtener seguidores
+// 🔹 Obtener seguidores
 const getFollowers = async (req, res) => {
-    console.log("🔍 Usuario autenticado:", req.user); // 🔥 Agrega este log aquí
-
-    const userId = req.user.id; // 🔥 Asegúrate de que req.user existe
+    console.log("📥 Entrando a getFollowers...");
+    if (!req.user || !req.user.id) {
+        console.log("❌ Usuario no autenticado en getFollowers");
+        return res.status(401).json({ error: "No autenticado" });
+    }
+    const userId = req.user.id;
 
     try {
         const query = `
@@ -131,17 +127,25 @@ const getFollowers = async (req, res) => {
         const inputs = [{ name: "userId", type: db.Int, value: userId }];
         const results = await executeQuery(query, inputs);
 
-        res.send({ seguidores: results.recordset });
+        if (results.recordset.length === 0) {
+            console.log("ℹ️ No se encontraron seguidores para este usuario.");
+            return res.status(200).json({ seguidores: [] });
+        }
+
+        res.json({ seguidores: results.recordset });
     } catch (error) {
-        console.error("Error al obtener seguidores:", error);
-        res.status(500).send({ error: "Error al obtener seguidores" });
+        console.error("❌ Error al obtener seguidores:", error);
+        res.status(500).json({ error: "Error al obtener seguidores" });
     }
 };
 
-
-
-// Obtener seguidos
+// 🔹 Obtener seguidos
 const getFollowing = async (req, res) => {
+    console.log("📥 Entrando a getFollowing...");
+    if (!req.user || !req.user.id) {
+        console.log("❌ Usuario no autenticado en getFollowing");
+        return res.status(401).json({ error: "No autenticado" });
+    }
     const userId = req.user.id;
 
     try {
@@ -154,10 +158,15 @@ const getFollowing = async (req, res) => {
         const inputs = [{ name: "userId", type: db.Int, value: userId }];
         const results = await executeQuery(query, inputs);
 
-        res.send({ seguidos: results.recordset });
+        if (results.recordset.length === 0) {
+            console.log("ℹ️ No se encontraron seguidos para este usuario.");
+            return res.status(200).json({ seguidos: [] });
+        }
+
+        res.json({ seguidos: results.recordset });
     } catch (error) {
-        console.error("Error al obtener seguidos:", error);
-        res.status(500).send("Error al obtener seguidos");
+        console.error("❌ Error al obtener seguidos:", error);
+        res.status(500).json({ error: "Error al obtener seguidos" });
     }
 };
 

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api/followers";
+const API_URL = "/api/followers";
 
 export const fetchRecommendations = async () => {
   const response = await fetch(`${API_URL}/recommendations`, {
@@ -10,7 +10,7 @@ export const fetchRecommendations = async () => {
 };
 
 export const fetchFollowers = async () => {
-  const response = await fetch(`${API_URL}/followers`, {
+  const response = await fetch(`${API_URL}`, {
     method: "GET",
     credentials: "include",
   });

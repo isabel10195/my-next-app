@@ -23,7 +23,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/followers", followerRoutes);
 app.use("/api/community", communityRoutes);
-app.use("/api/stories", storyRoutes); // 📌 Añadimos las rutas de Stories
+app.use("/api/stories", storyRoutes);
 //app.use("/api/imagesIA", imageIARoutes);
 
 // Servidor

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api/tweets";
+const API_URL = "/api/tweets";
 
 export const fetchForYouTweets = async () => {
   const response = await fetch(`${API_URL}/interest`, {
@@ -10,7 +10,7 @@ export const fetchForYouTweets = async () => {
   const data = await response.json();
   return data.tweets.map(tweet => ({
     ...tweet,
-    comments: tweet.comments || [] // Asegurar que haya un array de comentarios
+    comments: tweet.comments || [],
   }));
 };
 
@@ -25,101 +25,96 @@ export const fetchFollowingTweets = async () => {
   return data.tweets;
 };
 
+export const fetchTweets = async () => {
+  const response = await fetch(API_URL, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Error al obtener los tweets");
+  return response.json();
+};
+
+
 export const createTweet = async (tweet_text) => {
   const response = await fetch(`${API_URL}/create`, {
     method: "POST",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tweet_text }),
+  });
+  if (!response.ok) throw new Error("Error creando el tweet");
+  return response.json();
+};
+
+export const editTweet = async (tweet_id, tweet_text) => {
+  const response = await fetch(`${API_URL}/edit/${tweet_id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ tweet_text }),
   });
   if (!response.ok) {
-    throw new Error("Error creating tweet");
+    const data = await response.json();
+    throw new Error(data.message || "Error al actualizar el tweet");
   }
-  await response.json();
+  return response.json();
 };
 
-export const fetchTweets = async () => {
-    const response = await fetch(API_URL, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!response.ok) throw new Error("Error al obtener los tweets");
-    return response.json();
-  };
-  
-  export const editTweet = async (tweet_id, tweet_text) => {
-    const response = await fetch(`${API_URL}/edit/${tweet_id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ tweet_text }),
-    });
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Error al actualizar el tweet");
-    }
-    return response.json();
-  };
-  
-  export const deleteTweet = async (tweet_id) => {
-    const response = await fetch(`${API_URL}/delete/${tweet_id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Error al eliminar el tweet");
-    }
-    return response.json();
-  };
+export const deleteTweet = async (tweet_id) => {
+  const response = await fetch(`${API_URL}/delete/${tweet_id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al eliminar el tweet");
+  }
+  return response.json();
+};
 
-  export const likeTweet = async (tweet_id) => {
-    const response = await fetch(`${API_URL}/like`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ tweet_id }),
-    });
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Error al dar like");
-    }
-    return response.json();
-  };
+export const likeTweet = async (tweet_id) => {
+  const response = await fetch(`${API_URL}/like`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ tweet_id }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al dar like");
+  }
+  return response.json();
+};
 
-  export const commentTweet = async (tweetId, commentText) => {
-    const response = await fetch(`${API_URL}/${tweetId}/comments`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ comment_text: commentText }), // tweetId se pasa en la URL
-    });
-    if (!response.ok) throw new Error("Error al comentar");
-    return await response.json(); // Debe devolver { message, comment }
-  };
-  
-  export const fetchCommentsByTweet = async (tweetId) => {
-    const response = await fetch(`${API_URL}/${tweetId}/comments`, {
-      credentials: "include",
-    });
-    if (!response.ok) throw new Error("Error al obtener comentarios");
-    return await response.json(); // Debe devolver { comments: [...] }
-  };
+export const commentTweet = async (tweetId, commentText) => {
+  const response = await fetch(`${API_URL}/${tweetId}/comments`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ comment_text: commentText }),
+  });
+  if (!response.ok) throw new Error("Error al comentar");
+  return await response.json();
+};
 
-  export const toggleRetweet = async (tweet_id) => {
-    const response = await fetch(`${API_URL}/retweet`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tweet_id }),
-    });
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Error al hacer retweet");
-    }
-    return response.json();
-  };  
+export const fetchCommentsByTweet = async (tweetId) => {
+  const response = await fetch(`${API_URL}/${tweetId}/comments`, {
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Error al obtener comentarios");
+  return await response.json();
+};
+
+export const toggleRetweet = async (tweet_id) => {
+  const response = await fetch(`${API_URL}/retweet`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tweet_id }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al hacer retweet");
+  }
+  return response.json();
+};
