@@ -110,7 +110,6 @@ export default function ProfilePage() {
 
               <div className="lg:hidden w-full">
               <CardTweets
-                tweets={tweets}
                 handleDeleteTweet={() => {}} // Implementar o pasar función real
                 handleEditTweet={() => {}}   // Implementar o pasar función real
                 handleSaveTweet={() => {}}   // Implementar o pasar función real
