@@ -17,7 +17,18 @@ interface Tweet {
 
 interface CardTweetsProps {
   tweets: Tweet[];
-  user: any; // 🔥 Agregamos la validación del usuario
+  user: {
+    name: string;
+    user_handle: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+    bio?: string;
+    location?: string;
+    birthday?: string;
+    email?: string;
+    followers: number;
+    following: number;
+  } | null;
   handleDeleteTweet: (tweetId: string) => void;
   handleEditTweet: (tweetId: string, text: string) => void;
   handleSaveTweet: (tweetId: string, text: string) => void;

@@ -4,13 +4,27 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Home, User, Bell, Mail, Settings, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/app/context/AuthContext";
 import { toast } from "react-hot-toast";
 
 interface MenuItem {
   icon: React.ElementType;
   label: string;
   path: string;
+}
+
+interface PerfilNavProps {
+  user: {
+    name: string;
+    user_handle: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+    bio?: string;
+    location?: string;
+    birthday?: string;
+    email?: string;
+    followers: number;
+    following: number;
+  } | null;
 }
 
 const menuItems: MenuItem[] = [
@@ -21,9 +35,8 @@ const menuItems: MenuItem[] = [
   { icon: Settings, label: "Configuración", path: "/pages/settings" },
 ];
 
-export default function PerfilNav() {
+export default function PerfilNav({ user }: PerfilNavProps) {
   const router = useRouter();
-  const { user, setUser } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -36,7 +49,6 @@ export default function PerfilNav() {
         throw new Error("Error en el cierre de sesión");
       }
 
-      setUser(null);
       toast.success("Sesión cerrada exitosamente");
       router.push("/pages/login");
     } catch (error) {
@@ -55,9 +67,11 @@ export default function PerfilNav() {
               <item.icon className="h-6 w-6 text-gray-700 dark:text-gray-300" />
             </Link>
           ))}
-          <button onClick={handleLogout}>
-            <LogOut className="h-6 w-6 text-red-500" />
-          </button>
+          {user && (
+            <button onClick={handleLogout}>
+              <LogOut className="h-6 w-6 text-red-500" />
+            </button>
+          )}
         </div>
       </div>
 

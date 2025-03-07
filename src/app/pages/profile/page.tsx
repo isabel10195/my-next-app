@@ -33,36 +33,35 @@ export default function ProfilePage() {
         const authRes = await fetch("/api/auth/me");
         const authData = await authRes.json();
         if (!authData.authenticated) {
-          setError("Inicia sesión para ver tu perfil");
-          setLoading(false);
-          return;
+          setUser(null);
+        } else {
+          setUser(authData.user);
+
+          // 🔹 Hacer todas las peticiones en paralelo
+          const [userDataRes, userDetailsRes, tweetsRes, followersRes, followingRes] = await Promise.all([
+            fetch("/api/users/data"),
+            fetch("/api/users/details"),
+            fetch("/api/tweets"),
+            fetch("/api/followers"),
+            fetch("/api/followers/following"),
+          ]);
+
+          // 🔹 Convertir respuestas a JSON
+          const [userData, userDetailsData, tweetsData, followersData, followingData] = await Promise.all([
+            userDataRes.json(),
+            userDetailsRes.json(),
+            tweetsRes.json(),
+            followersRes.json(),
+            followingRes.json(),
+          ]);
+
+          // 🔹 Guardar los datos en el estado
+          setUser(userData);
+          setUserDetails(userDetailsData);
+          setTweets(tweetsData.tweets || []);
+          setFollowers(followersData);
+          setFollowing(followingData);
         }
-        setUser(authData.user);
-
-        // 🔹 Hacer todas las peticiones en paralelo
-        const [userDataRes, userDetailsRes, tweetsRes, followersRes, followingRes] = await Promise.all([
-          fetch("/api/users/data"),
-          fetch("/api/users/details"),
-          fetch("/api/tweets"),
-          fetch("/api/followers"),
-          fetch("/api/followers/following"),
-        ]);
-
-        // 🔹 Convertir respuestas a JSON
-        const [userData, userDetailsData, tweetsData, followersData, followingData] = await Promise.all([
-          userDataRes.json(),
-          userDetailsRes.json(),
-          tweetsRes.json(),
-          followersRes.json(),
-          followingRes.json(),
-        ]);
-
-        // 🔹 Guardar los datos en el estado
-        setUser(userData);
-        setUserDetails(userDetailsData);
-        setTweets(tweetsData.tweets || []);
-        setFollowers(followersData);
-        setFollowing(followingData);
       } catch (err) {
         setError("Error al cargar los datos");
       } finally {
@@ -73,13 +72,6 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <p>Cargando...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
   const renderTagsWithColors = (tags: string[]) => {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
     return tags.map((tag, index) => (
@@ -88,7 +80,7 @@ export default function ProfilePage() {
       </span>
     ));
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -100,34 +92,16 @@ export default function ProfilePage() {
       <div className="mx-auto px-4 lg:px-8 flex justify-center mt-4">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           <div className="w-full lg:w-[250px] lg:flex-shrink-0 space-y-4 z-10 -mt-4">
-            <PerfilNav />
+            <PerfilNav user={user} />
           </div>
           <div className="flex-1 space-y-4 w-full relative">
             <CardUsuario user={user} />
-            <CardLogros achievements={userDetails.achievements} />
-            <CardIntereses 
-              interests={userDetails.interests} 
-              renderTagsWithColors={renderTagsWithColors} 
-            />
-
-            <CardHabilidades skills={userDetails.skills} />
-            <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} />
-            <CardTweets 
-              tweets={tweets} 
-              user={user} 
-              handleDeleteTweet={() => {}} 
-              handleEditTweet={() => {}} 
-              handleSaveTweet={() => {}} 
-            />
-            <UserTabs 
-              user={user}
-              seguidores={followers} 
-              seguidos={following} 
-              recomendaciones={userDetails.recommendations} 
-              followUser={() => {}} 
-              unfollowUser={() => {}} 
-            />
-
+            <CardLogros user={user} achievements={userDetails.achievements} />
+            <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+            <CardHabilidades user={user} skills={userDetails.skills} />
+            <CardEstadisticas user={user} stats={{ posts: tweets.length, comments: 120, interactions: 500 }} />
+            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
+            <UserTabs user={user} seguidores={followers} seguidos={following} recomendaciones={userDetails.recommendations} followUser={() => {}} unfollowUser={() => {}} />
           </div>
         </div>
       </div>

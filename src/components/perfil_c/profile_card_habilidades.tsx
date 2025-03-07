@@ -7,6 +7,18 @@ import { useAuth } from "@/app/context/AuthContext";
 
 // Definimos la estructura de los props
 interface CardHabilidadesProps {
+  user: {
+    name: string;
+    user_handle: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+    bio?: string;
+    location?: string;
+    birthday?: string;
+    email?: string;
+    followers: number;
+    following: number;
+  } | null;
   skills?: string[]; // 🔥 Ahora es opcional
 }
 

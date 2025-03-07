@@ -7,6 +7,18 @@ import { useAuth } from "@/app/context/AuthContext";
 
 // 🔥 Definimos la estructura de los props
 interface CardInteresesProps {
+  user: {
+    name: string;
+    user_handle: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+    bio?: string;
+    location?: string;
+    birthday?: string;
+    email?: string;
+    followers: number;
+    following: number;
+  } | null;
   interests: string[];
   renderTagsWithColors: (tags: string[]) => React.ReactNode; // 🔥 Usa React.ReactNode en vez de JSX.Element[]
 }
