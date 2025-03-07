@@ -11,7 +11,7 @@ import CardLogros from "@/components/perfil_c/profile_card_logros";
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [tweets, setTweets] = useState([]);
-  const [userDetails, setUserDetails] = useState({ logros: [] }); // ✅ Ahora definimos `logros`
+  const [userDetails, setUserDetails] = useState({ achievements: [] }); // ✅ Cambiado `logros` por `achievements`
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -35,14 +35,13 @@ export default function ProfilePage() {
           const detailsRes = await fetch("/api/users/details", { credentials: "include" });
 
           if (!detailsRes.ok) {
-            console.warn("⚠️ No se encontraron detalles del usuario (404). Manteniendo `logros: []`.");
-            setUserDetails({ logros: [] });
+            console.warn("⚠️ No se encontraron detalles del usuario (404). Manteniendo `achievements: []`.");
+            setUserDetails({ achievements: [] });
           } else {
             const detailsData = await detailsRes.json();
             console.log("📜 Detalles del usuario obtenidos en page.tsx:", detailsData);
-            setUserDetails(detailsData);
+            setUserDetails({ achievements: detailsData.achievement ?? [] }); // ✅ Aseguramos que achievements tenga el formato correcto
           }
-          
         }
       } catch (err) {
         setError("Error al cargar los datos");
@@ -71,7 +70,7 @@ export default function ProfilePage() {
           <div className="flex-1 space-y-4 w-full relative">
             <CardUsuario user={user} />
             <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
-            <CardLogros user={user} achievements={userDetails.logros} /> {/* ✅ Pasamos `logros` correctamente */}
+            <CardLogros user={user} achievements={userDetails.achievements ?? []} /> {/* ✅ Ahora pasamos `achievements` correctamente */}
           </div>
         </div>
       </div>
