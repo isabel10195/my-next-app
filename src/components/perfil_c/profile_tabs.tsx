@@ -74,7 +74,7 @@ const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = 
               <p className="text-gray-500 dark:text-gray-300 text-center">Aún no tienes seguidores.</p>
             ) : (
               seguidores.map((user) => (
-                <div key={user.user_id} className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow">
+                <div key={user.user_id} className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2">
                   <div className="flex items-center space-x-3">
                     <Image src={user.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={40} height={40} className="rounded-full" />
                     <div>
