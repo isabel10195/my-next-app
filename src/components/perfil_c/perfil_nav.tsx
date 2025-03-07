@@ -20,7 +20,7 @@ const menuItems: MenuItem[] = [
   { icon: Settings, label: "Configuración", path: "/pages/settings" },
 ];
 
-export default function Sidebar() {
+export default function PerfilNav() {
   const router = useRouter();
   const { user, setUser } = useAuth();
 
