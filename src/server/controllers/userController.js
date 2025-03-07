@@ -38,10 +38,13 @@ const getUserData = async (req, res) => {
 };
 
 // Obtener detalles adicionales del usuario
+// Obtener detalles adicionales del usuario
 const getUserDetails = async (req, res) => {
     const userId = req.user.id;
 
     try {
+        console.log("📡 Buscando detalles del usuario en la base de datos:", userId);
+
         const query = `
             SELECT category, detail_text
             FROM user_details
@@ -52,17 +55,21 @@ const getUserDetails = async (req, res) => {
 
         if (result.recordset.length > 0) {
             const details = result.recordset.reduce((acc, row) => {
-                acc[row.category] = acc[row.category] || [];
-                acc[row.category].push(row.detail_text);
+                const key = row.category.toLowerCase(); // Convertir a minúsculas
+                acc[key] = acc[key] || [];
+                acc[key].push(row.detail_text);
                 return acc;
             }, {});
-            res.send(details);
+
+            console.log("✅ Datos del usuario obtenidos correctamente:", details);
+            res.status(200).json(details);
         } else {
-            res.status(404).send("No se encontraron detalles para el usuario");
+            console.warn("⚠️ Usuario sin detalles en la base de datos:", userId);
+            res.status(200).json({ logros: [] }); // 🔹 Ahora el frontend recibirá un array vacío en lugar de un error
         }
     } catch (error) {
-        console.error("Error al obtener detalles del usuario:", error);
-        res.status(500).send("Error al obtener detalles del usuario");
+        console.error("❌ Error al obtener detalles del usuario:", error);
+        res.status(500).json({ error: "Error al obtener detalles del usuario" });
     }
 };
 

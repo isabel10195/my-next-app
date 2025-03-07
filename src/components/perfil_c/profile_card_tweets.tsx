@@ -1,13 +1,14 @@
 "use client";
 
-import { Edit, Trash, Check, X } from "lucide-react";
+// el doble GET /api/tweets en la consola de frontend se debe a que React está renderizando el componente dos veces en modo desarrollo, 
+// lo cual es un comportamiento esperado en React Strict Mode.
+
+import { Edit, Trash } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-// 🔥 Definimos la estructura de los props
 interface Tweet {
   tweet_id: string;
   avatar_url?: string;
@@ -35,6 +36,8 @@ interface CardTweetsProps {
 }
 
 const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet, handleEditTweet, handleSaveTweet }) => {
+  console.log("🎥 Renderizando CardTweets con tweets:", tweets);
+
   if (!user) {
     return (
       <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
@@ -63,34 +66,10 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
             {tweets.map((tweet) => (
               <li key={tweet.tweet_id} className="p-4 bg-blue-800 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <Image
-                    src={tweet.avatar_url || "/placeholder-user.jpg"}
-                    alt="Avatar"
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
+                  <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
                   <div className="flex-1">
                     <h4 className="font-bold text-gray-200">{tweet.user_handle}</h4>
                     <p className="mt-1 text-gray-700 dark:text-gray-400">{tweet.tweet_text}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleEditTweet(tweet.tweet_id, tweet.tweet_text)}
-                      className="text-blue-500 hover:text-blue-400"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDeleteTweet(tweet.tweet_id)}
-                      className="text-red-500 hover:text-red-400"
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </li>
