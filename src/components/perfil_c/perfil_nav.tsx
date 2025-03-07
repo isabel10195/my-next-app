@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Home, User, Bell, Mail, Settings, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/app/context/AuthContext";
+import { toast } from "react-hot-toast";
 
 interface MenuItem {
   icon: React.ElementType;
@@ -26,15 +27,21 @@ export default function PerfilNav() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/api/auth/logout", {
+      const response = await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });
 
+      if (!response.ok) {
+        throw new Error("Error en el cierre de sesión");
+      }
+
       setUser(null);
+      toast.success("Sesión cerrada exitosamente");
       router.push("/pages/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+      toast.error("No se pudo cerrar sesión, inténtalo de nuevo");
     }
   };
 
