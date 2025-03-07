@@ -9,8 +9,7 @@ import PerfilNav from "@/components/perfil_c/perfil_nav";
 import CardLogros from "@/components/perfil_c/profile_card_logros";
 import CardIntereses from "@/components/perfil_c/profile_card_intereses"; 
 import CardHabilidades from "@/components/perfil_c/profile_card_habilidades"; 
-// import CardEstadisticas from "@/components/perfil_c/card_estadisticas"; // 🟡 AÑADIR DESPUÉS
-// import UserTabs from "@/components/perfil_c/profile_tabs"; // 🟡 AÑADIR DESPUÉS
+import UserTabs from "@/components/perfil_c/profile_tabs"; // ✅ Habilitado
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -52,15 +51,21 @@ export default function ProfilePage() {
             });
           }
 
-          // 🔹 Obtener seguidores y seguidos (PARA TABS) 🟡 DESCOMENTAR CUANDO SE HABILITE `UserTabs`
-          // const followersRes = await fetch("/api/followers", { credentials: "include" });
-          // const followingRes = await fetch("/api/followers/following", { credentials: "include" });
+          // 🔹 Obtener seguidores y seguidos
+          const followersRes = await fetch("/api/followers", { credentials: "include" });
+          const followingRes = await fetch("/api/followers/following", { credentials: "include" });
 
-          // const followersData = await followersRes.json();
-          // const followingData = await followingRes.json();
+          if (followersRes.ok) {
+            const followersData = await followersRes.json();
+            setFollowers(followersData.followers ?? []);
+          }
 
-          // setFollowers(followersData);
-          // setFollowing(followingData);
+          if (followingRes.ok) {
+            const followingData = await followingRes.json();
+            console.log("👥 Datos de following recibidos:", followingData); // 🔍 Agregar console.log() para depuración
+            setFollowing(followingData.seguidos ?? []); // 🔥 Cambiar "following" por "seguidos"
+          }
+          
         }
       } catch (err) {
         setError("Error al cargar los datos");
@@ -71,6 +76,45 @@ export default function ProfilePage() {
 
     fetchData();
   }, []);
+
+  // 🔹 Función para seguir a un usuario
+  const followUser = async (userId) => {
+    try {
+      const res = await fetch("/api/followers/follow", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ follow_user_id: userId }),
+      });
+
+      if (res.ok) {
+        const updatedFollowers = await res.json();
+        setFollowing(updatedFollowers.following ?? []);
+      }
+    } catch (error) {
+      console.error("❌ Error al seguir usuario:", error);
+    }
+  };
+
+  // 🔹 Función para dejar de seguir a un usuario
+  const unfollowUser = async (userId) => {
+    try {
+      const res = await fetch("/api/followers/unfollow", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ follow_user_id: userId }),
+      });
+
+      if (res.ok) {
+        const updatedFollowers = await res.json();
+        setFollowing(updatedFollowers.following ?? []);
+      }
+    } catch (error) {
+      console.error("❌ Error al dejar de seguir usuario:", error);
+    }
+  };
+
   const renderTagsWithColors = (tags: string[]) => {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
     return tags.map((tag, index) => (
@@ -79,7 +123,7 @@ export default function ProfilePage() {
       </span>
     ));
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -98,12 +142,19 @@ export default function ProfilePage() {
             <CardUsuario user={user} />
             <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
             <CardLogros user={user} achievements={userDetails.achievements} />
-
-            {/* 🟡 AÑADIR COMPONENTES UNO A UNO */}
             <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
             <CardHabilidades user={user} skills={userDetails.skills} />
-            {/* <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} /> */}
-            {/* <UserTabs user={user} seguidores={followers} seguidos={following} recomendaciones={userDetails.recommendations} followUser={() => {}} unfollowUser={() => {}} /> */}
+
+            {/* ✅ UserTabs habilitado */}
+            <UserTabs
+              user={user}
+              seguidores={followers} 
+              following={following} // ✅ Cambiado de "seguidos" a "following"
+              recomendaciones={[]} 
+              followUser={followUser}
+              unfollowUser={unfollowUser}
+            />
+
           </div>
         </div>
       </div>

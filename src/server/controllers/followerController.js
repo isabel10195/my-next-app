@@ -109,12 +109,15 @@ const getRecommendations = async (req, res) => {
 };
 
 // 🔹 Obtener seguidores
+// Obtener seguidores
 const getFollowers = async (req, res) => {
     console.log("📥 Entrando a getFollowers...");
+
     if (!req.user || !req.user.id) {
-        console.log("❌ Usuario no autenticado en getFollowers");
+        console.warn("❌ Usuario no autenticado en getFollowers");
         return res.status(401).json({ error: "No autenticado" });
     }
+
     const userId = req.user.id;
 
     try {
@@ -129,15 +132,16 @@ const getFollowers = async (req, res) => {
 
         if (results.recordset.length === 0) {
             console.log("ℹ️ No se encontraron seguidores para este usuario.");
-            return res.status(200).json({ seguidores: [] });
+            return res.status(200).json({ followers: [] }); // 🔥 Devuelve array vacío en lugar de error
         }
 
-        res.json({ seguidores: results.recordset });
+        res.json({ followers: results.recordset });
     } catch (error) {
         console.error("❌ Error al obtener seguidores:", error);
         res.status(500).json({ error: "Error al obtener seguidores" });
     }
 };
+
 
 // 🔹 Obtener seguidos
 const getFollowing = async (req, res) => {

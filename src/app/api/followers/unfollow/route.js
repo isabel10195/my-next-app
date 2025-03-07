@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const API_BASE_URL = "http://localhost:3001/api/followers/follow";
+const API_BASE_URL = "http://localhost:3001/api/followers/unfollow";
 
-// 📌 POST /api/followers/follow → Seguir a un usuario
+// 📌 POST /api/followers/unfollow → Dejar de seguir a un usuario
 export async function POST(req) {
   const { follow_user_id } = await req.json();
 
@@ -27,13 +27,13 @@ export async function POST(req) {
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: "Error al seguir usuario" }, { status: response.status });
+      return NextResponse.json({ error: "Error al dejar de seguir usuario" }, { status: response.status });
     }
 
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("❌ Error en POST /api/followers/follow:", error);
+    console.error("❌ Error en POST /api/followers/unfollow:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
