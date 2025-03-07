@@ -1,0 +1,52 @@
+Tu controlador userController.js está bien estructurado y listo para manejar las peticiones desde userRoutes.js. Ahora, repasemos cómo fluye la información y qué aspectos debes verificar para asegurar que /api/users/data y /api/users/details funcionen correctamente.
+
+📌 Flujo de la petición en el backend
+1️⃣ Next.js (page.tsx) hace una petición a /api/users/data y /api/users/details.
+2️⃣ Next.js reenvía la petición al backend Express (http://localhost:3001/api/users/data).
+3️⃣ Express recibe la petición en routes/userRoutes.js, verifica autenticación y la manda a userController.js.
+4️⃣ userController.js consulta la base de datos y devuelve los datos del usuario.
+5️⃣ Next.js recibe la respuesta y la pasa como props a los componentes.
+
+📌 ¿Qué verificar en getUserData?
+✅ req.user.id debe existir (lo establece authMiddleware.js).
+✅ executeQuery(query, inputs) debe ejecutarse correctamente.
+✅ La consulta SQL debe devolver datos válidos.
+
+🔹 Posibles problemas y cómo solucionarlos
+1️⃣ Si req.user.id es undefined, el middleware no está pasando los datos correctamente.
+
+Agrega un console.log(req.user); antes de const userId = req.user.id; para verificarlo.
+2️⃣ Si la consulta devuelve [], el usuario no existe en la base de datos.
+
+Asegúrate de que el user_id en la base de datos coincide con el id del token.
+3️⃣ Si executeQuery falla, revisa la conexión con la base de datos.
+
+¿La base de datos está corriendo correctamente?
+¿El usuario que estás consultando existe en la tabla users?
+🔹 Agrega más console.log() para depurar:
+
+js
+Copiar
+Editar
+console.log("🔍 ID del usuario recibido:", userId);
+console.log("🔍 Query ejecutada:", query);
+console.log("🔍 Inputs:", inputs);
+console.log("🔍 Resultado de la consulta:", result.recordset);
+📌 ¿Qué verificar en getUserDetails?
+✅ req.user.id debe existir.
+✅ La consulta SQL debe devolver datos válidos.
+
+🔹 Posibles problemas
+1️⃣ Si result.recordset.length === 0, el usuario no tiene detalles guardados.
+
+Es normal si la tabla user_details está vacía para ese usuario.
+2️⃣ Si hay un error en acc[row.category], puede ser porque row.category es null.
+
+Asegúrate de que category no sea null en la base de datos.
+📌 Resumen
+✅ El index.js ya importa userRoutes.js correctamente.
+✅ Las rutas /api/users/data y /api/users/details están en userRoutes.js.
+✅ El userController.js maneja las consultas correctamente, pero debes verificar los datos recibidos y la conexión con la base de datos.
+✅ Usa console.log() en getUserData y getUserDetails para depurar si algo falla.
+
+Si la API responde correctamente, tu frontend (page.tsx) debería recibir los datos sin problemas. 🚀
