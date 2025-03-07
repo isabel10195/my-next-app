@@ -4,12 +4,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Calendar, Mail, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useAuth } from "@/app/context/AuthContext";
 import Image from "next/image";
 
-const CardUsuario: React.FC = () => {
-  const { user } = useAuth(); // 🔥 Obtenemos el usuario desde el contexto de autenticación
+// 🔹 Modificamos el componente para recibir los datos del usuario como prop
+type CardUsuarioProps = {
+  user: {
+    name: string;
+    user_handle: string;
+    avatarUrl?: string;
+    coverUrl?: string;
+    bio?: string;
+    location?: string;
+    birthday?: string;
+    email?: string;
+    followers: number;
+    following: number;
+  } | null;
+};
 
+const CardUsuario: React.FC<CardUsuarioProps> = ({ user }) => {
+  // 🔹 Si el usuario no está autenticado, mostramos un mensaje en lugar de intentar renderizar datos inexistentes
   if (!user) {
     return (
       <Card className="mb-8 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none overflow-hidden shadow-xl">
@@ -22,23 +36,23 @@ const CardUsuario: React.FC = () => {
 
   return (
     <Card className="mb-8 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none overflow-hidden shadow-xl">
-      {/* Imagen de portada y Avatar */}
+      {/* 🔹 Imagen de portada y Avatar */}
       <div className="relative">
-      <Image 
-        src={user.coverUrl || "/placeholder.jpg"} 
-        alt="Cover" 
-        width={600} 
-        height={112} 
-        className="w-full h-28 object-cover" 
-        priority 
-      />
+        <Image 
+          src={user.coverUrl || "/placeholder.jpg"} 
+          alt="Cover" 
+          width={600} 
+          height={112} 
+          className="w-full h-28 object-cover" 
+          priority 
+        />
         <Avatar className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-36 h-36 border-2 border-gray-300 shadow-xl dark:border-gray-300">
           <AvatarImage src={user.avatarUrl || "/placeholder.svg"} alt={user.name} />
           <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
       </div>
 
-      {/* Información del usuario */}
+      {/* 🔹 Información del usuario */}
       <CardContent className="mt-20 p-6 text-center">
         <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300">{user.name}</h2>
         <p className="text-gray-700 dark:text-gray-400">@{user.user_handle}</p>
@@ -46,7 +60,7 @@ const CardUsuario: React.FC = () => {
 
         <Separator className="bg-gray-300 dark:bg-gray-800" />
 
-        {/* Lista de detalles */}
+        {/* 🔹 Lista de detalles */}
         <div className="mt-6 space-y-3 text-left">
           {user.location && (
             <div className="flex items-center gap-3">

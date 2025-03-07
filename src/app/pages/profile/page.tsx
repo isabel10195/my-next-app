@@ -1,56 +1,85 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import CardUsuario from "@/components/perfil_c/profile_card_usuario";
 import CardLogros from "@/components/perfil_c/profile_card_logros";
 import CardIntereses from "@/components/perfil_c/profile_card_intereses";
 import CardEstadisticas from "@/components/perfil_c/card_estadisticas";
 import CardHabilidades from "@/components/perfil_c/profile_card_habilidades";
-import CardTweets from "@/components/perfil_c/profile_card_tweets"; 
+import CardTweets from "@/components/perfil_c/profile_card_tweets";
 import UserTabs from "@/components/perfil_c/profile_tabs";
 import Menu from "@/components/perfil_c/perfil_nav";
-import useProfile from "@/app/hooks/useProfile";
 
 export default function ProfilePage() {
-  const {
-    profile,
-    userDetails = {
-      achievements: [],
-      interests: [],
-      skills: [],
-      recommendations: [],
-    }, // ✅ Valores predeterminados para evitar errores
-    followers = [],
-    following = [],
-    tweets = [],
-    loading,
-    fetchProfileData,
-    fetchUserDetailsData,
-    fetchFollowersData,
-    fetchFollowingData,
-    fetchTweetsData,
-  } = useProfile();
-
-  console.log("📡 Datos recibidos en ProfilePage:", {
-    profile,
-    userDetails,
-    followers,
-    following,
-    tweets,
+  const [user, setUser] = useState(null);
+  const [userDetails, setUserDetails] = useState({
+    achievements: [],
+    interests: [],
+    skills: [],
+    recommendations: [],
   });
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [tweets, setTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const renderTagsWithColors = (tags = []) => {
-    const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
-    return tags.map((tag, index) => (
-      <span key={index} className={`px-2 py-1 text-white rounded ${colors[index % colors.length]}`}>
-        {tag}
-      </span>
-    ));
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 🔹 Verificar autenticación
+        const authRes = await fetch("/api/auth/me");
+        const authData = await authRes.json();
+        if (!authData.authenticated) {
+          setError("Inicia sesión para ver tu perfil");
+          setLoading(false);
+          return;
+        }
+        setUser(authData.user);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+        // 🔹 Hacer todas las peticiones en paralelo
+        const [userDataRes, userDetailsRes, tweetsRes, followersRes, followingRes] = await Promise.all([
+          fetch("/api/users/data"),
+          fetch("/api/users/details"),
+          fetch("/api/tweets"),
+          fetch("/api/followers"),
+          fetch("/api/followers/following"),
+        ]);
+
+        // 🔹 Convertir respuestas a JSON
+        const [userData, userDetailsData, tweetsData, followersData, followingData] = await Promise.all([
+          userDataRes.json(),
+          userDetailsRes.json(),
+          tweetsRes.json(),
+          followersRes.json(),
+          followingRes.json(),
+        ]);
+
+        // 🔹 Guardar los datos en el estado
+        setUser(userData);
+        setUserDetails(userDetailsData);
+        setTweets(tweetsData.tweets || []);
+        setFollowers(followersData);
+        setFollowing(followingData);
+      } catch (err) {
+        setError("Error al cargar los datos");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <p>Cargando...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <motion.div
@@ -66,97 +95,13 @@ export default function ProfilePage() {
             <Menu />
           </div>
           <div className="flex-1 space-y-4 w-full relative">
-            <div className="flex flex-col lg:flex-row gap-8 w-full">
-              <div className="lg:hidden w-full">
-                <CardUsuario />
-                <button
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="w-full flex py-1 px-2 bg-white dark:bg-gray-800 rounded-md shadow-sm"
-                >
-                  <span className="mr-2 text-xs text-gray-700 dark:text-gray-300">
-                    {isExpanded ? "Ocultar detalles" : "Mostrar detalles"}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`transition-transform text-black dark:text-white ${isExpanded ? "rotate-180" : ""}`}
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </button>
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden mt-2"
-                >
-                  <CardLogros achievements={userDetails.achievements} />
-                  <CardIntereses
-                    interests={userDetails.interests} 
-                    renderTagsWithColors={renderTagsWithColors}
-                  />
-                  <CardHabilidades skills={userDetails.skills} />
-                  <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} />
-                </motion.div>
-              </div>
-
-              <div className="lg:hidden w-full">
-              <CardTweets
-                handleDeleteTweet={() => {}} // Implementar o pasar función real
-                handleEditTweet={() => {}}   // Implementar o pasar función real
-                handleSaveTweet={() => {}}   // Implementar o pasar función real
-              />
-
-              </div>
-
-              <div className="lg:hidden w-full">
-              <UserTabs
-                seguidores={followers}
-                seguidos={following}
-                recomendaciones={userDetails.recommendations}
-                followUser={() => {}} // Implementar función real
-                unfollowUser={() => {}} // Implementar función real
-              />
-
-              </div>
-
-              <div className="hidden lg:block xl:block relative w-full xl:w-[300px] xl:ml-60 mt-2 space-y-4">
-                <CardUsuario/>
-                <CardLogros achievements={userDetails.achievements} />
-                <CardIntereses interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
-                <CardHabilidades skills={userDetails.skills} />
-                <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} />
-              </div>
-
-              <div className="hidden lg:block xl:block relative w-full xl:w-[800px] mt-2 space-y-4">
-              <CardTweets
-                handleDeleteTweet={() => {}} // Implementar funciones reales si es necesario
-                handleEditTweet={() => {}}
-                handleSaveTweet={() => {}}
-              />
-
-
-              </div>
-
-              <div className="hidden lg:block xl:block relative w-full xl:w-[400px] mt-2 space-y-4">
-              <UserTabs
-                seguidores={followers}
-                seguidos={following}
-                recomendaciones={userDetails.recommendations}
-                followUser={() => {}} // Implementar función real
-                unfollowUser={() => {}} // Implementar función real
-              />
-
-              </div>
-            </div>
+            <CardUsuario user={user} />
+            {/* <CardLogros achievements={userDetails.achievements} />
+            <CardIntereses interests={userDetails.interests} />
+            <CardHabilidades skills={userDetails.skills} />
+            <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} />
+            <CardTweets tweets={tweets} />
+            <UserTabs seguidores={followers} seguidos={following} /> */}
           </div>
         </div>
       </div>
