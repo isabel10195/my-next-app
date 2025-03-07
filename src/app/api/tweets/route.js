@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -11,7 +11,7 @@ export async function GET() {
     }
 
     // 🔥 Llamamos a nuestra API backend para obtener los tweets del usuario autenticado
-    const response = await fetch("http://localhost:3001/api/tweets/user", {
+    const response = await fetch("http://localhost:3001/api/tweets", {
       headers: { Authorization: `Bearer ${token}` },
       credentials: "include",
     });

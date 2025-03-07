@@ -30,7 +30,7 @@ export default function ProfilePage() {
     const fetchData = async () => {
       try {
         // 🔹 Verificar autenticación
-        const authRes = await fetch("/api/auth/me");
+        const authRes = await fetch("/api/auth/me",{credentials:"include"});
         const authData = await authRes.json();
         if (!authData.authenticated) {
           setUser(null);
@@ -39,12 +39,13 @@ export default function ProfilePage() {
 
           // 🔹 Hacer todas las peticiones en paralelo
           const [userDataRes, userDetailsRes, tweetsRes, followersRes, followingRes] = await Promise.all([
-            fetch("/api/users/data"),
-            fetch("/api/users/details"),
-            fetch("/api/tweets"),
-            fetch("/api/followers"),
-            fetch("/api/followers/following"),
+            fetch("/api/users/data", { credentials: "include" }),
+            fetch("/api/users/details", { credentials: "include" }),
+            fetch("/api/tweets", { credentials: "include" }),
+            fetch("/api/followers", { credentials: "include" }),
+            fetch("/api/followers/following", { credentials: "include" }),
           ]);
+          
 
           // 🔹 Convertir respuestas a JSON
           const [userData, userDetailsData, tweetsData, followersData, followingData] = await Promise.all([

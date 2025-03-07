@@ -1,5 +1,16 @@
 const API_URL = "/api/tweets";
 
+export const fetchTweets = async () => {
+  const response = await fetch(API_URL, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Error al obtener los tweets");
+  return response.json();
+};
+
+
+
 export const fetchForYouTweets = async () => {
   const response = await fetch(`${API_URL}/interest`, {
     credentials: "include",
@@ -25,14 +36,6 @@ export const fetchFollowingTweets = async () => {
   return data.tweets;
 };
 
-export const fetchTweets = async () => {
-  const response = await fetch(API_URL, {
-    method: "GET",
-    credentials: "include",
-  });
-  if (!response.ok) throw new Error("Error al obtener los tweets");
-  return response.json();
-};
 
 
 export const createTweet = async (tweet_text) => {
