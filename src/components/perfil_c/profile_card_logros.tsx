@@ -54,7 +54,7 @@ const CardLogros: React.FC<CardLogrosProps> = ({ achievements = [] }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500 dark:text-gray-300">No hay logros disponibles.</p>
+          <p className="text-gray-500 dark:text-gray-300">No hay logros disponibles o no tienes.</p>
         )}
       </CardContent>
     </Card>

@@ -1,26 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 export async function GET() {
   try {
     console.log("📡 Solicitando detalles del usuario desde Next.js API");
 
-    // 🔹 Obtener el token de las cookies
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-
-    if (!token) {
-      console.warn("❌ No hay token en las cookies, usuario no autenticado.");
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-    }
-
-    console.log("✅ Token encontrado, enviando petición al backend...");
-
-    // 🔹 Hacer la solicitud al backend con el token en los headers
-    const response = await fetch("http://localhost:3001/api/users/details", {
-      headers: { Authorization: `Bearer ${token}` }, // 🔥 Se agrega el token en la cabecera
-      credentials: "include",
-    });
+    // 🔹 Hacer la solicitud al backend sin autenticación
+    const response = await fetch("http://localhost:3001/api/users/details");
 
     if (!response.ok) {
       console.error("❌ Error al obtener detalles del usuario, código:", response.status);
