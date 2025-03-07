@@ -7,11 +7,17 @@ import CardUsuario from "@/components/perfil_c/profile_card_usuario";
 import CardTweets from "@/components/perfil_c/profile_card_tweets";
 import PerfilNav from "@/components/perfil_c/perfil_nav";
 import CardLogros from "@/components/perfil_c/profile_card_logros";
+import CardIntereses from "@/components/perfil_c/profile_card_intereses"; 
+import CardHabilidades from "@/components/perfil_c/profile_card_habilidades"; 
+// import CardEstadisticas from "@/components/perfil_c/card_estadisticas"; // 🟡 AÑADIR DESPUÉS
+// import UserTabs from "@/components/perfil_c/profile_tabs"; // 🟡 AÑADIR DESPUÉS
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [tweets, setTweets] = useState([]);
-  const [userDetails, setUserDetails] = useState({ achievements: [] }); // ✅ Cambiado `logros` por `achievements`
+  const [userDetails, setUserDetails] = useState({ achievements: [], interests: [], skills: [] });
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,20 +34,33 @@ export default function ProfilePage() {
           // 🔹 Obtener tweets
           const tweetsRes = await fetch("/api/tweets", { credentials: "include" });
           const tweetsData = await tweetsRes.json();
-          console.log("📦 Tweets obtenidos en page.tsx:", tweetsData);
           setTweets(tweetsData?.tweets ?? []);
 
           // 🔹 Obtener detalles del usuario
           const detailsRes = await fetch("/api/users/details", { credentials: "include" });
 
           if (!detailsRes.ok) {
-            console.warn("⚠️ No se encontraron detalles del usuario (404). Manteniendo `achievements: []`.");
-            setUserDetails({ achievements: [] });
+            console.warn("⚠️ No se encontraron detalles del usuario (404).");
+            setUserDetails({ achievements: [], interests: [], skills: [] });
           } else {
             const detailsData = await detailsRes.json();
-            console.log("📜 Detalles del usuario obtenidos en page.tsx:", detailsData);
-            setUserDetails({ achievements: detailsData.achievement ?? [] }); // ✅ Aseguramos que achievements tenga el formato correcto
+            console.log("📜 Detalles del usuario obtenidos:", detailsData);
+            setUserDetails({
+              achievements: detailsData.achievement ?? [],
+              interests: detailsData.interest ?? [],
+              skills: detailsData.skill ?? [],
+            });
           }
+
+          // 🔹 Obtener seguidores y seguidos (PARA TABS) 🟡 DESCOMENTAR CUANDO SE HABILITE `UserTabs`
+          // const followersRes = await fetch("/api/followers", { credentials: "include" });
+          // const followingRes = await fetch("/api/followers/following", { credentials: "include" });
+
+          // const followersData = await followersRes.json();
+          // const followingData = await followingRes.json();
+
+          // setFollowers(followersData);
+          // setFollowing(followingData);
         }
       } catch (err) {
         setError("Error al cargar los datos");
@@ -52,7 +71,15 @@ export default function ProfilePage() {
 
     fetchData();
   }, []);
-
+  const renderTagsWithColors = (tags: string[]) => {
+    const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
+    return tags.map((tag, index) => (
+      <span key={index} className={`px-2 py-1 text-white rounded ${colors[index % colors.length]}`}>
+        {tag}
+      </span>
+    ));
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -70,7 +97,13 @@ export default function ProfilePage() {
           <div className="flex-1 space-y-4 w-full relative">
             <CardUsuario user={user} />
             <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
-            <CardLogros user={user} achievements={userDetails.achievements ?? []} /> {/* ✅ Ahora pasamos `achievements` correctamente */}
+            <CardLogros user={user} achievements={userDetails.achievements} />
+
+            {/* 🟡 AÑADIR COMPONENTES UNO A UNO */}
+            <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+            <CardHabilidades user={user} skills={userDetails.skills} />
+            {/* <CardEstadisticas stats={{ posts: tweets.length, comments: 120, interactions: 500 }} /> */}
+            {/* <UserTabs user={user} seguidores={followers} seguidos={following} recomendaciones={userDetails.recommendations} followUser={() => {}} unfollowUser={() => {}} /> */}
           </div>
         </div>
       </div>

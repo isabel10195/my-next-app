@@ -55,7 +55,7 @@ const CardHabilidades: React.FC<CardHabilidadesProps> = ({ skills = [] }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500 dark:text-gray-300">No hay habilidades disponibles.</p>
+          <p className="text-gray-500 dark:text-gray-300 text-center">No tienes habilidades.</p>
         )}
       </CardContent>
     </Card>

@@ -50,7 +50,7 @@ const CardIntereses: React.FC<CardInteresesProps> = ({ interests, renderTagsWith
         {interests.length > 0 ? (
           <div className="flex flex-wrap gap-2">{renderTagsWithColors(interests)}</div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-300">No hay intereses disponibles.</p>
+          <p className="text-gray-500 dark:text-gray-300 text-center">No tienenes intereses.</p>
         )}
       </CardContent>
     </Card>
