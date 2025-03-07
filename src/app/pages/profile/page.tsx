@@ -120,6 +120,7 @@ export default function ProfilePage() {
               handleSaveTweet={() => {}} 
             />
             <UserTabs 
+              user={user}
               seguidores={followers} 
               seguidos={following} 
               recomendaciones={userDetails.recommendations} 
