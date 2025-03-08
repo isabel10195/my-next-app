@@ -30,13 +30,12 @@ export function AuthProvider({ children }) {
         method: "POST",
         credentials: "include",
       });
-
-      setUser(null); // 🔥 Borra el usuario del contexto
-      router.push("/"); // 🔥 Redirige al home tras cerrar sesión
+      setUser(null);
+      router.refresh(); // Forzar re-render en la misma ruta
     } catch (error) {
-      console.error("❌ Error al cerrar sesión:", error);
+      console.error("Error al cerrar sesión:", error);
     }
-  };
+  };  
 
   return (
     <AuthContext.Provider value={{ user, setUser, logout, loading }}>

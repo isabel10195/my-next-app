@@ -9,7 +9,8 @@ const {
     likeTweet,       
     createComment,
     getCommentsByTweet,
-    toggleRetweet
+    toggleRetweet,
+    getPopularTweets,
 } = require("../controllers/tweetController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -26,5 +27,6 @@ router.put("/edit/:tweet_id", authMiddleware, editTweet); // Editar tweet
 router.get("/:tweetId/comments", authMiddleware, getCommentsByTweet);
 router.post("/:tweetId/comments", authMiddleware, createComment); // Endpoint para comentar
 router.post("/retweet", authMiddleware, toggleRetweet); // Endpoint para retweet
+router.get("/popular", getPopularTweets); // Nueva ruta para obtener tweets populares
 
 module.exports = router;

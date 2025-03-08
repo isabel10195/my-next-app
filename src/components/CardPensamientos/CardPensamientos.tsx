@@ -1,34 +1,33 @@
-'use client';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { fetchUserCommunities, fetchPopularCommunities } from "@/server/service/communityService";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, ReactNode } from 'react';
+export function CardPensamientos({ isAuthenticated }) {
+  const [communities, setCommunities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-interface TideOfThoughtsProps {
-  onClick?: (content: ReactNode) => void;
-}
+  useEffect(() => {
+    async function loadCommunities() {
+      try {
+        console.log("🔍 Buscando comunidades...", isAuthenticated ? "Usuario autenticado" : "Usuario no autenticado");
+        const data = isAuthenticated
+          ? await fetchUserCommunities()
+          : await fetchPopularCommunities();
+        console.log("✅ Comunidades obtenidas:", data);
+        setCommunities(data);
+      } catch (error) {
+        console.error("Error al cargar comunidades:", error);
+        setError("Error al cargar las comunidades.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    loadCommunities();
+  }, [isAuthenticated]);
 
-export function CardPensamientos({ onClick }: TideOfThoughtsProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const content = (
-    <>
-      <h3 className="mb-4 text-xl font-serif text-gray-900 dark:text-white">Tide of Thoughts</h3>
-      <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-        Get the View Island Journal's opinion columnists, editorials, op-eds, letters for €2.50
-      </p>
-      <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-        <span>2,830 articles</span>
-        <span>175 authors</span>
-      </div>
-    </>
-  );
-
-  // const handleClick = () => {
-  //   if (onClick) {
-  //     onClick(content);
-  //   }
-  //   setIsExpanded(!isExpanded);
-  // };
+  const title = isAuthenticated ? "Comunidades a las que Perteneces" : "Comunidades Populares";
 
   return (
     <AnimatePresence>
@@ -37,26 +36,29 @@ export function CardPensamientos({ onClick }: TideOfThoughtsProps) {
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}
         className="cursor-pointer rounded-lg bg-white p-6 dark:bg-gray-900"
-        // onClick={handleClick}
       >
-        {isExpanded ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <motion.div
-              layout
-              className="w-full max-w-lg rounded-lg bg-white p-6 dark:bg-gray-900"
-            >
-              {content}
-            </motion.div>
-          </motion.div>
+        <h3 className="mb-4 text-xl font-serif text-gray-900 dark:text-white">{title}</h3>
+        {loading ? (
+          <p className="text-gray-600 dark:text-gray-300">Cargando comunidades...</p>
+        ) : error ? (
+          <p className="text-red-500 dark:text-red-400">{error}</p>
+        ) : communities.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-300">
+            {isAuthenticated
+              ? "No perteneces a ninguna comunidad."
+              : "No hay comunidades populares en este momento."}
+          </p>
         ) : (
-          content
+          <div className="space-y-2">
+            {communities.map((community) => (
+              <div key={community.community_id} className="p-2 border rounded dark:border-gray-700">
+                <p className="text-gray-900 dark:text-white">
+                  {community.name}
+                  {!isAuthenticated && ` | ${community.membersCount} miembros`}
+                </p>
+              </div>
+            ))}
+          </div>
         )}
       </motion.div>
     </AnimatePresence>

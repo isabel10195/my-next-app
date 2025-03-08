@@ -1,5 +1,13 @@
 const API_URL = "http://localhost:3001/api/tweets";
 
+export const fetchPopularTweets = async () => {
+  const response = await fetch(`${API_URL}/popular`, {
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Error al obtener los tweets populares");
+  return response.json();
+};
+
 export const fetchForYouTweets = async () => {
   const response = await fetch(`${API_URL}/interest`, {
     credentials: "include",
