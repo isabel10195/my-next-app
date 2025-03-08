@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { fetchAuthenticatedUser, sendMessageToAI } from "@/server/service/chatService"; // Importamos las funciones del servicio
+import { fetchAuthenticatedUser, sendMessageToAI } from "@/server/service/chatService";
 
 const ChatIA = () => {
   const [user, setUser] = useState(null);
@@ -10,7 +10,6 @@ const ChatIA = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Cargar usuario autenticado
   useEffect(() => {
     const fetchUser = async () => {
       const authenticatedUser = await fetchAuthenticatedUser();
@@ -24,14 +23,12 @@ const ChatIA = () => {
     fetchUser();
   }, []);
 
-  // Guardar mensajes en localStorage cada vez que cambien
   useEffect(() => {
     if (user) {
       localStorage.setItem(`chatConversation_${user.user_id}`, JSON.stringify(messages));
     }
   }, [messages, user]);
 
-  // Enviar mensaje
   const sendMessage = async () => {
     if (!input.trim() || !user) return;
     const userMessage = { sender: "user", text: input };
@@ -45,7 +42,6 @@ const ChatIA = () => {
     setIsLoading(false);
   };
 
-  // Manejo de Enter para enviar mensaje
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -54,9 +50,9 @@ const ChatIA = () => {
   };
 
   return user ? (
-    <div className="p-4 border rounded bg-white dark:bg-gray-800">
+    <div className="p-4 border rounded bg-white dark:bg-gray-800 flex flex-col h-full">
       <h2 className="text-xl font-semibold mb-4">Chat con IA</h2>
-      <div className="h-80 overflow-y-auto p-2 border mb-4">
+      <div className="flex-grow p-2 border mb-4 overflow-y-auto">
         {messages.length === 0 ? (
           <p>No hay mensajes en la conversación.</p>
         ) : (

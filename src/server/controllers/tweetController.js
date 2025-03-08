@@ -72,7 +72,7 @@ const getTweets = async (req, res) => {
       FROM tweets
       JOIN users ON tweets.user_id = users.user_id
       WHERE tweets.user_id = @userId
-      ORDER BY tweets.created_at DESC
+      ORDER BY num_likes DESC, tweets.created_at DESC
     `;
     const inputs = [{ name: "userId", type: db.Int, value: userId }];
     const results = await executeQuery(query, inputs);
@@ -81,6 +81,25 @@ const getTweets = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener tweets del usuario:", error);
     res.status(500).send("Error al obtener tweets");
+  }
+};
+
+const getPopularTweets = async (req, res) => {
+  try {
+    const query = `
+      SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
+             user_handle, first_name, last_name, avatar_url 
+      FROM tweets
+      JOIN users ON tweets.user_id = users.user_id
+      ORDER BY num_likes DESC, tweets.created_at DESC
+    `;
+    
+    const results = await executeQuery(query);
+    
+    res.send({ tweets: results.recordset });
+  } catch (error) {
+    console.error("Error al obtener tweets populares:", error);
+    res.status(500).send("Error al obtener tweets populares");
   }
 };
 
@@ -434,5 +453,6 @@ module.exports = {
   likeTweet,
   createComment,
   getCommentsByTweet,
-  toggleRetweet
+  toggleRetweet,
+  getPopularTweets
 };

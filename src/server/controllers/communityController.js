@@ -24,18 +24,18 @@ const joinCommunity = async (req, res) => {
 const getUserCommunities = async (req, res) => {
   const userId = req.user.id;
   try {
-    const query = `
-      SELECT c.community_id, c.name, c.category, c.description
+    const result = await executeQuery(`
+      SELECT c.community_id, c.name
       FROM communities c
-      INNER JOIN community_members cm ON c.community_id = cm.community_id
+      JOIN community_members cm ON c.community_id = cm.community_id
       WHERE cm.user_id = @userId
-    `;
-    const inputs = [{ name: "userId", type: db.Int, value: userId }];
-    const result = await executeQuery(query, inputs);
-    res.status(200).json({ communities: result.recordset });
-  } catch (error) {
-    console.error("Error al obtener las comunidades del usuario:", error);
-    res.status(500).json({ message: "Error al obtener las comunidades", error: error.message });
+    `, [{ name: "userId", type: db.Int, value: userId }]);
+
+    // Enviar solo el recordset
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("Error al obtener comunidades:", err);
+    res.status(500).json({ error: "Error al obtener comunidades" });
   }
 };
 
@@ -77,9 +77,27 @@ const getExploreCommunities = async (req, res) => {
     }
   };
 
+  const getPopularCommunities = async (req, res) => {
+    try {
+      const query = `
+        SELECT TOP 3 c.community_id, c.name, c.category, c.description, COUNT(cm.user_id) AS membersCount
+        FROM communities c
+        LEFT JOIN community_members cm ON c.community_id = cm.community_id
+        GROUP BY c.community_id, c.name, c.category, c.description
+        ORDER BY membersCount DESC
+      `;
+      const result = await executeQuery(query, []);
+      res.status(200).json({ communities: result.recordset });
+    } catch (error) {
+      console.error("Error al obtener comunidades populares:", error);
+      res.status(500).json({ message: "Error al obtener las comunidades populares", error: error.message });
+    }
+  };
+
 module.exports = {
   getUserCommunities,
   getExploreCommunities,
   joinCommunity,
-  getCategories
+  getCategories,
+  getPopularCommunities
 };

@@ -1,11 +1,47 @@
 const API_URL = "http://localhost:3001/api/community";
 
-export const fetchUserCommunities = async () => {
-  const response = await fetch(`${API_URL}/user`, { credentials: "include" });
-  if (!response.ok) throw new Error("Error al obtener tus comunidades");
-  const data = await response.json();
-  return data.communities;
-};
+export async function fetchUserCommunities() {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_URL}/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al obtener comunidades del usuario");
+  }
+
+  return response.json();
+}
+
+export async function fetchUserProfile() {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch("http://localhost:3001/api/auth/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Token en el encabezado
+      },
+      credentials: "include", // Incluir cookies en la solicitud
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el perfil del usuario");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("❌ Error al obtener el perfil:", error);
+    throw error;
+  }
+}
 
 export const fetchExploreCommunities = async (category = "") => {
   let url = `${API_URL}/explore`;
@@ -35,4 +71,11 @@ export const fetchCategories = async () => {
   if (!response.ok) throw new Error("Error al obtener las categorías");
   const data = await response.json();
   return data.categories;
+};
+
+export const fetchPopularCommunities = async () => {
+  const response = await fetch(`${API_URL}/popular`, { credentials: "include" });
+  if (!response.ok) throw new Error("Error al obtener las comunidades populares");
+  const data = await response.json();
+  return data.communities;
 };

@@ -3,7 +3,8 @@ const {
   getUserCommunities, 
   getExploreCommunities, 
   joinCommunity,
-  getCategories
+  getCategories,
+  getPopularCommunities
 } = require("../controllers/communityController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -17,5 +18,7 @@ router.get("/explore", authMiddleware, getExploreCommunities);
 router.post("/join", authMiddleware, joinCommunity);
 
 router.get("/categories", authMiddleware, getCategories);
+
+router.get("/popular", getPopularCommunities);
 
 module.exports = router;

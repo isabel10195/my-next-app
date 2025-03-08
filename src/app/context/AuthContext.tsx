@@ -34,9 +34,9 @@ export function AuthProvider({ children }) {
       localStorage.removeItem("token");
       router.push("/");
     } catch (error) {
-      console.error("❌ Error al cerrar sesión:", error);
+      console.error("Error al cerrar sesión:", error);
     }
-  };
+  };  
 
   return (
     <AuthContext.Provider value={{ user, token, setUser, setToken, logout, loading }}>
