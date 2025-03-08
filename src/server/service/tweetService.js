@@ -9,8 +9,6 @@ export const fetchTweets = async () => {
   return response.json();
 };
 
-
-
 export const fetchPopularTweets = async () => {
   const response = await fetch(`${API_URL}/popular`, {
     credentials: "include",
@@ -43,8 +41,6 @@ export const fetchFollowingTweets = async () => {
   const data = await response.json();
   return data.tweets;
 };
-
-
 
 export const createTweet = async (tweet_text) => {
   const response = await fetch(`${API_URL}/create`, {
