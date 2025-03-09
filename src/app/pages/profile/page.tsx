@@ -74,51 +74,69 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
-  // 🔹 Eliminar tweet
-  const handleDeleteTweet = async (tweetId) => {
-    try {
-      const res = await fetch(`/api/tweets/delete/${tweetId}`, {
-        method: "DELETE",
-        credentials: "include",
+// 🔹 Eliminar tweet
+const handleDeleteTweet = async (tweetId) => {
+  const numericTweetId = parseInt(tweetId, 10);
+
+  if (isNaN(numericTweetId)) {
+      console.error("❌ Error al eliminar el tweet: ID de tweet inválido");
+      return;
+  }
+
+  try {
+      const res = await fetch(`/api/tweets/delete/${numericTweetId}`, {
+          method: "DELETE",
+          credentials: "include",
       });
 
       if (!res.ok) {
-        throw new Error("Error al eliminar el tweet");
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Error al eliminar el tweet");
       }
 
       // 🔥 Eliminar el tweet del estado
-      setTweets((prevTweets) => prevTweets.filter((tweet) => tweet.tweet_id !== tweetId));
-    } catch (error) {
+      setTweets((prevTweets) => prevTweets.filter((tweet) => tweet.tweet_id !== numericTweetId));
+  } catch (error) {
       console.error("❌ Error al eliminar el tweet:", error);
+  }
+};
+
+// 🔹 Editar tweet
+const handleEditTweet = async (tweetId, newText) => {
+  const numericTweetId = parseInt(tweetId, 10);
+
+  if (isNaN(numericTweetId)) {
+    console.error("❌ Error al editar el tweet: ID de tweet inválido");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/tweets/edit/${numericTweetId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ tweet_text: newText }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Error al editar el tweet");
     }
-  };
 
-  // 🔹 Editar tweet
-  const handleEditTweet = async (tweetId, newText) => {
-    try {
-      const res = await fetch(`/api/tweets/edit/${tweetId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ tweet_text: newText }),
-      });
+    const updatedTweet = await res.json();
 
-      if (!res.ok) {
-        throw new Error("Error al editar el tweet");
-      }
+    // 🔥 Actualizar el tweet en el estado
+    setTweets((prevTweets) =>
+      prevTweets.map((tweet) =>
+        tweet.tweet_id === numericTweetId ? { ...tweet, tweet_text: updatedTweet.tweet_text } : tweet
+      )
+    );
+  } catch (error) {
+    console.error("❌ Error al editar el tweet:", error);
+  }
+};
 
-      const updatedTweet = await res.json();
 
-      // 🔥 Actualizar el tweet en el estado
-      setTweets((prevTweets) =>
-        prevTweets.map((tweet) =>
-          tweet.tweet_id === tweetId ? { ...tweet, tweet_text: updatedTweet.tweet_text } : tweet
-        )
-      );
-    } catch (error) {
-      console.error("❌ Error al editar el tweet:", error);
-    }
-  };
 
   const renderTagsWithColors = (tags: string[]) => {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];

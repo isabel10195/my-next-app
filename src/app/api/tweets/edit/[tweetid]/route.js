@@ -3,9 +3,14 @@ import { cookies } from "next/headers";
 
 export async function PUT(req, { params }) {
   try {
-    const { tweetId } = params; // Extraer tweetId de la URL
-    const { tweet_text } = await req.json(); // Extraer texto editado
-    const cookieStore = await cookies(); // ✅ `cookies()` debe ser `await`
+    const tweetId = parseInt(params.tweetId, 10); // 🔥 Convertimos `tweetId` a número
+    if (isNaN(tweetId)) { // Validamos que sea un número válido
+      console.error("❌ ID de tweet inválido en API");
+      return NextResponse.json({ error: "ID de tweet inválido" }, { status: 400 });
+    }
+
+    const { tweet_text } = await req.json();
+    const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -23,7 +28,8 @@ export async function PUT(req, { params }) {
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: "Error al editar el tweet" }, { status: response.status });
+      const errorData = await response.json();
+      return NextResponse.json({ error: errorData.error || "Error al editar el tweet" }, { status: response.status });
     }
 
     const updatedTweet = await response.json();

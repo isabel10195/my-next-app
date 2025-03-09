@@ -3,12 +3,16 @@ import { cookies } from "next/headers";
 
 export async function DELETE(req, { params }) {
   try {
-    const { tweetId } = params; // Obtener el tweetId desde la URL
+    const tweetId = parseInt(params.tweetId, 10); // 🔥 Convertimos `tweetId` a número
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+
+    if (isNaN(tweetId)) { // Validación adicional para evitar errores
+      return NextResponse.json({ error: "ID de tweet inválido" }, { status: 400 });
     }
 
     const response = await fetch(`http://localhost:3001/api/tweets/delete/${tweetId}`, {
