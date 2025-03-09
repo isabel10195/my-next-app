@@ -9,7 +9,7 @@ import PerfilNav from "@/components/perfil_c/perfil_nav";
 import CardLogros from "@/components/perfil_c/profile_card_logros";
 import CardIntereses from "@/components/perfil_c/profile_card_intereses"; 
 import CardHabilidades from "@/components/perfil_c/profile_card_habilidades"; 
-import UserTabs from "@/components/perfil_c/profile_tabs"; // ✅ Habilitado
+import UserTabs from "@/components/perfil_c/profile_tabs"; 
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -43,7 +43,6 @@ export default function ProfilePage() {
             setUserDetails({ achievements: [], interests: [], skills: [] });
           } else {
             const detailsData = await detailsRes.json();
-            console.log("📜 Detalles del usuario obtenidos:", detailsData);
             setUserDetails({
               achievements: detailsData.achievement ?? [],
               interests: detailsData.interest ?? [],
@@ -62,10 +61,8 @@ export default function ProfilePage() {
 
           if (followingRes.ok) {
             const followingData = await followingRes.json();
-            console.log("👥 Datos de following recibidos:", followingData); // 🔍 Agregar console.log() para depuración
-            setFollowing(followingData.seguidos ?? []); // 🔥 Cambiar "following" por "seguidos"
+            setFollowing(followingData.seguidos ?? []);
           }
-          
         }
       } catch (err) {
         setError("Error al cargar los datos");
@@ -77,41 +74,49 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
-  // 🔹 Función para seguir a un usuario
-  const followUser = async (userId) => {
+  // 🔹 Eliminar tweet
+  const handleDeleteTweet = async (tweetId) => {
     try {
-      const res = await fetch("/api/followers/follow", {
-        method: "POST",
+      const res = await fetch(`/api/tweets/delete/${tweetId}`, {
+        method: "DELETE",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ follow_user_id: userId }),
       });
 
-      if (res.ok) {
-        const updatedFollowers = await res.json();
-        setFollowing(updatedFollowers.following ?? []);
+      if (!res.ok) {
+        throw new Error("Error al eliminar el tweet");
       }
+
+      // 🔥 Eliminar el tweet del estado
+      setTweets((prevTweets) => prevTweets.filter((tweet) => tweet.tweet_id !== tweetId));
     } catch (error) {
-      console.error("❌ Error al seguir usuario:", error);
+      console.error("❌ Error al eliminar el tweet:", error);
     }
   };
 
-  // 🔹 Función para dejar de seguir a un usuario
-  const unfollowUser = async (userId) => {
+  // 🔹 Editar tweet
+  const handleEditTweet = async (tweetId, newText) => {
     try {
-      const res = await fetch("/api/followers/unfollow", {
-        method: "POST",
-        credentials: "include",
+      const res = await fetch(`/api/tweets/edit/${tweetId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ follow_user_id: userId }),
+        credentials: "include",
+        body: JSON.stringify({ tweet_text: newText }),
       });
 
-      if (res.ok) {
-        const updatedFollowers = await res.json();
-        setFollowing(updatedFollowers.following ?? []);
+      if (!res.ok) {
+        throw new Error("Error al editar el tweet");
       }
+
+      const updatedTweet = await res.json();
+
+      // 🔥 Actualizar el tweet en el estado
+      setTweets((prevTweets) =>
+        prevTweets.map((tweet) =>
+          tweet.tweet_id === tweetId ? { ...tweet, tweet_text: updatedTweet.tweet_text } : tweet
+        )
+      );
     } catch (error) {
-      console.error("❌ Error al dejar de seguir usuario:", error);
+      console.error("❌ Error al editar el tweet:", error);
     }
   };
 
@@ -140,21 +145,19 @@ export default function ProfilePage() {
 
           <div className="flex-1 space-y-4 w-full relative">
             <CardUsuario user={user} />
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} />
+            <CardTweets tweets={tweets} user={user} handleDeleteTweet={handleDeleteTweet} handleEditTweet={handleEditTweet} />
             <CardLogros user={user} achievements={userDetails.achievements} />
             <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
             <CardHabilidades user={user} skills={userDetails.skills} />
 
-            {/* ✅ UserTabs habilitado */}
             <UserTabs
               user={user}
               seguidores={followers} 
-              following={following} // ✅ Cambiado de "seguidos" a "following"
+              following={following} 
               recomendaciones={[]} 
-              followUser={followUser}
-              unfollowUser={unfollowUser}
+              followUser={() => {}} 
+              unfollowUser={() => {}}
             />
-
           </div>
         </div>
       </div>

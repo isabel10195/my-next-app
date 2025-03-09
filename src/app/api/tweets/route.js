@@ -1,30 +1,33 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+const API_BASE_URL = "http://localhost:3001/api/tweets";
+
+// 📌 GET /api/tweets → Obtener tweets del usuario autenticado
 export async function GET() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+      return NextResponse.json({ error: "No autenticado en api tweet" }, { status: 401 });
     }
 
-    // 🔥 Llamamos a nuestra API backend para obtener los tweets del usuario autenticado
-    const response = await fetch("http://localhost:3001/api/tweets", {
+    const response = await fetch(API_BASE_URL, {
       headers: { Authorization: `Bearer ${token}` },
       credentials: "include",
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: "Error obteniendo tweets" }, { status: response.status });
+      return NextResponse.json({ error: "Error obteniendo tweets en api tweet" }, { status: response.status });
     }
 
     const tweets = await response.json();
     return NextResponse.json(tweets, { status: 200 });
 
   } catch (error) {
-    console.error("❌ Error obteniendo tweets:", error);
-    return NextResponse.json({ error: "Error en el servidor" }, { status: 500 });
+    console.error("❌ Error obteniendo tweets en api tweet:", error);
+    return NextResponse.json({ error: "Error en el servidor en api tweet" }, { status: 500 });
   }
 }
+
