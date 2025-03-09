@@ -140,7 +140,7 @@ export default function ProfilePage() {
 
           <div className="flex-1 space-y-4 w-full relative">
             <CardUsuario user={user} />
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
+            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} />
             <CardLogros user={user} achievements={userDetails.achievements} />
             <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
             <CardHabilidades user={user} skills={userDetails.skills} />

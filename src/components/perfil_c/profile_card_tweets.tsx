@@ -1,13 +1,11 @@
 "use client";
 
-// el doble GET /api/tweets en la consola de frontend se debe a que React está renderizando el componente dos veces en modo desarrollo, 
-// lo cual es un comportamiento esperado en React Strict Mode.
-
-import { Edit, Trash } from "lucide-react";
+import { Edit, Trash, Check, X } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useState } from "react";
 
 interface Tweet {
   tweet_id: string;
@@ -32,10 +30,12 @@ interface CardTweetsProps {
   } | null;
   handleDeleteTweet: (tweetId: string) => void;
   handleEditTweet: (tweetId: string, text: string) => void;
-  handleSaveTweet: (tweetId: string, text: string) => void;
 }
 
-const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet, handleEditTweet, handleSaveTweet }) => {
+const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet, handleEditTweet }) => {
+  const [editingTweetId, setEditingTweetId] = useState<string | null>(null);
+  const [editedText, setEditedText] = useState("");
+
   console.log("🎥 Renderizando CardTweets con tweets:", tweets);
 
   if (!user) {
@@ -69,8 +69,68 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                   <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
                   <div className="flex-1">
                     <h4 className="font-bold text-gray-200">{tweet.user_handle}</h4>
-                    <p className="mt-1 text-gray-700 dark:text-gray-400">{tweet.tweet_text}</p>
+                    {editingTweetId === tweet.tweet_id ? (
+                      <textarea
+                        className="w-full p-2 text-black rounded-lg"
+                        value={editedText}
+                        onChange={(e) => setEditedText(e.target.value)}
+                      />
+                    ) : (
+                      <p className="mt-1 text-gray-700 dark:text-gray-400">{tweet.tweet_text}</p>
+                    )}
                   </div>
+
+                  {/* 🔥 Botones para todos los tweets */}
+                  <div className="flex gap-2 ml-auto items-center">
+                    {editingTweetId === tweet.tweet_id ? (
+                      <>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => {
+                            handleEditTweet(tweet.tweet_id, editedText);
+                            setEditingTweetId(null);
+                          }}
+                          className="text-white bg-green-600 hover:bg-green-500 p-2 rounded-lg shadow-md"
+                        >
+                          <Check className="h-5 w-5" />
+                        </Button>
+
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => setEditingTweetId(null)}
+                          className="text-white bg-red-600 hover:bg-red-500 p-2 rounded-lg shadow-md"
+                        >
+                          <X className="h-5 w-5" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => {
+                            setEditingTweetId(tweet.tweet_id);
+                            setEditedText(tweet.tweet_text);
+                          }}
+                          className="text-blue-500 hover:text-blue-400 p-2 rounded-lg shadow-md"
+                        >
+                          <Edit className="h-5 w-5" />
+                        </Button>
+
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => handleDeleteTweet(tweet.tweet_id)}
+                          className="text-red-500 hover:text-red-400 p-2 rounded-lg shadow-md"
+                        >
+                          <Trash className="h-5 w-5" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+
                 </div>
               </li>
             ))}
