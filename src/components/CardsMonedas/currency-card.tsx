@@ -47,41 +47,27 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return; // Evitar ejecución en SSR
+  
     async function fetchChartData() {
       try {
-        const baseCurrency = pair.base.toLowerCase();
-        const quoteCurrency = pair.quote.toLowerCase();
-        const url = `https://api.coingecko.com/api/v3/coins/${baseCurrency}/market_chart?vs_currency=${quoteCurrency}&days=7`;
-        
+        const url = `https://api.coingecko.com/api/v3/coins/${pair.base.toLowerCase()}/market_chart?vs_currency=${pair.quote.toLowerCase()}&days=7`;
         const data = await fetchWithCache(url);
         if (!data.prices) throw new Error("No hay datos disponibles.");
-
-        const prices = data.prices.map((point: [number, number]) => point[1]);
-        const labels = data.prices.map((point: [number, number]) =>
-          new Date(point[0]).toLocaleDateString()
-        );
-
+        
         setChartData({
-          labels,
-          datasets: [
-            {
-              label: `${pair.base}/${pair.quote} Precio`,
-              data: prices,
-              borderColor: "rgba(75, 192, 192, 1)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              tension: 0.3,
-            },
-          ],
+          labels: data.prices.map((point: [number, number]) => new Date(point[0]).toLocaleDateString()),
+          datasets: [{ label: `${pair.base}/${pair.quote} Precio`, data: data.prices.map((point) => point[1]) }]
         });
-        setError(null);
       } catch (error: any) {
         console.error("Error al cargar datos del gráfico:", error.message);
         setError(`No se pudo obtener datos para ${pair.base}/${pair.quote}.`);
       }
     }
-
+  
     fetchChartData();
   }, [pair.base, pair.quote]);
+  
 
   const chartOptions = {
     responsive: true,

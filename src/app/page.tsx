@@ -47,33 +47,26 @@ export default function HomePage() {
 
   // Cargar tweets según la autenticación
   useEffect(() => {
+    if (typeof window === "undefined") return; // Evitar ejecución en SSR
+    
     async function loadTweets() {
-      console.log("Loading tweets. isAuthenticated:", isAuthenticated);
-      // Borrar los tweets previos para evitar que se muestre el estado anterior
-      setTweets([]);
+      setTweets([]); // Evitar datos inconsistentes
       setLoading(true);
       try {
-        let data;
-        if (isAuthenticated) {
-          console.log("Fetching user tweets");
-          data = await fetchTweets();
-        } else {
-          console.log("Fetching popular tweets");
-          data = await fetchPopularTweets();
-        }
-        console.log("Tweets fetched:", data);
-        const sortedTweets = data.tweets.sort((a, b) => b.num_likes - a.num_likes);
-        setTweets(sortedTweets);
+        let data = isAuthenticated ? await fetchTweets() : await fetchPopularTweets();
+        setTweets(data.tweets.sort((a, b) => b.num_likes - a.num_likes));
       } catch (error) {
         console.error("Error al cargar los tweets:", error);
       } finally {
         setLoading(false);
       }
     }
+  
     if (!authLoading) {
       loadTweets();
     }
-  }, [isAuthenticated, authLoading]);  
+  }, [isAuthenticated, authLoading]);
+  
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
