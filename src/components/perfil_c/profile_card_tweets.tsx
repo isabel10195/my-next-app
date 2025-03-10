@@ -60,7 +60,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
       <Separator className="bg-gray-300 dark:bg-gray-800" />
       <CardContent className="pt-6">
         {!tweets || tweets.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-300 text-center">No hay tweets disponibles.</p>
+          <p className="text-white dark:text-gray-300 text-center">No hay tweets disponibles.</p>
         ) : (
           <ul className="space-y-4">
             {tweets.map((tweet) => (
@@ -68,7 +68,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                 <div className="flex items-start gap-3">
                   <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-200">{tweet.user_handle}</h4>
+                    <h4 className="font-bold text-white">{tweet.user_handle}</h4>
                     {editingTweetId === tweet.tweet_id ? (
                       <textarea
                         className="w-full p-2 text-black rounded-lg"
@@ -76,7 +76,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         onChange={(e) => setEditedText(e.target.value)}
                       />
                     ) : (
-                      <p className="mt-1 text-gray-700 dark:text-gray-400">{tweet.tweet_text}</p>
+                      <p className="mt-1 text-white dark:text-gray-400">{tweet.tweet_text}</p>
                     )}
                   </div>
 
