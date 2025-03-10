@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function PUT(req, { params }) {
+export async function PUT(req, context) {
   try {
-    const tweetId = parseInt(params.tweetId, 10); // 🔥 Convertimos `tweetId` a número
-    if (isNaN(tweetId)) { // Validamos que sea un número válido
-      console.error("❌ ID de tweet inválido en API");
+    const { params } = context; // ✅ Extraemos `params` correctamente con `await`
+
+    const { tweetid } = await params; // ✅ Extraemos `tweetid` de `params`
+    const tweetId = parseInt(tweetid, 10); // ✅ Convertimos a número
+
+    console.log("📌 ID de tweet procesado en API para editar:", tweetId, typeof tweetId); // 🔍 Depuración
+
+    if (isNaN(tweetId)) {
+      console.error("❌ ID de tweet inválido en API para editar");
       return NextResponse.json({ error: "ID de tweet inválido" }, { status: 400 });
     }
 
@@ -16,6 +22,8 @@ export async function PUT(req, { params }) {
     if (!token) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
+
+    console.log(`🔄 Enviando PUT a backend con ID: ${tweetId} y texto: ${tweet_text}`);
 
     const response = await fetch(`http://localhost:3001/api/tweets/edit/${tweetId}`, {
       method: "PUT",
@@ -33,7 +41,9 @@ export async function PUT(req, { params }) {
     }
 
     const updatedTweet = await response.json();
+    console.log("✅ Respuesta del backend:", updatedTweet);
     return NextResponse.json(updatedTweet, { status: 200 });
+
   } catch (error) {
     console.error("❌ Error en la API de edición de tweets:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });

@@ -123,14 +123,19 @@ const handleEditTweet = async (tweetId, newText) => {
       throw new Error(errorData.error || "Error al editar el tweet");
     }
 
+    // ✅ Obtener el texto actualizado desde la respuesta del backend
     const updatedTweet = await res.json();
 
-    // 🔥 Actualizar el tweet en el estado
+    // ✅ Asegurar que el tweet se actualiza en la UI inmediatamente
     setTweets((prevTweets) =>
       prevTweets.map((tweet) =>
-        tweet.tweet_id === numericTweetId ? { ...tweet, tweet_text: updatedTweet.tweet_text } : tweet
+        tweet.tweet_id === numericTweetId
+          ? { ...tweet, tweet_text: newText } // 🔥 Usamos `newText` directamente
+          : tweet
       )
     );
+
+    console.log("✅ Tweet actualizado en el estado:", updatedTweet);
   } catch (error) {
     console.error("❌ Error al editar el tweet:", error);
   }

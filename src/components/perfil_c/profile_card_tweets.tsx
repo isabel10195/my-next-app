@@ -87,8 +87,8 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => {
-                            handleEditTweet(tweet.tweet_id, editedText);
+                          onClick={async () => {
+                            await handleEditTweet(tweet.tweet_id, editedText); // ✅ Esperar a que se actualice
                             setEditingTweetId(null);
                           }}
                           className="text-white bg-green-600 hover:bg-green-500 p-2 rounded-lg shadow-md"
