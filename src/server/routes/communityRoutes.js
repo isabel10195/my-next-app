@@ -3,6 +3,7 @@ const {
   getUserCommunities, 
   getExploreCommunities, 
   joinCommunity,
+  leaveCommunity,
   getCategories,
   getPopularCommunities
 } = require("../controllers/communityController");
@@ -16,6 +17,8 @@ router.get("/user", authMiddleware, getUserCommunities);
 router.get("/explore", authMiddleware, getExploreCommunities);
 // Unirse a una comunidad
 router.post("/join", authMiddleware, joinCommunity);
+//Salir de comunidades
+router.post("/leave", authMiddleware, leaveCommunity);
 
 router.get("/categories", authMiddleware, getCategories);
 

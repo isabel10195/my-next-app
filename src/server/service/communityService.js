@@ -66,6 +66,20 @@ export const joinCommunity = async (communityId) => {
   return response.json();
 };
 
+export const leaveCommunity = async (communityId) => {
+  const response = await fetch(`${API_URL}/leave`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ communityId }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Error al dejar la comunidad");
+  }
+  return response.json();
+};
+
 export const fetchCategories = async () => {
   const response = await fetch(`${API_URL}/categories`, { credentials: "include" });
   if (!response.ok) throw new Error("Error al obtener las categorías");

@@ -1,43 +1,24 @@
+// components/Communities/CommunitiesContent.js
 import React, { useState, useEffect } from "react";
+import { fetchNewsByCategory } from "@/server/service/newsService";
 
 const CommunitiesContent = ({ category }) => {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const loadNews = async () => {
       try {
         setIsLoading(true);
-        // Inicia la medición del tiempo
-        console.time("fetchNews");
-      
-        // Generar la consulta según la categoría
-        const consulta =
-          category === "Deporte"
-            ? "obtener noticias deportivas destacadas"
-            : `obtener noticias de ${category}`;
-      
-        const response = await fetch("https://magicloops.dev/api/loop/6743674f-6f2e-4738-8dd9-83b9d6ed76af/run", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input: consulta }),
-        });
-      
-        const data = await response.json();
-        // Finaliza la medición del tiempo y muestra el resultado en la consola
-        console.timeEnd("fetchNews");
-      
-        // Extrae la lista de noticias correspondiente a la categoría
-        setNews(data[category] || []);
+        const data = await fetchNewsByCategory(category);
+        setNews(data.news || []);
       } catch (error) {
         console.error("Error al obtener las noticias:", error);
       } finally {
         setIsLoading(false);
       }
-      
     };
-
-    fetchNews();
+    loadNews();
   }, [category]);
 
   return (
@@ -50,24 +31,50 @@ const CommunitiesContent = ({ category }) => {
           <span className="ml-2">Cargando noticias...</span>
         </div>
       ) : news.length > 0 ? (
-        news.map((item, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="font-bold">{item.titulo}</h3>
-            <p>{item.resumen}</p>
-            {item.enlace && (
-              <a
-                href={item.enlace}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline"
-              >
-                Leer más
-              </a>
+        news.map((article) => (
+          <div key={article.article_id} className="mb-4 border-b pb-4">
+            {/* Titulo principal */}
+            <h3 className="font-bold text-lg mb-1">{article.title}</h3>
+            
+            {/* Subtítulo */}
+            {article.subtitle && (
+              <p className="text-gray-400 italic mb-2">{article.subtitle}</p>
+            )}
+            
+            {/* Resumen */}
+            <p className="text-gray-200 leading-relaxed">{article.summary}</p>
+            
+            {/* Enlace y metadatos */}
+            <div className="mt-3 flex items-center justify-between">
+              <div>
+                {article.link && (
+                  <a
+                    href={article.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:text-blue-700 underline"
+                  >
+                    Leer artículo completo
+                  </a>
+                )}
+              </div>
+              <span className="text-sm text-gray-500">
+                {new Date(article.published_date).toLocaleDateString()}
+              </span>
+            </div>
+            
+            {/* Imagen */}
+            {article.image && (
+              <img 
+                src={article.image} 
+                alt={article.title}
+                className="mt-4 w-full h-48 object-cover rounded-lg shadow-sm"
+              />
             )}
           </div>
         ))
       ) : (
-        <p>No hay noticias para mostrar.</p>
+        <p className="text-gray-500">No hay noticias disponibles en esta categoría.</p>
       )}
     </div>
   );

@@ -34,11 +34,11 @@ app.use("/api/news", newRoutes);
 //     console.log('Actualización de noticias completada. (PRUEBA CADA 10 MINUTOS)'); // Mensaje modificado para identificar pruebas
 // });
 
-(async () => {
-    console.log('🔄 Ejecutando actualización inicial de noticias...');
-    await newsController.updateDailyNews();
-    console.log('✅ Actualización inicial de noticias completada.');
-})();
+// (async () => {
+//     console.log('🔄 Ejecutando actualización inicial de noticias...');
+//     await newsController.updateDailyNews();
+//     console.log('✅ Actualización inicial de noticias completada.');
+// })();
 
 // Servidor
 app.listen(PORT, () => {

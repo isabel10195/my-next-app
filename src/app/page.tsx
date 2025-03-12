@@ -14,7 +14,7 @@ import CardEventos from "@/components/CardEventosPorUsuario/CardEventos";
 import CardCerrarSesion from "@/components/CardCerrarSesion/card-cerrar-sesion";
 import CardinnfoSesion from "@/components/CardInfoSesion/card-infosesion";
 import CombinedNavbar from "@/components/navbar/combinednavbar";
-import { TweetCard } from "@/components/CardPrincipal/tweet-cards"
+import { TweetCard } from "@/components/CardPrincipal/tweet-cards";
 import { fetchTweets, fetchPopularTweets } from "@/server/service/tweetService";
 import { fetchGeneralNews, fetchUserNews } from "@/server/service/newsService";
 import Footer from "@/components/footer";
@@ -48,9 +48,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   // Estado para guardar las noticias
   const [news, setNews] = useState<any[]>([]);
-
   const [tweetMessage, setTweetMessage] = useState("");
   const [newsMessage, setNewsMessage] = useState("");
+
+  // Estado para detectar cambios en la membresía de comunidades
+  const [communityUpdated, setCommunityUpdated] = useState(false);
+
+  // Efecto para ocultar mensajes después de 3 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setNewsMessage("");
+      setTweetMessage("");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [newsMessage, tweetMessage]);
 
   // Cargar tweets según la autenticación
   useEffect(() => {
@@ -63,18 +75,17 @@ export default function HomePage() {
         if (isAuthenticated) {
           console.log("Fetching user tweets");
           data = await fetchTweets();
-          // Si no hay tweets propios, mostramos mensaje e invocamos tweets populares
           if (!data.tweets || data.tweets.length === 0) {
-            setTweetMessage("No tienes tweets, mostrando tweets populares.");
+            setTweetMessage("No tienes tweets, mostrando tweets populares...");
             const popularData = await fetchPopularTweets();
             data.tweets = popularData.tweets;
           } else {
-            setTweetMessage(""); // Limpiamos el mensaje si hay tweets propios
+            setTweetMessage("");
           }
         } else {
           console.log("Fetching popular tweets");
           data = await fetchPopularTweets();
-          setTweetMessage(""); // Limpiamos el mensaje si no hay sesión
+          setTweetMessage("");
         }
         const sortedTweets = data.tweets.sort((a, b) => b.num_likes - a.num_likes);
         setTweets(sortedTweets);
@@ -87,18 +98,18 @@ export default function HomePage() {
     if (!authLoading) {
       loadTweets();
     }
-  }, [isAuthenticated, authLoading]);  
+  }, [isAuthenticated, authLoading]);
 
-  // Cargar noticias según la autenticación
+  // Cargar noticias según la autenticación y cambios en las comunidades
   useEffect(() => {
     async function loadNews() {
       try {
         let data;
         if (isAuthenticated) {
-          data = await fetchUserNews();
-          // Si la bandera está activa, el usuario no pertenece a ninguna comunidad
+          const data = await fetchUserNews();
           if (data.noCommunity) {
-            setNewsMessage("No estás en ninguna comunidad, mostrando noticias generales.");
+            setNewsMessage("No estás en ninguna comunidad. Mostrando Noticias Generales...");
+            setNews(data.news);
           } else {
             setNewsMessage("");
           }
@@ -125,7 +136,7 @@ export default function HomePage() {
             })
           }));
           setNews(formattedNews);
-          setNewsMessage(""); // Limpiamos el mensaje si no hay sesión
+          setNewsMessage("");
         }
       } catch (error) {
         console.error("Error fetching news:", error);
@@ -134,8 +145,8 @@ export default function HomePage() {
     if (!authLoading) {
       loadNews();
     }
-  }, [isAuthenticated, authLoading]);
-    
+  }, [isAuthenticated, authLoading, communityUpdated]); // Se actualiza cuando cambia communityUpdated
+
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-950">
       <CombinedNavbar />
@@ -166,7 +177,7 @@ export default function HomePage() {
             <div className="hidden lg:grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {loading || tweets.length < 1 ? (
                 <>
-                <ArticleCard
+                  <ArticleCard
                     key={`dynamic-article-${isAuthenticated}`}
                     large
                     title="Turn Your Devices From Distractions Into Time Savers Either"
@@ -180,37 +191,37 @@ export default function HomePage() {
                     isAuthenticated={isAuthenticated}
                   />
 
-                <div className="space-y-6">
-                  {/* Otros bloques estáticos o componentes adicionales */}
-                  <ArticleCard
-                    key={`static-article2-${isAuthenticated}`}
-                    large
-                    title="Draw Inspiration From Vibrancy"
-                    excerpt="Finding beauty in the simplest forms of nature"
-                    author="Lind Tailor"
-                    date="30 enero 2024"
-                    readTime="3 min read"
-                    views={17}
-                    image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
-                    onClick={setExpandedArticle}
-                    isAuthenticated={isAuthenticated}
-                  />
-                  <CardPensamientos key={`pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} />
-                  <CardAutorizacion />
-                </div>
-              </>              
+                  <div className="space-y-6">
+                    <ArticleCard
+                      key={`static-article2-${isAuthenticated}`}
+                      large
+                      title="Draw Inspiration From Vibrancy"
+                      excerpt="Finding beauty in the simplest forms of nature"
+                      author="Lind Tailor"
+                      date="30 enero 2024"
+                      readTime="3 min read"
+                      views={17}
+                      image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
+                      onClick={setExpandedArticle}
+                      isAuthenticated={isAuthenticated}
+                    />
+                    {/* Se pasa onCommunityUpdate al CardPensamientos */}
+                    <CardPensamientos 
+                      key={`pensamientos-${isAuthenticated}`} 
+                      isAuthenticated={isAuthenticated}
+                      onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}
+                    />
+                    <CardAutorizacion />
+                  </div>
+                </>
               ) : (
-                // Bloque de noticias (en versión de escritorio)
                 <>
                   <ArticleCard
                     key={`news-article-${isAuthenticated}`}
                     large
-                    articles={news.slice(0, 3).map(article => ({
-                      ...article,
-                      image: article.image || '/default-news-image.jpg'
-                    }))}
+                    articles={news.slice(0, 5)}
                     previewTitle={!isAuthenticated ? "Noticias Generales" : "Noticias para ti"}
-                    message={newsMessage} // <-- Aquí se envía el mensaje
+                    message={newsMessage}
                     onClick={() => {
                       setExpandedArticle(
                         <FullNewsList news={news} isAuthenticated={isAuthenticated} />
@@ -224,11 +235,12 @@ export default function HomePage() {
                       large
                       tweet={tweets[0]}
                       previewTitle={
-                        !isAuthenticated ? "Tweets más populares" : "Tus tweets más populares"
+                        !isAuthenticated || tweetMessage
+                          ? "Tweets más populares"
+                          : "Tus tweets más populares"
                       }
-                      message={tweetMessage} // <-- Aquí se envía el mensaje para los tweets
+                      message={tweetMessage}
                       onClick={() => {
-                        // Lógica para expandir el bloque de tweets
                         const tweetData = tweets.map((tweet) => ({
                           name: new Date(tweet.created_at).toLocaleDateString(),
                           likes: tweet.num_likes || 0,
@@ -272,11 +284,10 @@ export default function HomePage() {
                         );
                       }}
                     />
-                    <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} />
+                    <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
                     <CardAutorizacion />
                   </div>
                 </>
-
               )}
               <div className="space-y-6">
                 <CardEventos />
@@ -328,85 +339,76 @@ export default function HomePage() {
                   </>
                 ) : (
                   <>
-                  <ArticleCard
-                    key={`news-article-${isAuthenticated}`}
-                    large
-                    articles={news.slice(0, 3)} // Se muestran solo las 3 primeras
-                    previewTitle={!isAuthenticated ? "Noticias Generales" : "Noticias para ti"}
-                    onClick={() => {
-                      setExpandedArticle(
-                        <FullNewsList news={news} isAuthenticated={isAuthenticated} />
-                      );
-                    }}
-                    isAuthenticated={isAuthenticated}
-                  />
-                  <div className="space-y-6">
                     <ArticleCard
-                      key={`tweet-article-${isAuthenticated}`}
+                      key={`news-article-${isAuthenticated}`}
                       large
-                      tweet={tweets[0]}
-                      previewTitle={
-                        !isAuthenticated ? "Tweets más populares" : "Tus tweets más populares"
-                      }
+                      articles={news.slice(0, 3)}
+                      previewTitle={!isAuthenticated ? "Noticias Generales" : "Noticias para ti"}
                       onClick={() => {
-                        // Definir tweetData para el gráfico de evolución de likes
-                        const tweetData = tweets.map((tweet) => ({
-                          name: new Date(tweet.created_at).toLocaleDateString(),
-                          likes: tweet.num_likes || 0, // Asegurar que 'num_likes' es un número válido
-                        }));
-
-                        // Calcular el ranking de usuarios más influyentes
-                        const userInfluence = tweets.reduce<Record<string, number>>((acc, tweet) => {
-                          acc[tweet.user_handle] = (acc[tweet.user_handle] || 0) + (tweet.num_likes || 0);
-                          return acc;
-                        }, {});
-
-                        const sortedUsers = Object.entries(userInfluence)
-                          .sort((a, b) => Number(b[1]) - Number(a[1])) // Convertir a número explícitamente
-                          .slice(0, 3);
-
                         setExpandedArticle(
-                          <div className="space-y-4">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                              {!isAuthenticated ? "Tweets más populares" : "Tus tweets más populares"}
-                            </h2>
-
-                            {/* Mostrar Top 3 tweets más populares */}
-                            {tweets.slice(0, 3).map((tweet) => (
-                              <TweetCard key={tweet.tweet_id} tweet={tweet} showStats={true} />
-                            ))}
-
-                            {/* Gráfico de evolución de likes */}
-                            <h2 className="text-xl font-bold">Gráfico de evolución de likes</h2>
-                            <ResponsiveContainer width="100%" height={200}>
-                              <LineChart data={tweetData}>
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line type="monotone" dataKey="likes" stroke="#8884d8" />
-                              </LineChart>
-                            </ResponsiveContainer>
-
-                            {/* Ranking de usuarios más influyentes */}
-                            <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
-                            <ul>
-                              {sortedUsers.map(([user, likes]) => (
-                                <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
-                                  🏆 {user}: {Number(likes)} likes totales
-                                </li>
-                              ))}
-                            </ul>
-                            
-                          </div>
+                          <FullNewsList news={news} isAuthenticated={isAuthenticated} />
                         );
                       }}
+                      isAuthenticated={isAuthenticated}
                     />
-                    <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} />
-                    <CardAutorizacion />
-                  </div>
-                </>
+                    <div className="space-y-6">
+                      <ArticleCard
+                        key={`tweet-article-${isAuthenticated}`}
+                        large
+                        tweet={tweets[0]}
+                        previewTitle={
+                          !isAuthenticated ? "Tweets más populares" : "Tus tweets más populares"
+                        }
+                        onClick={() => {
+                          const tweetData = tweets.map((tweet) => ({
+                            name: new Date(tweet.created_at).toLocaleDateString(),
+                            likes: tweet.num_likes || 0,
+                          }));
+
+                          const userInfluence = tweets.reduce<Record<string, number>>((acc, tweet) => {
+                            acc[tweet.user_handle] = (acc[tweet.user_handle] || 0) + (tweet.num_likes || 0);
+                            return acc;
+                          }, {});
+
+                          const sortedUsers = Object.entries(userInfluence)
+                            .sort((a, b) => Number(b[1]) - Number(a[1]))
+                            .slice(0, 3);
+
+                          setExpandedArticle(
+                            <div className="space-y-4">
+                              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {!isAuthenticated ? "Tweets más populares" : "Tus tweets más populares"}
+                              </h2>
+                              {tweets.slice(0, 3).map((tweet) => (
+                                <TweetCard key={tweet.tweet_id} tweet={tweet} showStats={true} />
+                              ))}
+                              <h2 className="text-xl font-bold">Gráfico de evolución de likes</h2>
+                              <ResponsiveContainer width="100%" height={200}>
+                                <LineChart data={tweetData}>
+                                  <XAxis dataKey="name" />
+                                  <YAxis />
+                                  <Tooltip />
+                                  <Line type="monotone" dataKey="likes" stroke="#8884d8" />
+                                </LineChart>
+                              </ResponsiveContainer>
+                              <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
+                              <ul>
+                                {sortedUsers.map(([user, likes]) => (
+                                  <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
+                                    🏆 {user}: {Number(likes)} likes totales
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        }}
+                      />
+                      <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
+                      <CardAutorizacion />
+                    </div>
+                  </>
                 )}
-                <CardPensamientos key={`mobile-pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} />
+                <CardPensamientos key={`mobile-pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
                 <CardAutorizacion />
                 <div className="relative grid grid-cols-2 gap-4 mt-6">
                   {currencyPairs.map((pair) => (

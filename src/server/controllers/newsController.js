@@ -8,8 +8,9 @@ const db = require("mssql");
 const getGeneralNews = async (req, res) => {
   try {
     const query = `
-      SELECT TOP 15 *
+      SELECT *
       FROM news_articles
+      WHERE category = 'Noticias Generales' 
       ORDER BY published_date DESC
     `;
     const result = await executeQuery(query);
@@ -55,17 +56,41 @@ const getUserNews = async (req, res) => {
     } else {
       // Usuario sin comunidades: se muestran noticias generales y se indica el estado
       newsQuery = `
-        SELECT TOP 15 *
+        SELECT *
         FROM news_articles
+        WHERE category = 'Noticias Generales'
         ORDER BY published_date DESC
       `;
       const newsResult = await executeQuery(newsQuery);
-      res.status(200).json({ news: newsResult.recordset, noCommunity: true });
+      res.status(200).json({ 
+        news: newsResult.recordset, 
+        noCommunity: true,
+      });
     }
 
   } catch (error) {
     console.error("Error fetching user news:", error);
     res.status(500).json({ message: "Error fetching user news", error: error.message });
+  }
+};
+
+const getNewsByCategory = async (req, res) => {
+  const { category } = req.params;
+  try {
+    const query = `
+      SELECT *
+      FROM news_articles
+      WHERE category = @category
+      ORDER BY published_date DESC
+    `;
+    const inputs = [
+      { name: "category", type: db.NVarChar, value: category }
+    ];
+    const result = await executeQuery(query, inputs);
+    res.status(200).json({ news: result.recordset });
+  } catch (error) {
+    console.error("Error fetching news by category:", error);
+    res.status(500).json({ message: "Error fetching news", error: error.message });
   }
 };
 
@@ -118,5 +143,6 @@ const updateDailyNews = async () => {
 module.exports = {
   getGeneralNews,
   getUserNews,
-  updateDailyNews
+  updateDailyNews,
+  getNewsByCategory
 };

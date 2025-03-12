@@ -19,8 +19,8 @@ interface FullNewsListProps {
 
 const FullNewsList: React.FC<FullNewsListProps> = ({ news, isAuthenticated }) => {
   const filteredNews = !isAuthenticated
-    ? news.filter((article) => article.category === "Noticias Generales")
-    : news;
+  ? news.filter((article) => article.category === "Noticias Generales")
+  : news;
 
   return (
     <div className="container mx-auto p-4">
