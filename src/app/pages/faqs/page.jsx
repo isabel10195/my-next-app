@@ -1,4 +1,6 @@
 'use client'
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+
 
 export default function FAQsPage() {
   const faqs = [
@@ -25,12 +27,13 @@ export default function FAQsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <div className="container mx-auto p-6">
+        <BackButton href="/" />
         <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">FAQs</h1>
         <div className="space-y-6">
           {faqs.map((faq, index) => (
-            <div key={index} className="rounded-lg border bg-white p-4 dark:bg-gray-900 dark:border-gray-800">
+            <div key={index} className="rounded-lg border bg-gray-100 p-4 dark:bg-gray-900 border-gray-300 dark:border-gray-800">
               <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">{faq.question}</h2>
               <p className="text-gray-700 dark:text-gray-300">{faq.answer}</p>
             </div>

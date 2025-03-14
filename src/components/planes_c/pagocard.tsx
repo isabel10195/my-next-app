@@ -27,7 +27,7 @@ export default function PaymentSection() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black px-4 py-24">
+    <div className="relative min-h-screen bg-gradient-to-b from-gray-400 to-gray-100 dark:from-gray-800 dark:to-gray-950 text-gray-900 dark:text-white px-4 py-24">
       <div ref={ref} className="mx-auto max-w-2xl space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -35,8 +35,8 @@ export default function PaymentSection() {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">Pago seguro</h2>
-          <p className="text-lg text-gray-300 md:text-xl">
+          <h2 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Pago seguro</h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 md:text-xl">
             Introduce los datos de tu tarjeta para completar la compra.
           </p>
         </motion.div>
@@ -45,7 +45,7 @@ export default function PaymentSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-6"
+          className="space-y-6 bg-white dark:bg-gray-950 p-8 rounded-md"
           onSubmit={(e) => {
             e.preventDefault()
             const formData = new FormData(e.currentTarget as HTMLFormElement)
@@ -53,18 +53,18 @@ export default function PaymentSection() {
           }}
         >
           <div>
-            <Label htmlFor="card-number" className="block text-sm font-medium text-gray-300">
+            <Label htmlFor="card-number" className="block text-sm font-medium text-gray-900 dark:text-gray-400">
               Número de tarjeta
             </Label>
             <div className="mt-1 relative rounded-md">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <CreditCard className="h-5 w-5 text-gray-400" />
+                <CreditCard className="h-5 w-5 text-gray-700 dark:text-gray-400" />
               </div>
               <Input
                 type="text"
                 name="card-number"
                 id="card-number"
-                className="pl-10 text-white bg-gray-900"
+                className="pl-10 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="1234 5678 9012 3456"
                 required
               />
@@ -73,27 +73,27 @@ export default function PaymentSection() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="expiry" className="block text-sm font-medium text-gray-300">
+              <Label htmlFor="expiry" className="block text-sm font-medium text-gray-900 dark:text-gray-400">
                 Fecha de expiración
               </Label>
               <Input
                 type="text"
                 name="expiry"
                 id="expiry"
-                className="bg-gray-900 text-white"
+                className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="MM / AA"
                 required
               />
             </div>
             <div>
-              <Label htmlFor="cvc" className="block text-sm font-medium text-gray-300">
+              <Label htmlFor="cvc" className="block text-sm font-medium text-gray-900 dark:text-gray-400">
                 CVC
               </Label>
               <Input
                 type="text"
                 name="cvc"
                 id="cvc"
-                className="bg-gray-900 text-white"
+                className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                 placeholder="123"
                 required
               />
@@ -101,14 +101,14 @@ export default function PaymentSection() {
           </div>
 
           <div>
-            <Label htmlFor="name" className="block text-sm font-medium text-gray-300">
+            <Label htmlFor="name" className="block text-sm font-medium text-gray-900 dark:text-gray-400">
               Nombre en la tarjeta
             </Label>
             <Input
               type="text"
               name="name"
               id="name"
-              className="bg-gray-900 text-white"
+              className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="John Doe"
               required
             />
@@ -117,7 +117,7 @@ export default function PaymentSection() {
           <div>
             <Button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               disabled={isProcessing}
             >
               {isProcessing ? (

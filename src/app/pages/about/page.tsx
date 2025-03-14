@@ -1,39 +1,20 @@
 import Image from 'next/image'
 import { ChevronRight, Search, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-gray-200 dark:bg-gray-950 text-gray-900 dark:text-white">
+      <BackButton href="/" />
+
       {/* Global Banner */}
-      <div className="bg-[#f5f5f7] dark:bg-gray-900 text-sm py-3 px-4 text-center text-gray-900 dark:text-white">
+      <div className="bg-gray-100 dark:bg-gray-900 text-sm py-3 px-4 text-center text-gray-900 dark:text-white">
         <p>Elige otro país o región para ver contenido específico de tu ubicación</p>
       </div>
 
-      {/* Navigation */}
-      <nav className="bg-[rgba(255,255,255,0.8)] dark:bg-[rgba(26,26,26,0.8)] backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-      <div className="max-w-[980px] mx-auto px-4 h-[44px] flex items-center justify-between">
-      <Link href="/" className="opacity-80 hover:opacity-100 transition-opacity">
-            <Image 
-                        src="/logo.png" 
-                        alt="Logo de LA ISLA DE LURE" 
-                        width={150} 
-                        height={150} 
-                      />
-            <span className="sr-only">Inicio</span>
-          </Link>
-          
-          <div className="hidden md:flex space-x-8 text-sm">
-            <Link href="/" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Inicio</Link>
-            <Link href="/pages/profile" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Perfil</Link>
-            <Link href="/pages/planes" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Planes</Link>
-            <Link href="#" className="text-gray-900 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white">Soporte</Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 bg-white dark:bg-gray-950">
+      <section className="pt-20 pb-16 px-4 bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white">
         <div className="max-w-[980px] mx-auto text-center">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-400 mb-4">Sobre Nosotros</h2>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold text-gray-900 dark:text-white mb-4 tracking-tight">
@@ -55,7 +36,7 @@ export default function Page() {
           <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Nuestra Historia</h3>
-              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400 leading-relaxed">
                 Fundada en un garaje en 1976, nuestra compañía ha crecido hasta convertirse en una de 
                 las empresas de tecnología más valiosas del mundo. Estamos comprometidos a 
                 ofrecer la mejor experiencia de usuario a nuestros clientes a través de hardware, 
@@ -71,7 +52,7 @@ export default function Page() {
             </div>
             <div className="space-y-6">
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Nuestros Valores</h3>
-              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+              <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400 leading-relaxed">
                 Creemos que la tecnología debe ser accesible para todos y que 
                 los mejores productos provienen de la intersección entre la tecnología y las artes liberales.
                 Nuestro compromiso con la responsabilidad ambiental nos impulsa a 

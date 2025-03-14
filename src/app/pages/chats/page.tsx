@@ -42,15 +42,15 @@ export default function MessagesPage() {
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-950">
           <div className="container mx-auto px-6 py-8">
-            <h3 className="text-gray-700 text-3xl font-medium">Messages</h3>
+            <h3 className="text-3xl font-medium text-gray-900 dark:text-white">Messages</h3>
             <Card className="mt-8">
               <CardHeader>
-                <CardTitle className="text-2xl">Chat with John</CardTitle>
+                <CardTitle className="text-2xl text-gray-900 dark:text-white">Chat with John</CardTitle>
               </CardHeader>
               <CardContent>
-                <ScrollArea className="h-[400px] pr-4">
+                <ScrollArea className="h-[600px] pr-4">
                   {messages.map((message) => (
                     <div key={message.id} className={`flex ${message.sender === 'You' ? 'justify-end' : 'justify-start'} mb-4`}>
                       <div className={`flex ${message.sender === 'You' ? 'flex-row-reverse' : 'flex-row'} items-end`}>
@@ -60,7 +60,7 @@ export default function MessagesPage() {
                         </Avatar>
                         <div className={`mx-2 py-2 px-4 rounded-lg ${message.sender === 'You' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
                           <p>{message.content}</p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-gray-300 dark:text-gray-700 mt-1">
                             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                         </div>
@@ -80,9 +80,9 @@ export default function MessagesPage() {
                         handleSendMessage()
                       }
                     }}
-                    className="flex-1 mr-2"
+                    className="flex-1 mr-2 text-gray-900 dark:text-white"
                   />
-                  <Button onClick={handleSendMessage}>Send</Button>
+                  <Button type="submit" className=" bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition" onClick={handleSendMessage}>Send</Button>
                 </div>
               </CardContent>
             </Card>

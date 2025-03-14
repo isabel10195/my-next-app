@@ -29,7 +29,7 @@ interface PerfilNavProps {
 
 const menuItems: MenuItem[] = [
   { icon: Home, label: "Inicio", path: "/" },
-  { icon: User, label: "Perfil", path: "/pages/profile" },
+  { icon: User, label: "Feed", path: "/pages/feed" },
   { icon: Bell, label: "Notificaciones", path: "/pages/notifications" },
   { icon: Mail, label: "Mensajes", path: "/pages/chats" },
   { icon: Settings, label: "Configuración", path: "/pages/settings" },
@@ -60,7 +60,7 @@ export default function PerfilNav({ user }: PerfilNavProps) {
   return (
     <>
       {/* Menú en barra inferior para pantallas pequeñas */}
-      <div className="xl:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-800 shadow-lg z-50">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-800 shadow-lg z-50">
         <div className="flex justify-around p-3">
           {menuItems.slice(0, 4).map((item) => (
             <Link key={item.label} href={item.path}>
@@ -76,7 +76,7 @@ export default function PerfilNav({ user }: PerfilNavProps) {
       </div>
 
       {/* Sidebar lateral en pantallas grandes */}
-      <aside className="hidden xl:flex flex-col fixed h-[90vh] w-64 p-4 bg-white dark:bg-gray-900 shadow-lg overflow-hidden rounded-xl">
+      <aside className="hidden lg:flex flex-col fixed h-[90vh] w-64 p-4 bg-white dark:bg-gray-900 shadow-lg overflow-hidden rounded-xl">
         {user ? (
           <div className="flex flex-col items-center space-y-2 mb-6 mt-6 text-gray-500 dark:text-gray-300">
             <Avatar className="w-20 h-20 border-2 border-gray-300 shadow-xl dark:border-gray-300">

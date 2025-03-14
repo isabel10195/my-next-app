@@ -64,12 +64,12 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
         ) : (
           <ul className="space-y-4">
             {tweets.map((tweet) => (
-              <li key={tweet.tweet_id} className="p-4 bg-blue-800 rounded-lg">
+              <li key={tweet.tweet_id} className="p-4 border rounded-lg">
                 <div className="flex items-start gap-3">
                   <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-200">{tweet.user_handle}</h4>
-                    <p className="mt-1 text-gray-700 dark:text-gray-400">{tweet.tweet_text}</p>
+                    <h4 className="font-bold text-gray-900 dark:text-white">{tweet.user_handle}</h4>
+                    <p className="mt-1 text-gray-900 dark:text-white">{tweet.tweet_text}</p>
                   </div>
                 </div>
               </li>
