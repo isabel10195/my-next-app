@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from '@/components/ui/ScrollArea'
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+
 interface Message {
   id: number
   sender: string
@@ -44,7 +46,8 @@ export default function MessagesPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-950">
           <div className="container mx-auto px-6 py-8">
-            <h3 className="text-3xl font-medium text-gray-900 dark:text-white">Messages</h3>
+            <BackButton href="/" />
+            <h3 className="text-3xl mt-10 font-medium text-gray-900 dark:text-white">Mensajes</h3>
             <Card className="mt-8">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-900 dark:text-white">Chat with John</CardTitle>
