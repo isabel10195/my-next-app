@@ -206,7 +206,7 @@ const handleEditTweet = async (tweetId, newText) => {
                 </motion.div>
               </div>
             
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} />
+              <CardTweets tweets={tweets} user={user} handleDeleteTweet={handleDeleteTweet} handleEditTweet={handleEditTweet} />
              
              {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
             <div className="hidden lg:block space-y-4">
