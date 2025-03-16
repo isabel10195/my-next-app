@@ -14,7 +14,6 @@ import {
   likeTweet
 } from "@/server/service/tweetService";
 import Tweet from "@/components/tweet/tweet";
-import { ProfileProvider } from "@/app/context/ProfileContext";
 import { toast } from "sonner";
 
 export default function Feed() {
@@ -193,9 +192,7 @@ export default function Feed() {
           <TweetList tweets={followingTweets} onRetweetChange={handleRetweetChange} />
         </TabsContent>
         <TabsContent value="communities">
-        <ProfileProvider>
           <Communities />
-        </ProfileProvider>
         </TabsContent>
         <TabsContent value="ChatIA">
           <ChatIA />

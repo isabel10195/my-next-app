@@ -18,11 +18,16 @@ const authMiddleware = (req, res, next) => {
     
     console.log("🔑 Token encontrado en authMiddleware:", token);
 
+    // if (!token) {
+    //     console.log("🔴 No hay token, usuario anónimo en authMiddleware.");
+    //     req.user = { user_id: null };
+    //     return next();
+    // }
+
     if (!token) {
-        console.log("🔴 No hay token, usuario anónimo en authMiddleware.");
-        req.user = { user_id: null };
-        return next();
-    }
+        console.log("🔴 Acceso no autorizado");
+        return res.status(401).json({ error: "No autorizado" });
+      }
 
     try {
         // 🔹 Decodificar token
