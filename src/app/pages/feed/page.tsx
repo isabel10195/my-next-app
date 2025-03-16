@@ -13,7 +13,7 @@ export default function FeedPage() {
 
       {/* Contenedor principal del feed */}
       <section className="flex flex-grow justify-center px-4 mt-4 ">
-        <div className="w-full max-w-[700px]">
+        <div className="w-full max-w-[100%]">
           <FeedPrincipal />
         </div>
       </section>

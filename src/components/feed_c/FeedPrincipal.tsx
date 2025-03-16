@@ -14,6 +14,8 @@ import {
   likeTweet
 } from "@/server/service/tweetService";
 import Tweet from "@/components/tweet/tweet";
+import { ProfileProvider } from "@/app/context/ProfileContext";
+import { toast } from "sonner";
 
 export default function Feed() {
   const [forYouTweets, setForYouTweets] = useState([]);
@@ -34,6 +36,12 @@ export default function Feed() {
         }
         return tweet;
     }));
+    // Notificación de retweet
+    toast[isRetweeted ? "success" : "warning"](`Retweet ${isRetweeted ? "realizado" : "eliminado"}`, {
+      description: isRetweeted 
+        ? "Has compartido este tweet" 
+        : "Has dejado de compartir este tweet",
+    });
   };
 
   // Cargar tweets de For You y Following
@@ -73,12 +81,22 @@ export default function Feed() {
     e.preventDefault();
     if (newTweet.trim()) {
       try {
+        toast.loading("Publicando tweet...", { id: "tweet-loading" });
         await createTweet(newTweet);
         setNewTweet("");
+        // Notificación de éxito
+        toast.success("¡Tweet publicado!", {
+          description: "Tu mensaje se ha compartido correctamente",
+          id: "tweet-loading" // Reemplazar la notificación de carga
+        });
         loadForYouTweets();
         loadFollowingTweets();
       } catch (error) {
-        console.error(error);
+        // Notificación de error
+        toast.error("Error al publicar", {
+          description: error.message || "No se pudo enviar el tweet",
+          id: "tweet-loading" // Reemplazar la notificación de carga
+        });
       }
     }
   };
@@ -100,8 +118,17 @@ export default function Feed() {
       );
   
       await likeTweet(tweet.tweet_id);
+      // Notificación de like
+      toast[tweet.liked ? "warning" : "success"](`Like ${tweet.liked ? "eliminado" : "añadido"}`, {
+        description: tweet.liked 
+          ? "Has quitado tu me gusta" 
+          : "¡Has dado me gusta a este tweet!",
+      });
+
     } catch (error) {
-      console.error(error);
+      toast.error("Error al actualizar like", {
+        description: error.message || "No se pudo actualizar tu interacción"
+      });
     }
   };
 
@@ -166,7 +193,9 @@ export default function Feed() {
           <TweetList tweets={followingTweets} onRetweetChange={handleRetweetChange} />
         </TabsContent>
         <TabsContent value="communities">
+        <ProfileProvider>
           <Communities />
+        </ProfileProvider>
         </TabsContent>
         <TabsContent value="ChatIA">
           <ChatIA />

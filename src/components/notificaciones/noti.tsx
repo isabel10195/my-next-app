@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
           position="top-right"
           richColors
           expand={true}
-          visibleToasts={2}
+          visibleToasts={3}
           offset="16px"
         />
       </body>
