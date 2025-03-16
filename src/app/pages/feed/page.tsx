@@ -4,24 +4,26 @@ import PanelDerecho from "@/components/feed_c/PanelDerecho";
 
 export default function FeedPage() {
   return (
-    <main className="flex min-h-screen bg-gray-200 dark:bg-gray-950 transition-colors duration-300">
-      
-      {/* Sidebar izquierdo */}
-      <aside className="hidden md:flex md:w-[250px] flex-shrink-0 ml-16 mt-4">
+    <div className="mx-auto px-4 lg:px-8 flex flex-col lg:flex-row gap-8 w-full">
+      {/* Sidebar izquierdo: Visible en pantallas grandes */}
+      <div className="lg:block lg:w-[250px] flex-shrink-0 mt-4 z-10">
         <NavIzq />
-      </aside>
+      </div>
 
       {/* Contenedor principal del feed */}
-      <section className="flex flex-grow justify-center px-4 mt-4 ">
-        <div className="w-full max-w-[700px]">
-          <FeedPrincipal />
-        </div>
+      <section className="flex-1 space-y-4 w-full mt-4">
+        <FeedPrincipal />
       </section>
 
       {/* Panel derecho */}
-      <aside className="hidden lg:flex w-[350px] flex-shrink-0 mr-16 mt-4 ">
+      <div className="hidden lg:block lg:w-[350px] flex-shrink-0 mt-4">
         <PanelDerecho />
-      </aside>
-    </main>
+      </div>
+
+      {/* Panel derecho debajo del feed pantallas medianas y pequeñas */}
+      <div className=" lg:hidden w-full mt-4">
+        <PanelDerecho />
+      </div>
+    </div>
   );
 }

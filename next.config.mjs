@@ -35,6 +35,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "static.vecteezy.com", // 🔥 Añadido para permitir imágenes de vecteezy
       },
+      {
+        protocol: "https",
+        hostname: "e7.pngegg.com",
+      },
     ],
   },
 };

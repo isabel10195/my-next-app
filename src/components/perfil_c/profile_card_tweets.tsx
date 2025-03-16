@@ -64,7 +64,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
         ) : (
           <ul className="space-y-4">
             {tweets.map((tweet) => (
-              <li key={tweet.tweet_id} className="p-4 bg-blue-800 rounded-lg">
+              <li key={tweet.tweet_id} className="p-4 border rounded-lg">
                 <div className="flex items-start gap-3">
                   <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
                   <div className="flex-1">

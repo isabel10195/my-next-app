@@ -10,6 +10,8 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+
 
 
 export default function LoginPage() {
@@ -78,7 +80,8 @@ export default function LoginPage() {
       </div>
 
       {/* Texto login lado izquierdo */}
-      <div className="flex items-center lg:pl-16 lg:mr-16 lg:ml-10 mb-20">
+      <div className="flex items-center lg:pl-56 lg:mr-16 lg:ml-10 mb-20">
+         <BackButton href="/" />
         <div className="text-white space-y-4">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold">Bienvenido a Lure</h1>
           <p className="text-3sm md:text-lg lg:text-xl">Accede a tu cuenta</p>
@@ -86,7 +89,7 @@ export default function LoginPage() {
       </div>
 
       {/* Login Form */}
-      <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white/95 dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 sm:p-8 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0 relative z-10">
+      <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0 relative z-10">
         <div className="w-full space-y-8">
           <div className="flex justify-center">
             <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-3 lg:w-[180px]" />
@@ -142,14 +145,11 @@ export default function LoginPage() {
 
           {/* Enlace para volver al inicio */}
           <div className="mt-6 text-center">
-            <Link href="/" className="text-blue-500 hover:text-blue-600">
-              ← Volver al inicio
-            </Link><br />
-            <Link href="/pages/register" className="text-blue-500 hover:text-blue-600">
-              No tienes una cuenta? Regístrate aquí
+
+            <Link href="/pages/register" className=" text-sm text-blue-500 hover:text-blue-600">
+              ¿Aún no tienes cuenta? Regístrate aquí
             </Link>
           </div>
-
         </div>
       </div>
     </div>

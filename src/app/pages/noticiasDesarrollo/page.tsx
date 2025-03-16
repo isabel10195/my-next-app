@@ -5,8 +5,7 @@ import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Button } from "@/components/ui/button"
 import { Clock, Eye } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
-import CombinedNavbar from "@/components/navbar/combinednavbar"
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
 
 interface NewsPost {
   id: number
@@ -99,28 +98,23 @@ const newsPosts: NewsPost[] = [
 
 export default function noticiasDesarrollo() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      <header className="border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4">
-          <CombinedNavbar />
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-200 dark:bg-gray-950 text-gray-900 dark:text-white">
       <main className="container mx-auto px-4 py-8">
+          <BackButton href="/" />
         <h1 className="text-3xl font-bold mb-8">Noticias y Actualizaciones</h1>
 
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="grid gap-6">
             {newsPosts.map((post) => (
-              <Card key={post.id} className="bg-gray-900/50 border-gray-800 text-white">
-                <CardHeader className="flex flex-row items-center gap-4">
+              <Card key={post.id} className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-white">
+                <CardHeader className="flex flex-row items-center gap-4 text-gray-900 dark:text-white">
                   <Avatar>
                     <AvatarImage src={post.author.avatar} />
                     <AvatarFallback>{post.author.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="font-semibold">{post.author.name}</span>
-                    <span className="text-sm text-gray-400">{post.date}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{post.date}</span>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -130,8 +124,8 @@ export default function noticiasDesarrollo() {
                     </div>
                   )}
                   <div>
-                    <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-                    <p className="text-gray-400">{post.excerpt}</p>
+                    <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-gray-400">{post.title}</h2>
+                    <p className="text-gray-700 dark:text-gray-400">{post.excerpt}</p>
                     {post.tags && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         {post.tags.map((tag, index) => (
@@ -142,7 +136,7 @@ export default function noticiasDesarrollo() {
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                       <Eye className="w-4 h-4" />
                       <span>{post.views}</span>

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+
 
 
 export default function RegisterPage() {
@@ -126,8 +128,9 @@ export default function RegisterPage() {
       <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-2xl overflow-hidden">
 
         {/* Sección izquierda */}
-        <div className="flex items-center bg-transparent p-12 text-white -mt-20">
-          <div className="relative">
+        <div className="flex items-center justify-center lg:justify-start bg-transparent p-12 text-white -mt-20">
+          <BackButton href="/" />
+          <div className="relative text-center lg:text-left">
             <div className="flex items-center justify-center gap-2 mt-12">
               <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 mt-3 -ml-11 lg:-ml-2">Registro</h1>
               <div className="w-5 h-5 border-2 border-white/30 rounded-full ml-3 mt-2"></div>
@@ -141,7 +144,7 @@ export default function RegisterPage() {
 
   
         {/* Sección derecha */}
-        <Card className=" border border-none shadow-2xl rounded-xl p-8 bg-white/95 dark:bg-gray-900 text-gray-900 dark:text-white relative z-10">
+        <Card className=" border border-none shadow-2xl rounded-xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white relative z-10 mx-auto">
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="flex justify-center">
@@ -153,30 +156,23 @@ export default function RegisterPage() {
             {/* Inputs */}
             <Input
               type="text"
-              placeholder="Nombre de usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-              />
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
-            <Input
-              type="text"
-              placeholder="Primer Nombre"
+              placeholder="Nombre"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
             />
             <Input
               type="text"
-              placeholder="Apellido"
+              placeholder="Apellidos"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
             />
             <Input
@@ -186,7 +182,13 @@ export default function RegisterPage() {
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
             />
-  
+            <Input
+              type="text"
+              placeholder="Nombre de usuario"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
             {/* Contraseña */}
             <div className="relative">
               <Input

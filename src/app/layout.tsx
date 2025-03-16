@@ -5,6 +5,7 @@ import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from './context/AuthContext';
 import { ProfileProvider } from './context/ProfileContext'; // 🔥 Importa el contexto de perfil
+import { Toaster } from "sonner";
 
 // Crear una instancia de QueryClient
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryClientProvider client={queryClient}>
           <AuthProvider> {/* 🔥 Toda la app tiene acceso a la autenticación */}
               {children}
+              <Toaster position="top-right" richColors expand={true} />
           </AuthProvider>
         </QueryClientProvider>
       </body>

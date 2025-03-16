@@ -54,7 +54,7 @@ export default function CombinedNavbar() {
   }, []);
 
   return (
-    <Navbar className="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+    <Navbar className=" bg-gradient-to-t from-gray-50 to-gray-200 dark:bg-gradient-to-b dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-900 shadow shadow-sm">
       <div className="container mx-auto flex items-center justify-between p-5 md:p-5">
         {/* Icono de hamburguesa */}
         <div className="md:hidden cursor-pointer mr-5" onClick={toggleMenu}>

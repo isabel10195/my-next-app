@@ -21,7 +21,7 @@ export default function HeroSection() {
   const blurAmount = Math.min(scrollY / 5, 40); // Ajusta la velocidad de difuminado
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden bg-gray-200 dark:from-gray-950 dark:to-gray-700 text-gray-900 dark:text-white">
       <video
         src="/video.mp4" // Asegúrate de colocar tu archivo en public/video.mp4
         className="absolute left-0 top-0 h-full w-full object-cover"
@@ -37,7 +37,7 @@ export default function HeroSection() {
           filter: `blur(${blurAmount}px)`,
         }}
       />
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center bg-gradient-to-b from-gray-100 to-gray-300 dark:from-gray-950 dark:to-gray-800 text-gray-900 dark:text-white">
         <h1 className="mb-4 text-5xl font-bold md:text-7xl">
           Todos los Originales de Lure.
         </h1>

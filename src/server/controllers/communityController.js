@@ -21,11 +21,31 @@ const joinCommunity = async (req, res) => {
   }
 };
 
+const leaveCommunity = async (req, res) => {
+  const { communityId } = req.body;
+  const userId = req.user.id;
+  try {
+    const query = `
+      DELETE FROM community_members
+      WHERE community_id = @communityId AND user_id = @userId
+    `;
+    const inputs = [
+      { name: "communityId", type: db.Int, value: communityId },
+      { name: "userId", type: db.Int, value: userId },
+    ];
+    await executeQuery(query, inputs);
+    res.status(200).json({ message: "Has dejado la comunidad" });
+  } catch (error) {
+    console.error("Error al dejar la comunidad:", error);
+    res.status(500).json({ message: "Error al dejar la comunidad", error: error.message });
+  }
+};
+
 const getUserCommunities = async (req, res) => {
   const userId = req.user.id;
   try {
     const result = await executeQuery(`
-      SELECT c.community_id, c.name
+      SELECT c.community_id, c.name, c.category, c.description
       FROM communities c
       JOIN community_members cm ON c.community_id = cm.community_id
       WHERE cm.user_id = @userId
@@ -99,5 +119,6 @@ module.exports = {
   getExploreCommunities,
   joinCommunity,
   getCategories,
-  getPopularCommunities
+  getPopularCommunities,
+  leaveCommunity
 };

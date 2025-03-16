@@ -8,7 +8,7 @@ export default function TextSection() {
   const isInView = useInView(ref, { once: true })
 
   return (
-    <div className="relative min-h-screen bg-black px-4 py-24">
+    <div className="relative min-h-screen bg-gradient-to-b from-gray-300 to-gray-100 dark:from-gray-800 dark:to-gray-950 dark:text-white px-4 py-24">
       <div ref={ref} className="mx-auto max-w-4xl space-y-24">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -19,8 +19,8 @@ export default function TextSection() {
           <h2 className="mb-6 text-4xl font-bold md:text-6xl">
             Acceso a contenido original.
           </h2>
-          <p className="text-xl text-gray-300 md:text-2xl">
-            Mira todo el contenido con filtros avanzados y sin conexion.
+          <p className="text-xl text-gray-500 dark:text-gray-300 md:text-2xl">
+            Mira todo el contenido con filtros avanzados y sin conexión.
           </p>
         </motion.div>
 
@@ -33,7 +33,7 @@ export default function TextSection() {
           <h2 className="mb-6 text-4xl font-bold md:text-6xl">
             En cualquer sitio.
           </h2>
-          <p className="text-xl text-gray-300 md:text-2xl">
+          <p className="text-xl text-gray-500 dark:text-gray-300 md:text-2xl">
             Comparte Lure+ con tu familia.
           </p>
         </motion.div>

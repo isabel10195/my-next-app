@@ -6,6 +6,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { Card } from "@/components/ui/card";
 import { Building2, Clock, Link, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+
 
 export default function MapaPage() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -26,27 +28,28 @@ export default function MapaPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0c10] text-white">
+    <div className="min-h-screen bg-gray-200 dark:bg-gray-950 text-gray-900 dark:text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-16">Dónde encontrarnos</h1>
+          <BackButton href="/" />
+          <h1 className="text-4xl font-bold text-center mb-16 text-gray-900 dark:text-white">Dónde encontrarnos</h1>
 
           <div className="grid lg:grid-cols-[2fr,1fr] gap-8">
             {/* Mapa con MapLibre */}
-            <Card className="bg-[#1a1d24] border-0 overflow-hidden h-[600px]">
+            <Card className="bg-muted border-0 overflow-hidden h-[600px]">
               <div ref={mapContainerRef} style={{ height: "100%", width: "100%" }} />
             </Card>
             
 
             {/* Información de contacto */}
             <div className="space-y-6">
-              <Card className="bg-[#1a1d24] border-0 p-6">
+              <Card className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-0 p-6 ">
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
                     <Building2 className="w-6 h-6 text-blue-500 mt-1" />
                     <div>
                       <h2 className="font-semibold text-xl mb-2">Dirección</h2>
-                      <p className="text-gray-400">
+                      <p className="text-gray-500 dark:text-gray-400">
                         Calle Gran Vía, 123
                         <br />
                         28013 Madrid
@@ -60,7 +63,7 @@ export default function MapaPage() {
                     <Clock className="w-6 h-6 text-blue-500 mt-1" />
                     <div>
                       <h2 className="font-semibold text-xl mb-2">Horario</h2>
-                      <div className="text-gray-400 space-y-1">
+                      <div className="text-gray-500 dark:text-gray-400 space-y-1">
                         <p>Lunes - Viernes: 9:00 - 20:00</p>
                         <p>Sábado: 10:00 - 14:00</p>
                         <p>Domingo: Cerrado</p>
@@ -72,7 +75,7 @@ export default function MapaPage() {
                     <Phone className="w-6 h-6 text-blue-500 mt-1" />
                     <div>
                       <h2 className="font-semibold text-xl mb-2">Teléfono</h2>
-                      <p className="text-gray-400">+34 900 123 456</p>
+                      <p className="text-gray-500 dark:text-gray-400">+34 900 123 456</p>
                     </div>
                   </div>
 
@@ -80,24 +83,24 @@ export default function MapaPage() {
                     <Mail className="w-6 h-6 text-blue-500 mt-1" />
                     <div>
                       <h2 className="font-semibold text-xl mb-2">Email</h2>
-                      <p className="text-gray-400">info@lure.com</p>
+                      <p className="text-gray-500 dark:text-gray-400">info@lure.com</p>
                     </div>
                   </div>
                 </div>
               </Card>
               
 
-              <Card className="bg-[#1a1d24] border-0 p-6">
+              <Card className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-0 p-6">
                 <h2 className="font-semibold text-xl mb-4">Cómo llegar</h2>
-                <div className="space-y-4 text-gray-400">
+                <div className="space-y-4 text-gray-500">
                   <p>
-                    <strong className="text-white">Metro:</strong> Líneas 1, 2 y 3 - Estación Gran Vía
+                    <strong className="text-gray-700 dark:text-gray-400">Metro:</strong> Líneas 1, 2 y 3 - Estación Gran Vía
                   </p>
                   <p>
-                    <strong className="text-white">Bus:</strong> Líneas 1, 2, 46, 74, 146
+                    <strong className="text-gray-700 dark:text-gray-400">Bus:</strong> Líneas 1, 2, 46, 74, 146
                   </p>
                   <p>
-                    <strong className="text-white">Parking:</strong> Disponible en el edificio
+                    <strong className="text-gray-700 dark:text-gray-400">Parking:</strong> Disponible en el edificio
                   </p>
                 </div>
               </Card>

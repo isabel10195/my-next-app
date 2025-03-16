@@ -19,6 +19,7 @@ export default function ProfilePage() {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,12 +167,54 @@ const handleEditTweet = async (tweetId, newText) => {
             <PerfilNav user={user} />
           </div>
 
-          <div className="flex-1 space-y-4 w-full relative">
+          <div className="flex-1 space-y-4 w-full relative overflow-y-auto pb-24">
             <CardUsuario user={user} />
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={handleDeleteTweet} handleEditTweet={handleEditTweet} />
-            <CardLogros user={user} achievements={userDetails.achievements} />
-            <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
-            <CardHabilidades user={user} skills={userDetails.skills} />
+            
+            {/* Cards de info adicional desplegables en pantallas medianas y pequeñas, debajo de cardUsuario*/}
+            <div className="lg:hidden">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="w-full flex py-1 px-2 bg-white dark:bg-gray-900 rounded-md shadow-sm mb-6"
+                  >
+                  <span className="mr-2 text-xs text-gray-700 dark:text-gray-300">{isExpanded ? 'Menos detalles de usuario' : 'Más detalles de usuario'}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`transition-transform text-black dark:text-white ${isExpanded ? 'rotate-180' : ''}`}
+                    >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+             
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden mt-2"
+                  >
+                  <CardLogros user={user} achievements={userDetails.achievements} />
+                  <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+                  <CardHabilidades user={user} skills={userDetails.skills} />
+                </motion.div>
+              </div>
+            
+            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
+             
+             {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
+            <div className="hidden lg:block space-y-4">
+              <CardLogros user={user} achievements={userDetails.achievements} />
+              <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+              <CardHabilidades user={user} skills={userDetails.skills} />
+            </div>
+            
 
             <UserTabs
               user={user}
