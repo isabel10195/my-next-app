@@ -206,7 +206,7 @@ const handleEditTweet = async (tweetId, newText) => {
                 </motion.div>
               </div>
             
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} handleSaveTweet={() => {}} />
+            <CardTweets tweets={tweets} user={user} handleDeleteTweet={() => {}} handleEditTweet={() => {}} />
              
              {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
             <div className="hidden lg:block space-y-4">
@@ -214,16 +214,7 @@ const handleEditTweet = async (tweetId, newText) => {
               <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
               <CardHabilidades user={user} skills={userDetails.skills} />
             </div>
-            
-
-            <UserTabs
-              user={user}
-              seguidores={followers} 
-              following={following} 
-              recomendaciones={[]} 
-              followUser={() => {}} 
-              unfollowUser={() => {}}
-            />
+              <UserTabs user={user} seguidores={followers}  following={following} recomendaciones={[]} followUser={() => {}}  unfollowUser={() => {}}/>
           </div>
         </div>
       </div>
