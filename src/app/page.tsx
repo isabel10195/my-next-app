@@ -20,6 +20,7 @@ import { fetchGeneralNews, fetchUserNews } from "@/server/service/newsService";
 import Footer from "@/components/footer";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import FullNewsList from "@/components/CardPrincipal/FullNewsList";
+import { toast } from "sonner";
 
 // Definir el tipo de los objetos en currencyPairs
 interface CurrencyPair {
@@ -78,7 +79,10 @@ export default function HomePage() {
           console.log("Fetching user tweets");
           data = await fetchTweets();
           if (!data.tweets || data.tweets.length === 0) {
-            setTweetMessage("No tienes tweets, mostrando tweets populares...");
+            toast.info('No tienes tweets', {
+              description: 'Mostrando tweets populares...',
+              position: "top-right"
+            });
             const popularData = await fetchPopularTweets();
             data.tweets = popularData.tweets;
           } else {
@@ -111,7 +115,10 @@ export default function HomePage() {
         if (isAuthenticated) {
           const data = await fetchUserNews();
           if (data.noCommunity) {
-            setNewsMessage("No estás en ninguna comunidad. Mostrando Noticias Generales...");
+            toast.info('No estás en ninguna comunidad', {
+              description: 'Mostrando Noticias Generales...',
+              position: "top-right"
+            });
             setNews(data.news);
           } else {
             setNewsMessage("");
@@ -142,7 +149,10 @@ export default function HomePage() {
           setNewsMessage("");
         }
       } catch (error) {
-        console.error("Error fetching news:", error);
+        toast.error("Error cargando noticias", {
+          description: error.message || "No se pudieron cargar las noticias",
+          position: "top-right"
+        });
       }
     }
     if (!authLoading) {

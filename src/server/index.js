@@ -8,6 +8,8 @@ const followerRoutes = require("./routes/followerRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const storyRoutes = require("./routes/storyRoutes"); // 📌 Importamos las rutas de Stories
 const newRoutes = require("./routes/newsRoutes");
+const topicsRoutes = require("./routes/topicsRoutes");
+const newsletterRoutes = require("./routes/newsletterRoutes");
 const cron = require('node-cron');
 const newsController = require('./controllers/newsController'); // 📌 Importamos el controlador de noticias
 
@@ -27,6 +29,10 @@ app.use("/api/followers", followerRoutes);
 app.use("/api/community", communityRoutes);
 app.use("/api/stories", storyRoutes);
 app.use("/api/news", newRoutes);
+app.use("/api/topics", topicsRoutes);
+app.use("/api/newsletter", newsletterRoutes);
+
+//equire("./cron/newsletterCron");
 
 // cron.schedule('0 3 * * *', async () => { // 👈  EXPRESIÓN CRON MODIFICADA PARA PRUEBAS
 //     console.log('Ejecutando actualización de noticias... (PRUEBA CADA 10 MINUTOS)'); // Mensaje modificado para identificar pruebas

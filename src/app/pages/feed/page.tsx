@@ -11,8 +11,10 @@ export default function FeedPage() {
       </div>
 
       {/* Contenedor principal del feed */}
-      <section className="flex-1 space-y-4 w-full mt-4">
-        <FeedPrincipal />
+      <section className="flex flex-grow justify-center px-4 mt-4 ">
+        <div className="w-full max-w-[100%]">
+          <FeedPrincipal />
+        </div>
       </section>
 
       {/* Panel derecho */}
