@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from "chart.js";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { useTheme } from "next-themes";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
 interface Pair {
   base: string;
@@ -20,11 +23,13 @@ interface CurrencyCardProps {
 
 const cacheKey = "currencyDataCache";
 
+const getCurrentTimestamp = () => (typeof window !== "undefined" ? performance.now() : new Date().getTime());
+
 async function fetchWithCache(url: string, cacheDuration = 600000) {
   const cachedData = sessionStorage.getItem(cacheKey);
   if (cachedData) {
     const { timestamp, data } = JSON.parse(cachedData);
-    if (Date.now() - timestamp < cacheDuration) {
+    if (getCurrentTimestamp() - timestamp < cacheDuration) {
       return data;
     }
   }
@@ -33,11 +38,11 @@ async function fetchWithCache(url: string, cacheDuration = 600000) {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
-    sessionStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data }));
+    sessionStorage.setItem(cacheKey, JSON.stringify({ timestamp: getCurrentTimestamp(), data }));
     return data;
   } catch (error) {
     console.warn("Error al obtener datos de la API, usando valores dummy.");
-    return { prices: Array(7).fill([Date.now(), Math.random() * 100]) };
+    return { prices: Array(7).fill([getCurrentTimestamp(), Math.random() * 100]) };
   }
 }
 
@@ -45,33 +50,61 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [chartData, setChartData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     if (typeof window === "undefined") return; // Evitar ejecución en SSR
-  
+
     async function fetchChartData() {
       try {
         const url = `https://api.coingecko.com/api/v3/coins/${pair.base.toLowerCase()}/market_chart?vs_currency=${pair.quote.toLowerCase()}&days=7`;
         const data = await fetchWithCache(url);
         if (!data.prices) throw new Error("No hay datos disponibles.");
-        
+
         setChartData({
-          labels: data.prices.map((point: [number, number]) => new Date(point[0]).toLocaleDateString()),
-          datasets: [{ label: `${pair.base}/${pair.quote} Precio`, data: data.prices.map((point) => point[1]) }]
+          labels: data.prices.map((point: [number, number]) => format(new Date(point[0]), "dd MMM", { locale: es })),
+          datasets: [
+            {
+              label: `${pair.base}/${pair.quote} Precio`,
+              data: data.prices.map((point) => point[1]),
+              borderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+              backgroundColor: resolvedTheme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(59, 130, 246, 0.2)",
+              pointBackgroundColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+              pointBorderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+            },
+          ],
         });
       } catch (error: any) {
         console.error("Error al cargar datos del gráfico:", error.message);
         setError(`No se pudo obtener datos para ${pair.base}/${pair.quote}.`);
       }
     }
-  
+
     fetchChartData();
-  }, [pair.base, pair.quote]);
-  
+  }, [pair.base, pair.quote, resolvedTheme]);
 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: resolvedTheme === "dark" ? "#ffffff" : "#000000",
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: resolvedTheme === "dark" ? "#ffffff" : "#000000",
+        },
+      },
+      y: {
+        ticks: {
+          color: resolvedTheme === "dark" ? "#ffffff" : "#000000",
+        },
+      },
+    },
   };
 
   return (
