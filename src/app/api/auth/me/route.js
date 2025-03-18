@@ -5,8 +5,12 @@ export async function GET() {
   try {
     console.log("🔄 Iniciando autenticación en api/auth/me");
 
-    const cookieStore = await cookies(); // ✅ Obtener cookies correctamente
+    const cookieStore = cookies();
     const token = cookieStore.get("token")?.value;
+
+    // 🔥 Eliminar cookies innecesarias para reducir el tamaño del header
+    cookieStore.delete("SLG_GWPT_Show_Hide_tmp");
+    cookieStore.delete("SLG_wptGlobTipTmp");
 
     if (!token) {
       console.error("❌ No hay token en las cookies en api/auth/me.");
@@ -17,11 +21,7 @@ export async function GET() {
 
     // 🔄 Intentamos obtener el perfil del usuario
     const response = await fetch("http://localhost:3001/api/auth/profile", {
-      credentials: "include",
-      headers: { Authorization: `Bearer ${token}` },
-    }).catch(err => {
-      console.error("❌ Error en la petición al backend en api/auth/me:", err);
-      throw new Error("ECONNREFUSED");
+      headers: { Authorization: `Bearer ${token}` }, // ❌ Quitar `credentials: "include"`
     });
 
     if (!response.ok) {
@@ -35,11 +35,6 @@ export async function GET() {
     return NextResponse.json({ authenticated: true, user }, { status: 200 });
 
   } catch (error) {
-    if (error.message === "ECONNREFUSED") {
-      console.error("❌ Error: No se pudo conectar con el backend en api/auth/me.");
-      return NextResponse.json({ authenticated: false, user: null, error: "No se pudo conectar con el backend" }, { status: 500 });
-    }
-
     console.error("❌ Error inesperado en api/auth/me:", error);
     return NextResponse.json({ authenticated: false, user: null, error: "Error inesperado" }, { status: 500 });
   }
