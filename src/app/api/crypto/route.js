@@ -1,41 +1,28 @@
-// Archivo: app/api/crypto/route.js
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const base = searchParams.get("base");
   const quote = searchParams.get("quote");
 
   if (!base || !quote) {
-    return new Response(JSON.stringify({ error: "Faltan parámetros base y quote" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: "Faltan parámetros base y quote" }, { status: 400 });
   }
 
   try {
-    // CoinCap solo trabaja con USD, así que ignoramos "quote"
     const url = `https://api.coincap.io/v2/assets/${base.toLowerCase()}/history?interval=d1`;
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Error al obtener datos de CoinCap");
+    if (!response.ok) throw new Error("Error en la API de CoinCap");
 
     const data = await response.json();
-    if (!data.data) throw new Error("No se encontraron datos en la API de CoinCap");
+    if (!data.data) throw new Error("No se encontraron datos");
 
     const formattedData = data.data.map((point) => ({
       timestamp: point.time,
       price: parseFloat(point.priceUsd),
     }));
 
-    return new Response(JSON.stringify(formattedData), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    return NextResponse.json(formattedData, { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error(`❌ Error en API /api/crypto (${base}/${quote}):`, error.message);
+    return NextResponse.json({ error: "No se pudo obtener datos", prices: [] }, { status: 500 });
   }
 }

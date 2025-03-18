@@ -29,33 +29,44 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
     if (typeof window === "undefined") return;
 
     async function fetchChartData() {
-      try {
-        const response = await fetch(`/api/crypto?base=${pair.base}&quote=${pair.quote}`);
-        if (!response.ok) throw new Error("Error al obtener datos.");
-        const data = await response.json();
-
-        if (!data.length) throw new Error("No hay datos disponibles.");
-
-        setChartData({
-          labels: data.map((point: { timestamp: number }) =>
-            format(new Date(point.timestamp), "dd MMM", { locale: es })
-          ),
-          datasets: [
-            {
-              label: `${pair.base.toUpperCase()}/${pair.quote.toUpperCase()} Precio`,
-              data: data.map((point: { price: number }) => point.price),
-              borderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
-              backgroundColor: resolvedTheme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(59, 130, 246, 0.1)",
-              pointBackgroundColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
-              pointBorderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
-              tension: 0.3,
-            },
-          ],
-        });
-      } catch (error) {
-        console.error("Error al cargar datos del gráfico:", error);
+      let retries = 3; // 🔄 Intentar 3 veces antes de rendirse
+      while (retries > 0) {
+        try {
+          const response = await fetch(`/api/crypto?base=${pair.base}&quote=${pair.quote}`);
+          if (!response.ok) throw new Error("Error al obtener datos.");
+          const data = await response.json();
+    
+          if (!data.prices) throw new Error("No hay datos disponibles.");
+    
+          setChartData({
+            labels: data.prices.map((point: [number, number]) =>
+              format(new Date(point[0]), "dd MMM", { locale: es })
+            ),
+            datasets: [
+              {
+                label: `${pair.base}/${pair.quote} Precio`,
+                data: data.prices.map((point) => point[1]),
+                borderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+                backgroundColor: resolvedTheme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(59, 130, 246, 0.1)",
+                pointBackgroundColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+                pointBorderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
+                tension: 0.3,
+              },
+            ],
+          });
+    
+          return; // ✅ Éxito, salir del bucle
+        } catch (error) {
+          console.error("❌ Error al cargar datos del gráfico:", error);
+          retries -= 1;
+          if (retries === 0) {
+            setError("No se pudo obtener datos.");
+          }
+          await new Promise((res) => setTimeout(res, 2000)); // 🔄 Esperar antes de reintentar
+        }
       }
     }
+    
 
     fetchChartData();
   }, [pair.base, pair.quote, resolvedTheme]);
@@ -75,3 +86,7 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
     </motion.div>
   );
 }
+function setError(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+
