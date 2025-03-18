@@ -33,9 +33,10 @@ interface CurrencyPair {
 const currencyPairs: CurrencyPair[] = [
   { base: "bitcoin", quote: "usd", value: 5.2, change: 0.9715 },
   { base: "ethereum", quote: "usd", value: 3.8, change: 1.0937 },
-  { base: "eur", quote: "usd", value: 1.1, change: 0.8745 },
-  { base: "usd", quote: "eur", value: 0.92, change: 1.0321 },
+  { base: "litecoin", quote: "usd", value: 1.5, change: 0.4567 },
+  { base: "ripple", quote: "usd", value: 0.5, change: -0.1234 },
 ];
+
 
 export default function HomePage() {
   // Usar el AuthContext para obtener el usuario
