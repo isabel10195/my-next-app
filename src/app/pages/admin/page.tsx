@@ -1,10 +1,18 @@
-'use client'
-import { Search } from "lucide-react"
+import { useEffect, useRef } from "react";
 import AdminLayout from "./layout"
 import UserList from "@/components/AdminPage/user-list"
 import TweetList from "@/components/AdminPage/tweet-list"
+import { Search } from "lucide-react"
 
 export default function AdminPage() {
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className="h-screen bg-zinc-50">
       <AdminLayout>
@@ -13,6 +21,7 @@ export default function AdminPage() {
             <div className="relative mb-4">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
               <input
+                ref={searchRef} // 🔥 Ahora el input se enfoca SOLO en el cliente
                 type="search"
                 placeholder="Search users..."
                 className="w-full pl-10 pr-4 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -26,6 +35,5 @@ export default function AdminPage() {
         </div>
       </AdminLayout>
     </div>
-  )
+  );
 }
-

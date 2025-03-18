@@ -67,6 +67,7 @@ export default function CombinedNavbar() {
             alt="Logo de LA ISLA DE LURE"
             width={150}
             height={150}
+            priority 
           />
         </NavbarBrand>
 
