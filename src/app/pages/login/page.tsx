@@ -98,7 +98,7 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="w-full max-w-sm mx-auto space-y-6">
             <div className="space-y-2">
               <Input
-                type="text" 
+                type="text"
                 placeholder="Nombre de Usuario"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                 value={username}

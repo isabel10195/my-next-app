@@ -33,19 +33,21 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
       while (retries > 0) {
         try {
           const response = await fetch(`/api/crypto?base=${pair.base}&quote=${pair.quote}`);
-          if (!response.ok) throw new Error("Error al obtener datos.");
           const data = await response.json();
     
-          if (!data.prices) throw new Error("No hay datos disponibles.");
+          // ✅ Si la API devuelve un error, lo mostramos y detenemos intentos
+          if (!response.ok || data.error || !data.prices.length) {
+            throw new Error(data.error || "No se pudo obtener datos.");
+          }
     
           setChartData({
-            labels: data.prices.map((point: [number, number]) =>
-              format(new Date(point[0]), "dd MMM", { locale: es })
+            labels: data.prices.map((point) =>
+              format(new Date(point.timestamp), "dd MMM", { locale: es })
             ),
             datasets: [
               {
                 label: `${pair.base}/${pair.quote} Precio`,
-                data: data.prices.map((point) => point[1]),
+                data: data.prices.map((point) => point.price),
                 borderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
                 backgroundColor: resolvedTheme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(59, 130, 246, 0.1)",
                 pointBackgroundColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
@@ -60,14 +62,12 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
           console.error("❌ Error al cargar datos del gráfico:", error);
           retries -= 1;
           if (retries === 0) {
-            setError("No se pudo obtener datos.");
+            setChartData(null); // 💥 Limpiamos el gráfico si falla todo
           }
           await new Promise((res) => setTimeout(res, 2000)); // 🔄 Esperar antes de reintentar
         }
       }
     }
-    
-
     fetchChartData();
   }, [pair.base, pair.quote, resolvedTheme]);
 
