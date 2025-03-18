@@ -34,7 +34,7 @@ const currencyPairs: CurrencyPair[] = [
   { base: "bitcoin", quote: "usd", value: 5.2, change: 0.9715 },
   { base: "ethereum", quote: "usd", value: 3.8, change: 1.0937 },
   { base: "litecoin", quote: "usd", value: 1.5, change: 0.4567 },
-  { base: "ripple", quote: "usd", value: 0.5, change: -0.1234 },
+  { base: "cardano", quote: "usd", value: 0.4, change: -0.1234 },
 ];
 
 

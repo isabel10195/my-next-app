@@ -12,9 +12,9 @@ export async function GET(req) {
   }
 
   try {
-    // API de CoinCap para obtener historial de precios
-    const cryptoUrl = `https://api.coincap.io/v2/assets/${base.toLowerCase()}/history?interval=d1`;
-    const response = await fetch(cryptoUrl);
+    // CoinCap solo trabaja con USD, así que ignoramos "quote"
+    const url = `https://api.coincap.io/v2/assets/${base.toLowerCase()}/history?interval=d1`;
+    const response = await fetch(url);
     if (!response.ok) throw new Error("Error al obtener datos de CoinCap");
 
     const data = await response.json();
@@ -29,7 +29,7 @@ export async function GET(req) {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // Evita problemas de CORS
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error) {

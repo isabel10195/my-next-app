@@ -26,7 +26,7 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    if (typeof window === "undefined") return; // Evitar SSR
+    if (typeof window === "undefined") return;
 
     async function fetchChartData() {
       try {
@@ -42,7 +42,7 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
           ),
           datasets: [
             {
-              label: `${pair.base}/${pair.quote} Precio`,
+              label: `${pair.base.toUpperCase()}/${pair.quote.toUpperCase()} Precio`,
               data: data.map((point: { price: number }) => point.price),
               borderColor: resolvedTheme === "dark" ? "#ffffff" : "#3b82f6",
               backgroundColor: resolvedTheme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(59, 130, 246, 0.1)",
