@@ -1,25 +1,60 @@
 const { executeQuery } = require("../config/database");
 const db = require("mssql");
 
-// Crear un tweet
+// Modificar createTweet
 const createTweet = async (req, res) => {
-  const { tweet_text } = req.body;
-  const user_id = req.user.id;
-
   try {
-    const query = "INSERT INTO tweets (user_id, tweet_text) OUTPUT INSERTED.tweet_id VALUES (@user_id, @tweet_text)";
+    const user_id = req.user.id;
+    const { tweet_text } = req.body;
+    
+    // Procesar archivos subidos
+    const mediaUrls = req.files?.map(file => 
+      `http://localhost:3001/uploads/${file.filename}` // ✅ Correcto
+    ) || [];
+
+    const query = `
+      INSERT INTO tweets (user_id, tweet_text, media_urls) 
+      OUTPUT INSERTED.tweet_id 
+      VALUES (@user_id, @tweet_text, @media_urls)
+    `;
+
     const inputs = [
       { name: "user_id", type: db.Int, value: user_id },
       { name: "tweet_text", type: db.NVarChar, value: tweet_text },
+      { name: "media_urls", type: db.NVarChar, value: JSON.stringify(mediaUrls) }
     ];
 
     const result = await executeQuery(query, inputs);
-    res.send({ message: "Tweet creado correctamente", tweetId: result.recordset[0].id });
+    res.status(201).send({ 
+      message: "Tweet creado correctamente",
+      tweetId: result.recordset[0].tweet_id,
+      mediaUrls
+    });
   } catch (error) {
-    console.error("Error al crear el tweet:", error);
-    res.status(500).send("Error al crear el tweet");
+    console.error("Error al crear tweet:", error);
+    res.status(500).send(error.message);
   }
 };
+
+// Crear un tweet
+// const createTweet = async (req, res) => {
+//   const { tweet_text } = req.body;
+//   const user_id = req.user.id;
+
+//   try {
+//     const query = "INSERT INTO tweets (user_id, tweet_text) OUTPUT INSERTED.tweet_id VALUES (@user_id, @tweet_text)";
+//     const inputs = [
+//       { name: "user_id", type: db.Int, value: user_id },
+//       { name: "tweet_text", type: db.NVarChar, value: tweet_text },
+//     ];
+
+//     const result = await executeQuery(query, inputs);
+//     res.send({ message: "Tweet creado correctamente", tweetId: result.recordset[0].id });
+//   } catch (error) {
+//     console.error("Error al crear el tweet:", error);
+//     res.status(500).send("Error al crear el tweet");
+//   }
+// };
 
 // Obtener tweets de usuarios seguidos
 const getTweetsByFollowing = async (req, res) => {
@@ -30,6 +65,7 @@ const getTweetsByFollowing = async (req, res) => {
       SELECT 
         tweets.tweet_id, 
         tweets.tweet_text, 
+        tweets.media_urls,
         tweets.num_likes, 
         tweets.num_retweets, 
         tweets.num_comments, 
@@ -67,7 +103,7 @@ const getTweets = async (req, res) => {
 
   try {
     const query = `
-      SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
+      SELECT tweet_id, tweet_text, media_urls, num_likes, num_retweets, num_comments, tweets.created_at, 
              user_handle, first_name, last_name, avatar_url 
       FROM tweets
       JOIN users ON tweets.user_id = users.user_id
@@ -87,7 +123,7 @@ const getTweets = async (req, res) => {
 const getPopularTweets = async (req, res) => {
   try {
     const query = `
-      SELECT tweet_id, tweet_text, num_likes, num_retweets, num_comments, tweets.created_at, 
+      SELECT tweet_id, tweet_text, media_urls, num_likes, num_retweets, num_comments, tweets.created_at, 
              user_handle, first_name, last_name, avatar_url 
       FROM tweets
       JOIN users ON tweets.user_id = users.user_id
@@ -109,7 +145,7 @@ const getTweetsByInterest = async (req, res) => {
   
   try {
     const query = `
-      SELECT DISTINCT t.tweet_id, t.tweet_text, t.num_likes, t.num_retweets, t.num_comments, t.created_at,
+      SELECT DISTINCT t.tweet_id, t.tweet_text, t.media_urls, t.num_likes, t.num_retweets, t.num_comments, t.created_at,
              u.user_handle, u.first_name, u.last_name, u.avatar_url
       FROM tweets t
       JOIN users u ON t.user_id = u.user_id
@@ -156,7 +192,8 @@ const getFollowingTweets = async (req, res) => {
     const tweetsQuery = `
            SELECT 
               t.tweet_id, 
-              t.tweet_text, 
+              t.tweet_text,
+              t.media_urls, 
               t.num_likes, 
               t.num_retweets, 
               t.num_comments, 

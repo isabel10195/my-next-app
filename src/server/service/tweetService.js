@@ -42,14 +42,38 @@ export const fetchFollowingTweets = async () => {
   return data.tweets;
 };
 
-export const createTweet = async (tweet_text) => {
+// export const createTweet = async (tweet_text) => {
+//   const response = await fetch(`${API_URL}/create`, {
+//     method: "POST",
+//     credentials: "include",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ tweet_text }),
+//   });
+//   if (!response.ok) throw new Error("Error creando el tweet");
+//   return response.json();
+// };
+
+export const createTweet = async (tweetData) => {
+  const formData = new FormData();
+  //formData.append('text', tweetData.text); // Campo correcto
+  formData.append('tweet_text', tweetData.text);
+
+  if (tweetData.files?.length > 0) {
+    tweetData.files.forEach(file => {
+      formData.append('media', file); // Nombre "media" (debe coincidir con el servidor)
+    });
+  }
+
   const response = await fetch(`${API_URL}/create`, {
     method: "POST",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ tweet_text }),
+    body: formData
   });
-  if (!response.ok) throw new Error("Error creando el tweet");
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error creando el tweet");
+  }
   return response.json();
 };
 

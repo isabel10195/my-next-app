@@ -100,12 +100,21 @@ const getNewsByCategory = async (req, res) => {
  */
 const updateDailyNews = async () => {
   try {
-    // Reemplaza "URL_API_EXTERNA" por la URL real de tu API externa
+    // Obtener datos desde la API externa
     const response = await axios.get("https://magicloops.dev/api/loop/6743674f-6f2e-4738-8dd9-83b9d6ed76af/run?input=I+love+Magic+Loops%21");
     const newsData = response.data;
     
     // Eliminar todas las noticias existentes
     await executeQuery("DELETE FROM news_articles");
+
+    // Mapear cada categoría al community_id correspondiente (según la tabla de comunidades)
+    const categoryToCommunityId = {
+      "Noticias Generales": 8,
+      "Deporte": 9,
+      "Salud": 10,
+      "Economía": 11,
+      "Tecnología": 12,
+    };
     
     // Insertar las nuevas noticias por cada categoría
     for (const category in newsData) {
@@ -114,9 +123,10 @@ const updateDailyNews = async () => {
         const dateMatch = article.enlace.match(/(\d{4}-\d{2}-\d{2})/);
         const publishedDate = dateMatch ? dateMatch[0] : new Date().toISOString().split("T")[0];
         
+        // Actualizar el query de inserción para incluir la columna community_id
         const insertQuery = `
-          INSERT INTO news_articles (category, title, subtitle, summary, link, published_date, image)
-          VALUES (@category, @title, @subtitle, @summary, @link, @publishedDate, @image)
+          INSERT INTO news_articles (category, title, subtitle, summary, link, published_date, image, community_id)
+          VALUES (@category, @title, @subtitle, @summary, @link, @publishedDate, @image, @communityId)
         `;
         const inputs = [
           { name: "category", type: db.NVarChar, value: category },
@@ -129,6 +139,11 @@ const updateDailyNews = async () => {
             name: "image", 
             type: db.NVarChar, 
             value: article.imagen || 'https://ejemplo.com/default-image.jpg' 
+          },
+          { 
+            name: "communityId", 
+            type: db.Int, 
+            value: categoryToCommunityId[category] || null 
           }
         ];
         await executeQuery(insertQuery, inputs);
@@ -139,6 +154,7 @@ const updateDailyNews = async () => {
     console.error("Error updating news:", error);
   }
 };
+
 
 module.exports = {
   getGeneralNews,

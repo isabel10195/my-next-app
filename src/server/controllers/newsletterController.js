@@ -80,45 +80,44 @@ const subscribe = async (req, res) => {
     }
     const userEmail = userResult.recordset[0].email_address;
 
-    // Obtener noticias de la comunidad
+    // Obtener noticias de la comunidad, incluyendo la imagen
     const newsResult = await executeQuery(
-      `SELECT n.title, n.subtitle, n.summary, n.link, n.published_date, c.category 
+      `SELECT n.title, n.subtitle, n.summary, n.link, n.published_date, n.image, c.category 
        FROM news_articles n
        JOIN communities c ON n.community_id = c.community_id
        WHERE n.community_id = @community_id`,
       [{ name: "community_id", type: db.Int, value: community_id }]
     );
 
-    for (const news of newsResult.recordset) {
-      try {
-        const payload = {
-          email: userEmail,
-          category: news.category,
-          title: news.title,
-          subtitle: news.subtitle || '',
-          summary: news.summary,
-          link: news.link,
-          date: new Date(news.published_date).toISOString()
-        };
+    // Construir el payload con el email y un arreglo de noticias
+    const payload = {
+      email: userEmail,
+      news: newsResult.recordset.map(news => ({
+        category: news.category,
+        title: news.title,
+        subtitle: news.subtitle || '',
+        summary: news.summary,
+        link: news.link,
+        // Formatear la fecha en español (ej: "15 de marzo de 2025")
+        date: new Date(news.published_date).toLocaleDateString('es-ES', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }),
+        image: news.image
+      }))
+    };
 
-        const url = 'https://magicloops.dev/api/loop/ee80b4fd-3111-4068-99fe-46d7204dfd4d/run';
-
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const responseData = await response.json();
-        console.log(`Respuesta de la API para ${news.title}:`, responseData);
-
-        if (!response.ok) {
-          console.error(`Error en noticia ${news.title}: ${response.status} - ${response.statusText}`);
-        }
-      } catch (error) {
-        console.error(`Error al enviar noticia ${news.title}: ${error.message}`);
-      }
-    }
+    // Enviar el payload en una sola llamada a la API externa
+    const url = 'https://magicloops.dev/api/loop/74549d6c-cc16-46ec-b86e-d64566f5160d/run';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    const responseData = await response.json();
+    console.log("Respuesta de la API:", responseData);
 
     res.status(201).json({ message: "Suscripción exitosa" });
   } catch (error) {

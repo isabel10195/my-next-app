@@ -12,6 +12,7 @@ interface Tweet {
   avatar_url?: string;
   user_handle: string;
   tweet_text: string;
+  media_urls?: string;
 }
 
 interface CardTweetsProps {
@@ -36,7 +37,47 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
   const [editingTweetId, setEditingTweetId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState("");
 
-  console.log("🎥 Renderizando CardTweets con tweets:", tweets);
+  // Función para renderizar imágenes y videos
+  const renderMedia = (mediaUrlsString: string | null) => {
+    if (!mediaUrlsString) return null;
+    
+    let mediaUrls;
+    try {
+      mediaUrls = JSON.parse(mediaUrlsString);
+    } catch (error) {
+      console.error("Error al parsear media_urls:", error);
+      return null;
+    }
+
+    return (
+      <div className={`grid gap-2 mt-2 ${mediaUrls.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+        {mediaUrls.map((url: string, index: number) => (
+          url.match(/\.(mp4|mov|avi)$/i) ? (
+            <video 
+              key={index} 
+              controls 
+              className="w-full h-auto max-h-96 object-contain"
+              playsInline
+              autoPlay
+              muted
+            >
+              <source src={url} type="video/mp4" />
+            </video>
+          ) : (
+            <img
+              key={index}
+              src={url}
+              alt={`Media ${index}`}
+              className="w-full h-auto max-h-96 object-contain"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          )
+        ))}
+      </div>
+    );
+  };
 
   if (!user) {
     return (
@@ -66,7 +107,13 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
             {tweets.map((tweet) => (
               <li key={tweet.tweet_id} className="p-4 border rounded-lg">
                 <div className="flex items-start gap-3">
-                  <Image src={tweet.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={48} height={48} className="rounded-full" />
+                  <Image 
+                    src={tweet.avatar_url || "/placeholder-user.jpg"} 
+                    alt="Avatar" 
+                    width={48} 
+                    height={48} 
+                    className="rounded-full" 
+                  />
                   <div className="flex-1">
                     <h4 className="font-bold text-white">{tweet.user_handle}</h4>
                     {editingTweetId === tweet.tweet_id ? (
@@ -76,11 +123,14 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         onChange={(e) => setEditedText(e.target.value)}
                       />
                     ) : (
-                      <p className="mt-1 text-white dark:text-gray-400">{tweet.tweet_text}</p>
+                      <>
+                        <p className="mt-1 text-white dark:text-gray-400">{tweet.tweet_text}</p>
+                        {/* Renderizar medios si existen */}
+                        {renderMedia(tweet.media_urls)}
+                      </>
                     )}
                   </div>
 
-                  {/* 🔥 Botones para todos los tweets */}
                   <div className="flex gap-2 ml-auto items-center">
                     {editingTweetId === tweet.tweet_id ? (
                       <>
@@ -88,14 +138,13 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                           size="icon"
                           variant="ghost"
                           onClick={async () => {
-                            await handleEditTweet(tweet.tweet_id, editedText); // ✅ Esperar a que se actualice
+                            await handleEditTweet(tweet.tweet_id, editedText);
                             setEditingTweetId(null);
                           }}
                           className="text-white bg-green-600 hover:bg-green-500 p-2 rounded-lg shadow-md"
                         >
                           <Check className="h-5 w-5" />
                         </Button>
-
                         <Button
                           size="icon"
                           variant="ghost"
@@ -118,7 +167,6 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         >
                           <Edit className="h-5 w-5" />
                         </Button>
-
                         <Button
                           size="icon"
                           variant="ghost"
@@ -130,7 +178,6 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                       </>
                     )}
                   </div>
-
                 </div>
               </li>
             ))}
