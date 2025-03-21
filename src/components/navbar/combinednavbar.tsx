@@ -18,11 +18,13 @@ export default function CombinedNavbar() {
   const togglePlayPause = (): void => {
     setIsPlaying(!isPlaying);
   };
-
+ 
+  //Menu responsive desplegable
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  //Modo claro/oscuro
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
@@ -39,10 +41,11 @@ export default function CombinedNavbar() {
   useEffect(() => {
     setIsVisible(true);
     setIsClient(true);
-
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldUseDark = savedTheme === "dark" || (!savedTheme && prefersDark);
+    
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const shouldUseDark = savedTheme === "dark" || (!savedTheme && prefersDark);
 
     if (shouldUseDark) {
       document.documentElement.classList.add("dark");
@@ -50,7 +53,7 @@ export default function CombinedNavbar() {
     } else {
       document.documentElement.classList.remove("dark");
       setIsDarkMode(false);
-    }
+    }}
   }, []);
 
   return (
@@ -87,6 +90,16 @@ export default function CombinedNavbar() {
         </NavbarContent>
 
         <NavbarContent className="flex items-center gap-4 md:gap-4">
+          <NavbarItem>
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              type="button"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+          </NavbarItem>
           <NavbarItem className="hidden md:flex">
             <Link href="/pages/planes">
               <button className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">

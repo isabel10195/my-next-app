@@ -50,9 +50,9 @@ const ChatIA = () => {
   };
 
   return user ? (
-    <div className="p-4 border rounded bg-white dark:bg-gray-800 flex flex-col h-full">
-      <h2 className="text-xl font-semibold mb-4">Chat con IA</h2>
-      <div className="flex-grow p-2 border mb-4 overflow-y-auto">
+    <div className="p-4 rounded bg-gray-200 dark:bg-gray-800 flex flex-col h-full">
+      <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Chat con IA</h2>
+      <div className="flex-grow mb-4 overflow-y-auto text-gray-600 dark:text-gray-400">
         {messages.length === 0 ? (
           <p>No hay mensajes en la conversación.</p>
         ) : (
@@ -64,16 +64,16 @@ const ChatIA = () => {
         )}
         {isLoading && <div className="text-gray-500">La IA está respondiendo...</div>}
       </div>
-      <div className="flex">
+      <div className="flex rounded px-2 ">
         <Input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Escribe tu mensaje..."
-          className="flex-grow mr-2"
+          className="flex-grow mr-2 border-gray-500 dark:border-white bg-white"
           onKeyDown={handleKeyDown}
         />
-        <Button onClick={sendMessage} disabled={isLoading}>
+        <Button className="mt-1 bg-blue-500 hover:bg-blue-600" onClick={sendMessage} disabled={isLoading}>
           Enviar
         </Button>
       </div>

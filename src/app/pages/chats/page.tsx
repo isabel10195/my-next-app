@@ -48,7 +48,7 @@ export default function MessagesPage() {
           <div className="container mx-auto px-6 py-8">
             <BackButton href="/" />
             <h3 className="text-3xl mt-10 font-medium text-gray-900 dark:text-white">Mensajes</h3>
-            <Card className="mt-8">
+            <Card className="mt-8 bg-white dark:bg-gray-900 ">
               <CardHeader>
                 <CardTitle className="text-2xl text-gray-900 dark:text-white">Chat with John</CardTitle>
               </CardHeader>
@@ -61,9 +61,9 @@ export default function MessagesPage() {
                           <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${message.sender}`} />
                           <AvatarFallback>{message.sender[0]}</AvatarFallback>
                         </Avatar>
-                        <div className={`mx-2 py-2 px-4 rounded-lg ${message.sender === 'You' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                        <div className={`mx-2 py-2 px-4 rounded-lg ${message.sender === 'You' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-white'}`}>
                           <p>{message.content}</p>
-                          <p className="text-xs text-gray-300 dark:text-gray-700 mt-1">
+                          <p className="text-xs text-gray-800 dark:text-gray-700 mt-1">
                             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                         </div>
@@ -75,7 +75,7 @@ export default function MessagesPage() {
                 <div className="flex mt-4">
                   <Input
                     type="text"
-                    placeholder="Type a message..."
+                    placeholder="Escribe un mensaje..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => {
@@ -85,7 +85,7 @@ export default function MessagesPage() {
                     }}
                     className="flex-1 mr-2 text-gray-900 dark:text-white"
                   />
-                  <Button type="submit" className=" bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition" onClick={handleSendMessage}>Send</Button>
+                  <Button type="submit" className=" bg-blue-500 hover:bg-blue-600 text-white mt-1 rounded-lg transition" onClick={handleSendMessage}>Send</Button>
                 </div>
               </CardContent>
             </Card>
