@@ -8,6 +8,7 @@ import { Heart, MessageCircle, Repeat2, Share, Repeat1 } from "lucide-react"; //
 import CommentInput from "@/components/CommentInput/CommentInput";
 import { commentTweet, fetchCommentsByTweet } from "@/server/service/tweetService";
 import { toggleRetweet } from "@/server/service/tweetService";
+import VideoPlayer from "@/components/feed_c/VideoPlayer";
 import Link from "next/link"; // Import Link
 
 const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
@@ -21,41 +22,30 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
     const renderMedia = () => {
         if (!tweet.media_urls) return null;
         let mediaUrls = JSON.parse(tweet.media_urls);
-        mediaUrls = mediaUrls.map(url => {
-            return url.startsWith('http') 
-                ? url 
-                : `http://localhost:3001${url}`;
-        });
+        mediaUrls = mediaUrls.map(url =>
+          url.startsWith("http") ? url : `http://localhost:3001${url}`
+        );
         
         return (
-            <div className={`grid gap-2 mt-4 grid-cols-${mediaUrls.length >= 2 ? '2' : '1'}`}>
-                {mediaUrls.map((url, index) => (
+            <div className={`grid gap-2 mt-4 grid-cols-${mediaUrls.length >= 2 ? "2" : "1"}`}>
+                {mediaUrls.map((url, index) =>
                     url.match(/\.(mp4|mov|avi)$/i) ? (
-                        <div key={index} className="relative w-full overflow-hidden rounded-lg">
-                            <video 
-                                controls 
-                                className="w-full h-auto max-h-96 object-contain"
-                                playsInline
-                                autoPlay
-                                muted
-                            >
-                                <source src={url} type="video/mp4" />
-                            </video>
-                        </div>
+                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                        <VideoPlayer src={url} /><br />
+                    </div>
                     ) : (
-                        <div key={index} className="relative w-full overflow-hidden rounded-lg">
-                            <img
-                                src={url}
-                                alt={`Media ${index}`}
-                                className="w-full h-auto max-h-96 object-contain"
-                                onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                }}
-                            />
-                        </div>
+                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                        <img
+                        src={url}
+                        alt={`Media ${index}`}
+                        className="w-full h-auto max-h-96 object-contain"
+                        onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                        }}
+                        /><br />
+                    </div>
                     )
-                ))}
-                <br />
+                )}
             </div>
         );
     };

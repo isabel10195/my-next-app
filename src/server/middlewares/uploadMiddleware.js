@@ -9,9 +9,9 @@ const storage = multer.diskStorage({
     
     console.log("📁 Ruta de subida:", uploadPath); // 👈 Para debuggear
     
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
+     if (!fs.existsSync(uploadPath)) {
+       fs.mkdirSync(uploadPath, { recursive: true });
+     }
     
     cb(null, uploadPath);
   },

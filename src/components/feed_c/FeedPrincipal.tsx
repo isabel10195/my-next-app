@@ -15,7 +15,7 @@ import {
 } from "@/server/service/tweetService";
 import Tweet from "@/components/tweet/tweet";
 import { toast } from "sonner";
-import FileDropZone from "./FileDropZone"; // Asegúrate de que la ruta sea la correcta
+import FileDropZone from "./FileDropZone";
 
 export default function Feed() {
   const [forYouTweets, setForYouTweets] = useState([]);
