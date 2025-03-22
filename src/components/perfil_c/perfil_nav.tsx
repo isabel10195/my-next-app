@@ -4,27 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Home, User, Bell, Mail, Settings, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toast } from "react-hot-toast";
+import { useAuth } from "@/app/context/AuthContext"; // 👈 IMPORTANTE
 
 interface MenuItem {
   icon: React.ElementType;
   label: string;
   path: string;
-}
-
-interface PerfilNavProps {
-  user: {
-    name: string;
-    user_handle: string;
-    avatarUrl?: string;
-    coverUrl?: string;
-    bio?: string;
-    location?: string;
-    birthday?: string;
-    email?: string;
-    followers: number;
-    following: number;
-  } | null;
 }
 
 const menuItems: MenuItem[] = [
@@ -35,31 +20,13 @@ const menuItems: MenuItem[] = [
   { icon: Settings, label: "Configuración", path: "/pages/settings" },
 ];
 
-export default function PerfilNav({ user }: PerfilNavProps) {
+export default function PerfilNav() {
   const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Error en el cierre de sesión");
-      }
-
-      toast.success("Sesión cerrada exitosamente");
-      router.push("/pages/login");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      toast.error("No se pudo cerrar sesión, inténtalo de nuevo");
-    }
-  };
+  const { user, logout } = useAuth(); // 👈 USAMOS logout DEL CONTEXTO
 
   return (
     <>
-      {/* Menú en barra inferior para pantallas pequeñas */}
+      {/* Menú inferior para móviles */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-800 shadow-lg z-50">
         <div className="flex justify-around p-3">
           {menuItems.slice(0, 4).map((item) => (
@@ -68,14 +35,14 @@ export default function PerfilNav({ user }: PerfilNavProps) {
             </Link>
           ))}
           {user && (
-            <button onClick={handleLogout}>
+            <button onClick={logout}>
               <LogOut className="h-6 w-6 text-red-500" />
             </button>
           )}
         </div>
       </div>
 
-      {/* Sidebar lateral en pantallas grandes */}
+      {/* Sidebar lateral en escritorio */}
       <aside className="hidden lg:flex flex-col fixed h-[90vh] w-64 p-4 bg-white dark:bg-gray-900 shadow-lg overflow-hidden rounded-xl">
         {user ? (
           <div className="flex flex-col items-center space-y-2 mb-6 mt-6 text-gray-500 dark:text-gray-300">
@@ -97,7 +64,7 @@ export default function PerfilNav({ user }: PerfilNavProps) {
           </div>
         )}
 
-        {/* Lista de navegación */}
+        {/* Menú lateral */}
         <nav className="flex-1">
           <ul className="space-y-2">
             {menuItems.map((item) => (
@@ -113,11 +80,11 @@ export default function PerfilNav({ user }: PerfilNavProps) {
           </ul>
         </nav>
 
-        {/* Botón de Cerrar Sesión */}
+        {/* Botón cerrar sesión */}
         {user && (
           <div className="mt-auto">
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="flex items-center justify-center w-full p-3 rounded-xl text-red-400 hover:bg-red-100 dark:hover:bg-gray-700 cursor-pointer"
             >
               <LogOut className="h-6 w-6" />
