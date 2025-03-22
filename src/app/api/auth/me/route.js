@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+// Obtener el perfil del usuario autenticado
 export async function GET() {
   try {
     console.log("🔄 Iniciando autenticación en api/auth/me");
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies(); // ✅ OBLIGATORIO usar `await` en Next.js 15+
     const token = cookieStore.get("token")?.value;
 
-    // 🔥 Eliminar cookies innecesarias para reducir el tamaño del header
+    // 🔥 Eliminar cookies innecesarias
     cookieStore.delete("SLG_GWPT_Show_Hide_tmp");
     cookieStore.delete("SLG_wptGlobTipTmp");
 
@@ -19,9 +20,8 @@ export async function GET() {
 
     console.log("✅ Token encontrado en cookies en api/auth/me:", token);
 
-    // 🔄 Intentamos obtener el perfil del usuario
     const response = await fetch("http://localhost:3001/api/auth/profile", {
-      headers: { Authorization: `Bearer ${token}` }, // ❌ Quitar `credentials: "include"`
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!response.ok) {
@@ -39,3 +39,4 @@ export async function GET() {
     return NextResponse.json({ authenticated: false, user: null, error: "Error inesperado" }, { status: 500 });
   }
 }
+
