@@ -1,4 +1,4 @@
-import React from 'react';
+
 import "../../globals.css";
 
 export default function RegisterLayout({ children }: { children: React.ReactNode }) {

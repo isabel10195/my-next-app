@@ -193,14 +193,6 @@ export default function HomePage() {
                 <>
                   <ArticleCard
                     key={`dynamic-article-${isAuthenticated}`}
-                    large
-                    title="Turn Your Devices From Distractions Into Time Savers Either"
-                    excerpt="Every January, I usually purge old snail mail, clothes and unwanted knickknacks to start the year anew. This time, I focused on my digital spaces instead."
-                    author="Yagami Souichirou"
-                    date="28 enero 2024"
-                    readTime="7 min read"
-                    views={38}
-                    image="https://img.freepik.com/vector-premium/fondo-gradiente-color-azul-sencillo-textura-suave_768131-988.jpg?semt=ais_hybrid"
                     onClick={setExpandedArticle}
                     isAuthenticated={isAuthenticated}
                   />
@@ -208,14 +200,6 @@ export default function HomePage() {
                   <div className="space-y-6">
                     <ArticleCard
                       key={`static-article2-${isAuthenticated}`}
-                      large
-                      title="Draw Inspiration From Vibrancy"
-                      excerpt="Finding beauty in the simplest forms of nature"
-                      author="Lind Tailor"
-                      date="30 enero 2024"
-                      readTime="3 min read"
-                      views={17}
-                      image="https://e0.pxfuel.com/wallpapers/694/480/desktop-wallpaper-blue-color-gradient-1-data-id-navy-blue-dark-blue-gradient.jpg"
                       onClick={setExpandedArticle}
                       isAuthenticated={isAuthenticated}
                     />

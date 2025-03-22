@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
                 })
                 .catch((error) => console.error("Error al obtener comentarios:", error));
         }
-    }, [showCommentInput, tweet.tweet_id]);
+    }, [showCommentInput, tweet.tweet_id, comments.length]);
 
     const handleComment = async (tweetId, commentText) => {
         try {

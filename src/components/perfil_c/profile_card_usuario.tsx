@@ -69,11 +69,17 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ user }) => {
             </div>
           )}
           {user.birthday && (
-            <div className="flex items-center gap-3">
-              <Calendar className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-              <span className="text-gray-700 dark:text-gray-300">{user.birthday}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <span className="text-gray-700 dark:text-gray-300">
+              {new Date(user.birthday).toLocaleDateString("es-ES", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+        )}
           {user.email && (
             <div className="flex items-center gap-3">
               <Mail className="w-5 h-5 text-gray-500 dark:text-gray-400" />

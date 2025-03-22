@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Play, Pause, Menu, Sun, Moon } from 'lucide-react';
 import Image from 'next/image';
-// import ReactPlayer from 'react-player'; // 🔥 Comentado para evitar errores por bloqueadores de anuncios
+
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import { HiX } from "react-icons/hi"
 

@@ -22,17 +22,21 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",  // Agrega esta línea
-    "paths": {       // Agrega esta sección
-      "@/*": ["src/*"]
+    "baseUrl": ".", // Agrega esta línea
+    "paths": { // Agrega esta sección
+      "@/*": [
+        "src/*"
+      ]
     }
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/components/CardPrincipal/article-card.tsx", "src/app/api/followers/route.s"  ],
+    "**/*.tsx",
+    "src/components/CardPrincipal/article-card.tsx",
+    "src/app/api/followers/route.s"
+  ],
   "exclude": [
     "node_modules"
   ]

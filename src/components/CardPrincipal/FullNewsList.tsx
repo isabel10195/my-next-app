@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import Image from "next/image"; // ✅ Importar el componente de Next.js
 
 interface Article {
   id: string;
@@ -9,7 +10,7 @@ interface Article {
   link: string;
   published_date: string;
   category?: string;
-  image?: string; // Asegúrate de agregar este campo
+  image?: string;
 }
 
 interface FullNewsListProps {
@@ -19,8 +20,8 @@ interface FullNewsListProps {
 
 const FullNewsList: React.FC<FullNewsListProps> = ({ news, isAuthenticated }) => {
   const filteredNews = !isAuthenticated
-  ? news.filter((article) => article.category === "Noticias Generales")
-  : news;
+    ? news.filter((article) => article.category === "Noticias Generales")
+    : news;
 
   return (
     <div className="container mx-auto p-4">
@@ -33,21 +34,26 @@ const FullNewsList: React.FC<FullNewsListProps> = ({ news, isAuthenticated }) =>
             key={article.id || index}
             className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow"
           >
-            {article.image && (
-              <img
-              src={article.image || 'https://via.placeholder.com/400x200/d3d3d3/000000?text=News+Image+Not+Available'}
-              alt={article.title}
-              className="w-full h-64 object-cover mb-4 rounded-lg"
-              onError={(e) => {
-                e.currentTarget.src = 'https://via.placeholder.com/400x200/d3d3d3/000000?text=News+Image+Not+Available';
-              }}
-            />
+            {article.image ? (
+              <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 700px"
+                  priority={index < 2} // Solo prioridad para las primeras 2
+                />
+              </div>
+            ) : (
+              <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden bg-gray-300 flex items-center justify-center text-gray-700 text-sm">
+                Imagen no disponible
+              </div>
             )}
+
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-blue-500">{article.category}</span>
-              <span className="text-xs text-gray-500">
-                {article.published_date}
-              </span>
+              <span className="text-xs text-gray-500">{article.published_date}</span>
             </div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white">
               {article.title}
@@ -57,9 +63,7 @@ const FullNewsList: React.FC<FullNewsListProps> = ({ news, isAuthenticated }) =>
                 {article.subtitle}
               </h4>
             )}
-            <p className="text-gray-600 dark:text-gray-300 mt-2">
-              {article.summary}
-            </p>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">{article.summary}</p>
             {article.link && (
               <a
                 href={article.link}

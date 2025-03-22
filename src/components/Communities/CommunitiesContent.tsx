@@ -1,5 +1,5 @@
 // components/Communities/CommunitiesContent.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { fetchNewsByCategory } from "@/server/service/newsService";
 

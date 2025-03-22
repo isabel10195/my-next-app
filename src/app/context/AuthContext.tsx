@@ -3,61 +3,58 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Creamos el contexto con valor por defecto null
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Cargar token desde localStorage solo en cliente
+  // 🔄 Al montar el contexto, pedimos el perfil autenticado
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    } else {
-      setLoading(false); // si no hay token, deja de cargar
-    }
-  }, []);
+    const fetchUser = async () => {
+      try {
+        console.log("🧠 Comprobando autenticación desde AuthContext...");
+        const res = await fetch("/api/auth/me", { credentials: "include" });
+        const data = await res.json();
 
-  // Autenticar si hay token
-  useEffect(() => {
-    if (!token) return;
-
-    fetch("/api/auth/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
         if (data.authenticated) {
+          console.log("✅ Usuario autenticado:", data.user);
           setUser(data.user);
         } else {
-          localStorage.removeItem("token");
-          setToken(null);
+          console.warn("⚠️ Usuario no autenticado.");
+          setUser(null);
         }
-      })
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
-  }, [token]);
+      } catch (error) {
+        console.error("❌ Error al verificar autenticación:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchUser();
+  }, []);
+
+  // 🔒 Cerrar sesión
   const logout = async () => {
     try {
-      await fetch("/api/auth/logout", {
+      await fetch("http://localhost:3001/api/auth/logout", {
         method: "POST",
+        credentials: "include",
       });
 
-      localStorage.removeItem("token");
+      console.log("🚪 Sesión cerrada correctamente.");
       setUser(null);
-      setToken(null);
       router.push("/");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      console.error("❌ Error al cerrar sesión:", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, setUser, setToken, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -66,7 +63,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-  
-  // The  AuthProvider  component is responsible for managing the user's authentication state. It uses two  useEffect  hooks to load the token from localStorage and authenticate the user if a token is found. 
-  // The  useAuth  hook is a custom hook that allows us to access the authentication context from any component. 
-  // Now, let's use the  AuthProvider  in the  _app.tsx  file to wrap the entire application.
