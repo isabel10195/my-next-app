@@ -1,11 +1,18 @@
 const express = require("express");
-const { getUserData, getUserDetails } = require("../controllers/userController");
+const {
+  getUserData,
+  getUserDetails,
+  updateUserDetail,
+  deleteUserDetail,
+} = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 // Rutas relacionadas con usuarios
-router.get("/data", authMiddleware, getUserData);        // Obtener datos básicos del usuario
-router.get("/details", authMiddleware, getUserDetails); // Obtener detalles adicionales del usuario
+router.get("/data", authMiddleware, getUserData);
+router.get("/details", authMiddleware, getUserDetails);
+router.post("/details", authMiddleware, updateUserDetail);    // Añadir interés, habilidad, etc.
+router.delete("/details", authMiddleware, deleteUserDetail);  // Eliminar detalle
 
 module.exports = router;

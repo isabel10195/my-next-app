@@ -75,6 +75,51 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
+  // 🔹 Añadir o eliminar  interés
+  const handleAddInterest = async (newInterest: string) => {
+    try {
+      const res = await fetch("/api/users/details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          category: "interest",
+          detail_text: newInterest,
+        }),
+      });
+  
+      if (!res.ok) throw new Error("No se pudo añadir el interés");
+  
+      // ✅ Actualizar UI sin recargar
+      setUserDetails((prev) => ({
+        ...prev,
+        interests: [...prev.interests, newInterest],
+      }));
+    } catch (err) {
+      console.error("❌ Error al guardar interés:", err);
+    }
+  };
+  
+  const handleDeleteInterest = async (interestToDelete: string) => {
+    const res = await fetch("/api/users/details", {
+      method: "DELETE", // 👈 Asumimos que haces DELETE también
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        category: "interest",
+        detail_text: interestToDelete,
+      }),
+    });
+  
+    if (!res.ok) throw new Error("Error al eliminar el interés");
+  
+    // Quita el interés de la UI
+    setUserDetails((prev) => ({
+      ...prev,
+      interests: prev.interests.filter((i) => i !== interestToDelete),
+    }));
+  };
+  
 // 🔹 Eliminar tweet
 const handleDeleteTweet = async (tweetId) => {
   const numericTweetId = parseInt(tweetId, 10);
@@ -187,8 +232,7 @@ const handleEditTweet = async (tweetId, newText) => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className={`transition-transform text-black dark:text-white ${isExpanded ? 'rotate-180' : ''}`}
-                    >
+                    className={`transition-transform text-black dark:text-white ${isExpanded ? 'rotate-180' : ''}`}>
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
@@ -201,7 +245,13 @@ const handleEditTweet = async (tweetId, newText) => {
                   className="overflow-hidden mt-2"
                   >
                   <CardLogros user={user} achievements={userDetails.achievements} />
-                  <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+                  <CardIntereses
+                    user={user}
+                    interests={userDetails.interests}
+                    renderTagsWithColors={renderTagsWithColors}
+                    onAddInterest={handleAddInterest}
+                    onDeleteInterest={handleDeleteInterest}
+                  />
                   <CardHabilidades user={user} skills={userDetails.skills} />
                 </motion.div>
               </div>
@@ -211,7 +261,14 @@ const handleEditTweet = async (tweetId, newText) => {
              {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
             <div className="hidden lg:block space-y-4">
               <CardLogros user={user} achievements={userDetails.achievements} />
-              <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
+              <CardIntereses
+                user={user}
+                interests={userDetails.interests}
+                renderTagsWithColors={renderTagsWithColors}
+                onAddInterest={handleAddInterest}
+                onDeleteInterest={handleDeleteInterest}
+              />
+
               <CardHabilidades user={user} skills={userDetails.skills} />
             </div>
               <UserTabs user={user} seguidores={followers}  following={following} recomendaciones={[]} followUser={() => {}}  unfollowUser={() => {}}/>
