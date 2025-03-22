@@ -3,7 +3,6 @@
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/app/context/AuthContext";
 
 // Definimos la estructura de los props
 interface CardHabilidadesProps {
@@ -22,9 +21,7 @@ interface CardHabilidadesProps {
   skills?: string[]; // 🔥 Ahora es opcional
 }
 
-const CardHabilidades: React.FC<CardHabilidadesProps> = ({ skills = [] }) => {
-  const { user } = useAuth(); // 🔥 Obtenemos el estado de autenticación
-
+const CardHabilidades: React.FC<CardHabilidadesProps> = ({ user, skills = [] }) => {
   if (!user) {
     return (
       <Card className="mb-8 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">

@@ -3,7 +3,6 @@
 import React from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/app/context/AuthContext";
 
 // 🔥 Definimos la estructura de los props
 interface CardInteresesProps {
@@ -20,12 +19,10 @@ interface CardInteresesProps {
     following: number;
   } | null;
   interests: string[];
-  renderTagsWithColors: (tags: string[]) => React.ReactNode; // 🔥 Usa React.ReactNode en vez de JSX.Element[]
+  renderTagsWithColors: (tags: string[]) => React.ReactNode;
 }
 
-const CardIntereses: React.FC<CardInteresesProps> = ({ interests, renderTagsWithColors }) => {
-  const { user } = useAuth(); // 🔥 Obtenemos el estado de autenticación
-
+const CardIntereses: React.FC<CardInteresesProps> = ({ user, interests, renderTagsWithColors }) => {
   if (!user) {
     return (
       <Card className="mb-8 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
@@ -50,7 +47,7 @@ const CardIntereses: React.FC<CardInteresesProps> = ({ interests, renderTagsWith
         {interests.length > 0 ? (
           <div className="flex flex-wrap gap-2">{renderTagsWithColors(interests)}</div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-300 text-center">No tienenes intereses.</p>
+          <p className="text-gray-500 dark:text-gray-300 text-center">No tienes intereses.</p>
         )}
       </CardContent>
     </Card>
