@@ -74,7 +74,44 @@ export default function ProfilePage() {
 
     fetchData();
   }, []);
-
+  const handleAddSkill = async (newSkill: string) => {
+    const res = await fetch("/api/users/details", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        category: "skill",
+        detail_text: newSkill,
+      }),
+    });
+  
+    if (!res.ok) throw new Error("Error al guardar la habilidad");
+  
+    setUserDetails((prev) => ({
+      ...prev,
+      skills: [...prev.skills, newSkill],
+    }));
+  };
+  
+  const handleDeleteSkill = async (skillToDelete: string) => {
+    const res = await fetch("/api/users/details", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        category: "skill",
+        detail_text: skillToDelete,
+      }),
+    });
+  
+    if (!res.ok) throw new Error("Error al eliminar la habilidad");
+  
+    setUserDetails((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((skill) => skill !== skillToDelete),
+    }));
+  };
+  
   // 🔹 Añadir o eliminar  interés
   const handleAddInterest = async (newInterest: string) => {
     try {
@@ -268,8 +305,13 @@ const handleEditTweet = async (tweetId, newText) => {
                 onAddInterest={handleAddInterest}
                 onDeleteInterest={handleDeleteInterest}
               />
+              <CardHabilidades
+                user={user}
+                skills={userDetails.skills}
+                onAddSkill={handleAddSkill}
+                onDeleteSkill={handleDeleteSkill}
+              />
 
-              <CardHabilidades user={user} skills={userDetails.skills} />
             </div>
               <UserTabs user={user} seguidores={followers}  following={following} recomendaciones={[]} followUser={() => {}}  unfollowUser={() => {}}/>
           </div>
