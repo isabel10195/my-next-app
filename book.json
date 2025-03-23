@@ -1,7 +1,13 @@
 {
-  "root": "docs",
-  "structure": {
-    "readme": "docs/README.md",
-    "summary": "docs/SUMMARY.md"
-  }
+  "title": "Documentación de mi proyecto",
+  "summary": [
+    {
+      "title": "Introducción",
+      "path": "./docs/intro.md"
+    },
+    {
+      "title": "API",
+      "path": "./docs/api.md"
+    }
+  ]
 }
