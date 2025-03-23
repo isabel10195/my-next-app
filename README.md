@@ -1,5 +1,5 @@
-
- Descripción del proyecto
+CINE
+Descripción del proyecto
 Lure es una innovadora red social diseñada para ser el compañero ideal de los usuarios al comenzar su día. Su enfoque principal está en la comunicación textual e informativa, similar a Twitter, pero con la capacidad de integrar contenido en video, tanto en formato horizontal como vertical, como en YouTube.
 
 Nuestra visión es convertir Lure en una plataforma que no solo permita la publicación de información y opiniones, sino que también sirva como un centro de contenido multimedia accesible y dinámico. La página principal de Lure funcionará como una aplicación matutina, mostrando datos clave como el clima, la hora, eventos programados y notificaciones importantes, facilitando así la planificación diaria de los usuarios.
