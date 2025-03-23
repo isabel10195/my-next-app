@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: [
+      'imagenes.elpais.com',
+      'ejemplo.com', // Agrega el dominio de la imagen por defecto
+      // puedes agregar otros dominios si es necesario
+    ],
     remotePatterns: [
       {
         protocol: 'https',

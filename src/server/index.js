@@ -38,8 +38,9 @@ app.use(
     setHeaders: (res, path) => {
       if (path.endsWith('.mp4')) {
         res.setHeader('Content-Type', 'video/mp4');
+      } else if (path.endsWith('.pdf')) {
+        res.setHeader('Content-Type', 'application/pdf');
       }
-      // Añade otros tipos si es necesario
     }
   }
 ));

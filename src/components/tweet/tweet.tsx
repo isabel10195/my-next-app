@@ -4,52 +4,79 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Repeat2, Share, Repeat1 } from "lucide-react"; // Importamos Repeat para el icono de retweeted
+import { Heart, MessageCircle, Repeat2, Share, Repeat1, FileText } from "lucide-react"; // Importamos FileText en lugar de FilePdf
 import CommentInput from "@/components/CommentInput/CommentInput";
 import { commentTweet, fetchCommentsByTweet } from "@/server/service/tweetService";
 import { toggleRetweet } from "@/server/service/tweetService";
 import VideoPlayer from "@/components/feed_c/VideoPlayer";
-import Link from "next/link"; // Import Link
+import Link from "next/link";
 
 const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comments, setComments] = useState(tweet.comments || []);
     const [numComments, setNumComments] = useState(tweet.num_comments || 0);
     const [tweetState, setTweetState] = useState(tweet);
-    const [isRetweetedLocal, setIsRetweetedLocal] = useState(tweet.retweeted || false); // Estado local para el retweet
+    const [isRetweetedLocal, setIsRetweetedLocal] = useState(tweet.retweeted || false);
 
-    // Nuevo renderizado de medios
+    const getFileNameFromUrl = (url) => {
+        const parts = url.split('/');
+        return parts[parts.length - 1];
+    };
+
     const renderMedia = () => {
         if (!tweet.media_urls) return null;
         let mediaUrls = JSON.parse(tweet.media_urls);
         mediaUrls = mediaUrls.map(url =>
-          url.startsWith("http") ? url : `http://localhost:3001${url}`
+            url.startsWith("http") ? url : `http://localhost:3001${url}`
         );
-        
+
         return (
             <div className={`grid gap-2 mt-4 grid-cols-${mediaUrls.length >= 2 ? "2" : "1"}`}>
-                {mediaUrls.map((url, index) =>
-                    url.match(/\.(mp4|mov|avi)$/i) ? (
-                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
-                        <VideoPlayer src={url} /><br />
-                    </div>
-                    ) : (
-                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
-                        <img
-                        src={url}
-                        alt={`Media ${index}`}
-                        className="w-full h-auto max-h-96 object-contain"
-                        onError={(e) => {
-                            e.currentTarget.style.display = "none";
-                        }}
-                        /><br />
-                    </div>
-                    )
-                )}
+                {mediaUrls.map((url, index) => {
+                    if (url.match(/\.pdf$/i)) {
+                        const fileName = getFileNameFromUrl(url);
+                        return (
+                            <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                                <div className="flex items-center justify-between p-4 rounded-t-lg">
+                                    <div className="flex items-center">
+                                        <FileText className="mr-2 h-6 w-6 text-red-500" /> {/* Usamos FileText aquí */}
+                                        <span className="text-sm font-medium">{fileName}</span>
+                                    </div>
+                                    <a
+                                        href={url}
+                                        download={fileName}
+                                        className="text-blue-500 hover:text-blue-700 text-sm"
+                                    >
+                                        Descargar PDF
+                                    </a>
+                                </div>
+                            </div>
+                        );
+                    }
+                    if (url.match(/\.(mp4|mov|avi)$/i)) {
+                        return (
+                            <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                                <VideoPlayer src={url} />
+                            </div>
+                        );
+                    }
+                    return (
+                        <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                            <img
+                                src={url}
+                                alt={`Media ${index}`}
+                                className="w-full h-auto max-h-96 object-contain"
+                                onError={(e) => {
+                                    e.currentTarget.style.display = "none";
+                                }}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         );
     };
-      
+
     useEffect(() => {
         setTweetState(tweet);
         setIsRetweetedLocal(tweet.retweeted || false);
