@@ -47,6 +47,7 @@ export default function FileDropZone({ onFilesSelected }) {
         className="hidden"
         multiple
         onChange={handleFileChange}
+        accept=".pdf,image/*,video/*"
       />
     </label>
   );
