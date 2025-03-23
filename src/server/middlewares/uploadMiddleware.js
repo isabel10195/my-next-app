@@ -5,7 +5,7 @@ const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ruta ABSOLUTA (cámbiala según tu sistema)
-    const uploadPath = "C:\\Users\\Usuario\\OneDrive\\Escritorio\\TFG7\\my-next-app\\src\\server\\public\\uploads";
+    const uploadPath = "public/uploads";
     
     console.log("📁 Ruta de subida:", uploadPath); // 👈 Para debuggear
     
