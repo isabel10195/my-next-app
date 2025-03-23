@@ -164,7 +164,7 @@ export default function Feed() {
   );
 
   return (
-    <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 bg-gray-200 dark:bg-gray-900 rounded-2xl">
+    <div className="flex-1 max-w-full ml-8 mr-5 mx-auto overflow-hidden mt-4 p-4 bg-white dark:bg-gray-900 rounded-2xl ">
       <Tabs defaultValue="for-you" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="for-you" className="text-gray-900 dark:text-white data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-2xl">

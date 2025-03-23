@@ -27,7 +27,7 @@ export default function CardCerrarSesion() {
             ${isHovering ? "text-red-500 dark:text-red-400" : "text-gray-500 dark:text-gray-400"}`}
           />
           <h2 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            Cerrar Sesión
+            Cerrar sesión
           </h2>
         </div>
       </CardHeader>
@@ -44,7 +44,7 @@ export default function CardCerrarSesion() {
           onClick={logout} // 🔥 Ahora usa la función de logout desde `useAuth()`
         >
           <LogOut className="w-4 h-4 mr-2" />
-          Cerrar Sesión
+          Cerrar sesión
         </Button>
       </CardFooter>
     </Card>

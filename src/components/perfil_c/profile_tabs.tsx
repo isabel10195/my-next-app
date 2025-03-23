@@ -54,13 +54,16 @@ const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = 
       <CardContent className="pt-6">
         {/* 🔹 Tabs para cambiar entre Seguidores, Seguidos y Sugerencias */}
         <div className="flex justify-around mb-4">
-          <Button variant={activeTab === "seguidores" ? "default" : "outline"} onClick={() => setActiveTab("seguidores")}>
+          <Button className={` whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "seguidores" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
+                  onClick={() => setActiveTab("seguidores")}>
             Seguidores
           </Button>
-          <Button variant={activeTab === "following" ? "default" : "outline"} onClick={() => setActiveTab("following")}>
+          <Button className={`inline-flex items-center justify-center whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "following" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
+                  onClick={() => setActiveTab("following")}>
             Siguiendo
           </Button>
-          <Button variant={activeTab === "sugerencias" ? "default" : "outline"} onClick={() => setActiveTab("sugerencias")}>
+          <Button className={`inline-flex items-center justify-center whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "recomendaciones" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
+                  onClick={() => setActiveTab("recomendaciones")}>
             Sugerencias
           </Button>
         </div>

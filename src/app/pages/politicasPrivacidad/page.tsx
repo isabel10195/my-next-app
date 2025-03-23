@@ -1,5 +1,5 @@
 import Link from "next/link"
-import BackButton from "@/components/ui/BackButton"; // Ajusta la ruta según tu estructura de carpetas
+import BackButton from "@/components/ui/BackButton"; 
 
 
 export default function PrivacyPolicyPage() {

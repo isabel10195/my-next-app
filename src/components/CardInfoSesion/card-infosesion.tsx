@@ -72,7 +72,7 @@ export default function SessionInfoCard() {
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition flex items-center gap-2"
               >
                 <ShieldCheck size={18} />
-                Panel de Administración
+                Panel de administración
               </button>
             ) : (
               <div className="rounded-lg border p-3 bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700">

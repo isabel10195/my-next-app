@@ -23,7 +23,7 @@ export default function FeedPage() {
       </div>
 
       {/* Panel derecho debajo del feed pantallas medianas y pequeñas */}
-      <div className=" lg:hidden w-full mt-4">
+      <div className=" lg:hidden w-full mt-4 overflow-y-auto pb-24">
         <PanelDerecho />
       </div>
     </div>
