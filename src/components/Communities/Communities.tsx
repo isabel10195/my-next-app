@@ -96,30 +96,40 @@ const Communities = () => {
   };
 
   const toggleSubscription = async (communityId, communityName) => {
-    const id = Number(communityId); // Convertir a número desde el inicio
+    const id = Number(communityId);
+    const wasSubscribed = newsletterSubscriptions.includes(id);
+
     try {
-      if (newsletterSubscriptions.includes(id)) {
-        await unsubscribeNewsletter(id);
-        setNewsletterSubscriptions(prev => prev.filter(i => i !== id)); // Actualización directa
-        toast.success(`Te has desuscrito de "${communityName}"`);
-      } else {
-        await subscribeNewsletter(id);
-        setNewsletterSubscriptions(prev => [...prev, id]); // Actualización directa
-        toast.success(`¡Ahora recibirás noticias de "${communityName}"!`);
-      }
+      // Actualización optimista INMEDIATA
+      setNewsletterSubscriptions((prev) =>
+        wasSubscribed ? prev.filter((i) => i !== id) : [...prev, id]
+      );
+
+      // Ejecutar acción en servidor
+      const action = wasSubscribed ? unsubscribeNewsletter : subscribeNewsletter;
+      await action(id);
+
+      // Notificación EXITOSA
+      toast.success(
+        wasSubscribed
+          ? `Suscripción cancelada para "${communityName}"`
+          : `¡Suscripción activada para "${communityName}"!`
+      );
+
+      // Sincronización AGRESIVA con servidor
+      const updatedSubs = await fetchNewsletterSubscriptions();
+      setNewsletterSubscriptions(updatedSubs.map((s) => Number(s.community_id)));
     } catch (error) {
-      toast.error("Error en la suscripción", {
-        description: error.message || "Intenta nuevamente más tarde"
+      // Revertir estado en caso de error
+      setNewsletterSubscriptions((prev) =>
+        wasSubscribed ? [...prev, id] : prev.filter((i) => i !== id)
+      );
+
+      toast.error("Error en la operación", {
+        description: error.message || "Intenta nuevamente",
       });
     }
-  };  
-  
-
-  useEffect(() => {
-  loadCommunities();
-  loadSubscriptions(); // Esto asegura que las suscripciones se carguen siempre que se cambie de categoría o se recargue el componente
-}, [activeTab, selectedCategory]);
-
+  };
 
   const toggleNews = (communityId) => {
     setExpandedCommunity(prev => prev === communityId ? null : communityId);
@@ -155,8 +165,8 @@ const Communities = () => {
                           ? "bg-yellow-500 hover:bg-yellow-600"
                           : "bg-green-500 hover:bg-green-600"
                       } text-white`}
-                       onClick={() => toggleSubscription(Number(com.community_id), com.name)} // ✅ Conversión aquí  
-                      >
+                      onClick={() => toggleSubscription(com.community_id, com.name)}
+                    >
                       {newsletterSubscriptions.includes(Number(com.community_id))
                         ? "Cancelar Suscripción"
                         : "Suscribirse Newsletter"

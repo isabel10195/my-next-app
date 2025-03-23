@@ -8,6 +8,7 @@ import { Heart, MessageCircle, Repeat2, Share, Repeat1 } from "lucide-react"; //
 import CommentInput from "@/components/CommentInput/CommentInput";
 import { commentTweet, fetchCommentsByTweet } from "@/server/service/tweetService";
 import { toggleRetweet } from "@/server/service/tweetService";
+import VideoPlayer from "@/components/feed_c/VideoPlayer";
 import Link from "next/link"; // Import Link
 
 const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
@@ -17,6 +18,38 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
     const [tweetState, setTweetState] = useState(tweet);
     const [isRetweetedLocal, setIsRetweetedLocal] = useState(tweet.retweeted || false); // Estado local para el retweet
 
+    // Nuevo renderizado de medios
+    const renderMedia = () => {
+        if (!tweet.media_urls) return null;
+        let mediaUrls = JSON.parse(tweet.media_urls);
+        mediaUrls = mediaUrls.map(url =>
+          url.startsWith("http") ? url : `http://localhost:3001${url}`
+        );
+        
+        return (
+            <div className={`grid gap-2 mt-4 grid-cols-${mediaUrls.length >= 2 ? "2" : "1"}`}>
+                {mediaUrls.map((url, index) =>
+                    url.match(/\.(mp4|mov|avi)$/i) ? (
+                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                        <VideoPlayer src={url} /><br />
+                    </div>
+                    ) : (
+                    <div key={index} className="relative w-full overflow-hidden rounded-lg">
+                        <img
+                        src={url}
+                        alt={`Media ${index}`}
+                        className="w-full h-auto max-h-96 object-contain"
+                        onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                        }}
+                        /><br />
+                    </div>
+                    )
+                )}
+            </div>
+        );
+    };
+      
     useEffect(() => {
         setTweetState(tweet);
         setIsRetweetedLocal(tweet.retweeted || false);
@@ -92,7 +125,10 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
                     )}
                 </div>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">{tweet.tweet_text || tweet.comment_text}</p>
+            <p className="text-gray-700 dark:text-gray-300 mb-4 break-words whitespace-pre-wrap">
+                {tweet.tweet_text || tweet.comment_text}
+            </p>
+            {renderMedia()}
             <div className="flex items-center justify-start space-x-4 text-gray-500 dark:text-gray-400">
                 <Button variant="ghost" size="sm" onClick={() => onLike(tweet)}>
                     <Heart className="mr-2 h-4 w-4" color={tweet.liked ? "red" : "currentColor"} fill={tweet.liked ? "red" : "none"} />

@@ -12,6 +12,7 @@ const topicsRoutes = require("./routes/topicsRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
 const cron = require('node-cron');
 const newsController = require('./controllers/newsController'); // 📌 Importamos el controlador de noticias
+const path = require('path');
 
 const app = express();
 const PORT = 3001;
@@ -31,6 +32,17 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/news", newRoutes);
 app.use("/api/topics", topicsRoutes);
 app.use("/api/newsletter", newsletterRoutes);
+app.use(
+  '/uploads', 
+  express.static(path.join(__dirname, 'public', 'uploads'), {
+    setHeaders: (res, path) => {
+      if (path.endsWith('.mp4')) {
+        res.setHeader('Content-Type', 'video/mp4');
+      }
+      // Añade otros tipos si es necesario
+    }
+  }
+));
 
 //equire("./cron/newsletterCron");
 

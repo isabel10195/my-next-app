@@ -2,14 +2,12 @@ const API_URL = "http://localhost:3001/api/newsletter";
 
 export const subscribeNewsletter = async (communityId) => {
 
-  const token = localStorage.getItem("token"); // ✅ Añadir token
-
   const response = await fetch(`${API_URL}/subscribe`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}` // ✅ Token en headers
     },
+    credentials: "include",
     body: JSON.stringify({ community_id: communityId })
   });
 
@@ -22,13 +20,13 @@ export const subscribeNewsletter = async (communityId) => {
 };
 
 export const unsubscribeNewsletter = async (communityId) => {
-  
+  console.log("🔥 Ejecutando UNSUBSCRIBE para comunidad:", communityId);
   const response = await fetch(`${API_URL}/unsubscribe`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
+    credentials: "include", // ✅ Las cookies se envían automáticamente
     body: JSON.stringify({ community_id: communityId })
   });
 
