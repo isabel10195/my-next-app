@@ -3,7 +3,7 @@ const db = require("mssql");
 
 // Obtener datos básicos del usuario
 const getUserData = async (req, res) => {
-    const userId = req.user.id; // Obtenido del middleware de autenticación
+    const userId = req.user.id;
 
     try {
         const query = `
@@ -38,7 +38,6 @@ const getUserData = async (req, res) => {
 };
 
 // Obtener detalles adicionales del usuario
-// Obtener detalles adicionales del usuario
 const getUserDetails = async (req, res) => {
     const userId = req.user.id;
 
@@ -55,7 +54,7 @@ const getUserDetails = async (req, res) => {
 
         if (result.recordset.length > 0) {
             const details = result.recordset.reduce((acc, row) => {
-                const key = row.category.toLowerCase(); // Convertir a minúsculas
+                const key = row.category.toLowerCase();
                 acc[key] = acc[key] || [];
                 acc[key].push(row.detail_text);
                 return acc;
@@ -65,7 +64,7 @@ const getUserDetails = async (req, res) => {
             res.status(200).json(details);
         } else {
             console.warn("⚠️ Usuario sin detalles en la base de datos:", userId);
-            res.status(200).json({ logros: [] }); // 🔹 Ahora el frontend recibirá un array vacío en lugar de un error
+            res.status(200).json({ logros: [] });
         }
     } catch (error) {
         console.error("❌ Error al obtener detalles del usuario:", error);
@@ -73,4 +72,67 @@ const getUserDetails = async (req, res) => {
     }
 };
 
-module.exports = { getUserData, getUserDetails };
+// Añadir un detalle (interés, habilidad, etc.)
+const updateUserDetail = async (req, res) => {
+    const userId = req.user.id;
+    const { category, detail_text } = req.body;
+
+    if (!category || !detail_text) {
+        return res.status(400).json({ error: "Faltan datos necesarios" });
+    }
+
+    try {
+        const query = `
+            INSERT INTO user_details (user_id, category, detail_text)
+            VALUES (@userId, @category, @detailText)
+        `;
+
+        const inputs = [
+            { name: "userId", type: db.Int, value: userId },
+            { name: "category", type: db.VarChar, value: category },
+            { name: "detailText", type: db.VarChar, value: detail_text },
+        ];
+
+        await executeQuery(query, inputs);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("❌ Error al insertar detalle:", error);
+        res.status(500).json({ error: "Error interno al insertar detalle" });
+    }
+};
+
+// Eliminar un detalle
+const deleteUserDetail = async (req, res) => {
+    const userId = req.user.id;
+    const { category, detail_text } = req.body;
+
+    if (!category || !detail_text) {
+        return res.status(400).json({ error: "Faltan datos para eliminar" });
+    }
+
+    try {
+        const query = `
+            DELETE FROM user_details
+            WHERE user_id = @userId AND category = @category AND detail_text = @detailText
+        `;
+
+        const inputs = [
+            { name: "userId", type: db.Int, value: userId },
+            { name: "category", type: db.VarChar, value: category },
+            { name: "detailText", type: db.VarChar, value: detail_text },
+        ];
+
+        await executeQuery(query, inputs);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error("❌ Error al eliminar detalle:", error);
+        res.status(500).json({ error: "Error interno al eliminar detalle" });
+    }
+};
+
+module.exports = {
+    getUserData,
+    getUserDetails,
+    updateUserDetail,
+    deleteUserDetail,
+};

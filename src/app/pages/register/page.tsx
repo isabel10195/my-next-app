@@ -148,7 +148,7 @@ export default function RegisterPage() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="flex justify-center">
-              <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-6 lg:w-[180px]" />
+              <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={100} height={140} className="mb-6 lg:w-[180px]"priority  />
             </div>
                 {/* 🔥 Mensajes de error y éxito */}
                 {error && <p className="text-red-500 text-center">{error}</p>}

@@ -36,3 +36,73 @@ export async function GET() {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const { category, detail_text } = await req.json();
+
+  if (!category || !detail_text) {
+    return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
+  }
+
+  try {
+    const response = await fetch("http://localhost:3001/api/users/details", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ category, detail_text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al guardar en el backend");
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("❌ Error en el POST de /details:", err);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
+  const { category, detail_text } = await req.json();
+
+  if (!category || !detail_text) {
+    return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
+  }
+
+  try {
+    const response = await fetch("http://localhost:3001/api/users/details", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ category, detail_text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar en el backend");
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("❌ Error en DELETE /details:", err);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+  }
+}

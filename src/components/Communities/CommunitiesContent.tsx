@@ -1,5 +1,6 @@
 // components/Communities/CommunitiesContent.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { fetchNewsByCategory } from "@/server/service/newsService";
 
 const CommunitiesContent = ({ category }) => {
@@ -65,12 +66,18 @@ const CommunitiesContent = ({ category }) => {
             
             {/* Imagen */}
             {article.image && (
-              <img 
-                src={article.image} 
-                alt={article.title}
-                className="mt-4 w-full h-48 object-cover rounded-lg shadow-sm"
-              />
+              <div className="relative mt-4 w-full h-48">
+                <Image 
+                  src={article.image} 
+                  alt={article.title}
+                  layout="fill" // Hace que la imagen ocupe todo el div contenedor
+                  objectFit="cover" // Ajusta la imagen sin deformarla
+                  className="rounded-lg shadow-sm"
+                  priority // Si la imagen es importante para la carga inicial
+                />
+              </div>
             )}
+
           </div>
         ))
       ) : (

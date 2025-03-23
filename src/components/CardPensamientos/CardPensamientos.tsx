@@ -103,8 +103,8 @@ export function CardPensamientos({ isAuthenticated, onCommunityUpdate }: CardPen
 
   const title = isAuthenticated 
     ? (showingRecommendations 
-        ? "Comunidades Populares" 
-        : "Comunidades a las que Perteneces")
+        ? "Comunidades populares" 
+        : "Comunidades a las que perteneces")
     : "Comunidades Populares";
 
   return (

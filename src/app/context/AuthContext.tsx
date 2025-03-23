@@ -1,27 +1,43 @@
+'use client';
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Creamos el contexto con valor por defecto null
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null); // 🔥 Se agrega el estado del token
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // 🔄 Al montar el contexto, pedimos el perfil autenticado
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchUser = async () => {
+      try {
+        console.log("🧠 Comprobando autenticación desde AuthContext...");
+        const res = await fetch("/api/auth/me", { credentials: "include" });
+        const data = await res.json();
+
         if (data.authenticated) {
+          console.log("✅ Usuario autenticado:", data.user);
           setUser(data.user);
-          setToken(localStorage.getItem("token") || ""); // 🔥 Guardar el token
+        } else {
+          console.warn("⚠️ Usuario no autenticado.");
+          setUser(null);
         }
-      })
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+      } catch (error) {
+        console.error("❌ Error al verificar autenticación:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
+  // 🔒 Cerrar sesión
   const logout = async () => {
     try {
       await fetch("http://localhost:3001/api/auth/logout", {
@@ -29,17 +45,16 @@ export function AuthProvider({ children }) {
         credentials: "include",
       });
 
+      console.log("🚪 Sesión cerrada correctamente.");
       setUser(null);
-      setToken(null); // 🔥 Eliminar token al cerrar sesión
-      localStorage.removeItem("token");
       router.push("/");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      console.error("❌ Error al cerrar sesión:", error);
     }
-  };  
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, setUser, setToken, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

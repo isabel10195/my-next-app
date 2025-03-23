@@ -92,7 +92,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm md:max-w-xl lg:max-w-2xl bg-white dark:bg-gray-900 flex items-center shadow-2xl rounded-xl mx-auto p-6 mb-40 md:p-10 lg:mr-16 xl:mr-40 lg:mb-0 relative z-10">
         <div className="w-full space-y-8">
           <div className="flex justify-center">
-            <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={140} height={140} className="mb-3 lg:w-[180px]" />
+            <Image src="/logo.png" alt="Logo de LA ISLA DE LURE" width={100} height={140} className="mb-3 lg:w-[180px]" priority />
           </div>
 
           <form onSubmit={handleLogin} className="w-full max-w-sm mx-auto space-y-6">

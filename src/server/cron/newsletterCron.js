@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // true para 465, false para otros puertos
   auth: {
     user: "aminbouali13@gmail.com", // Reemplaza con tu correo
-    pass: "Aaminbou1303+!", // Reemplaza con tu contraseña o API key
+    pass: "", // Reemplaza con tu contraseña o API key
   },
 });
 

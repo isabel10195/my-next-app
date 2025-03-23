@@ -108,46 +108,60 @@ const loginUser = async (req, res) => {
 };
 
 
-// Perfil del usuario
 const getUserProfile = async (req, res) => {
     try {
-        const query = `
-            SELECT 
-                u.user_id, u.user_handle, u.email_address, u.first_name, u.last_name, 
-                u.avatar_url, u.cover_url, u.last_login, u.user_role,
-                (SELECT COUNT(*) FROM followers WHERE following_id = u.user_id) AS followers,
-                (SELECT COUNT(*) FROM followers WHERE follower_id = u.user_id) AS following
-            FROM users u 
-            WHERE u.user_id = @user_id`;
-
-        const result = await executeQuery(query, [
-            { name: "user_id", type: db.Int, value: req.user.id },
-        ]);
-
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
-
-        const user = result.recordset[0];
-
-        res.json({
-            user_id: user.user_id,
-            user_handle: user.user_handle,
-            email: user.email_address,
-            name: `${user.first_name} ${user.last_name}`,
-            avatarUrl: user.avatar_url || null,
-            coverUrl: user.cover_url || null,
-            lastLogin: user.last_login,
-            isOnline: true,
-            role: user.user_role,
-            followers: user.followers, // 🔥 Agregado
-            following: user.following, // 🔥 Agregado
-        });
+      const query = `
+        SELECT 
+          u.user_id,
+          u.user_handle,
+          u.email_address,
+          u.first_name,
+          u.last_name,
+          u.avatar_url,
+          u.cover_url,
+          u.bio,
+          u.location,
+          u.date_of_birth,
+          u.last_login,
+          u.user_role,
+          (SELECT COUNT(*) FROM followers WHERE following_id = u.user_id) AS followers,
+          (SELECT COUNT(*) FROM followers WHERE follower_id = u.user_id) AS following
+        FROM users u 
+        WHERE u.user_id = @user_id
+      `;
+  
+      const result = await executeQuery(query, [
+        { name: "user_id", type: db.Int, value: req.user.id },
+      ]);
+  
+      if (result.recordset.length === 0) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+  
+      const user = result.recordset[0];
+  
+      res.json({
+        user_id: user.user_id,
+        user_handle: user.user_handle,
+        email: user.email_address,
+        name: `${user.first_name} ${user.last_name}`,
+        avatarUrl: user.avatar_url || null,
+        coverUrl: user.cover_url || null,
+        bio: user.bio || null,
+        location: user.location || null,
+        birthday: user.date_of_birth || null,
+        lastLogin: user.last_login,
+        isOnline: true,
+        role: user.user_role,
+        followers: user.followers,
+        following: user.following,
+      });
     } catch (error) {
-        console.error("❌ Error obteniendo perfil:", error);
-        res.status(500).json({ error: "Error en el servidor" });
+      console.error("❌ Error obteniendo perfil:", error);
+      res.status(500).json({ error: "Error en el servidor" });
     }
-};
+  };
+  
 
 
 

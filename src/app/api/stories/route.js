@@ -6,7 +6,7 @@ const API_URL = "http://localhost:3001/api/stories"; // URL del backend
 export async function GET(req) {
     try {
         const cookieStore = cookies(); // Obtiene las cookies correctamente en Next.js 15
-        const token = cookieStore.get("token")?.value || "";
+        const token = await cookieStore.get("token")?.value || "";
 
         const res = await fetch(API_URL, {
             method: "GET",

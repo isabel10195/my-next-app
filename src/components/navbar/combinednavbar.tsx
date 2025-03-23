@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Play, Pause, Menu, Sun, Moon } from 'lucide-react';
 import Image from 'next/image';
-// import ReactPlayer from 'react-player'; // 🔥 Comentado para evitar errores por bloqueadores de anuncios
+
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
 import { HiX } from "react-icons/hi"
 
@@ -13,46 +13,15 @@ export default function CombinedNavbar() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClient, setIsClient] = useState(false);  // Comprobar si estamos en el cliente
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar la visibilidad del menú
-  const [isDarkMode, setIsDarkMode] = useState(false); // Modo claro/oscuro
 
   const togglePlayPause = (): void => {
     setIsPlaying(!isPlaying);
   };
-
+ 
+  //Menu responsive desplegable
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  };
-
-  useEffect(() => {
-    setIsVisible(true);
-    setIsClient(true);
-
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldUseDark = savedTheme === "dark" || (!savedTheme && prefersDark);
-
-    if (shouldUseDark) {
-      document.documentElement.classList.add("dark");
-      setIsDarkMode(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDarkMode(false);
-    }
-  }, []);
-
   return (
     <Navbar className=" bg-gradient-to-t from-gray-50 to-gray-200 dark:bg-gradient-to-b dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-900 shadow shadow-sm">
       <div className="container mx-auto flex items-center justify-between p-5 md:p-5">
@@ -65,8 +34,9 @@ export default function CombinedNavbar() {
           <Image
             src="/logo.png"
             alt="Logo de LA ISLA DE LURE"
-            width={150}
+            width={100}
             height={150}
+            priority 
           />
         </NavbarBrand>
 
@@ -87,6 +57,16 @@ export default function CombinedNavbar() {
         </NavbarContent>
 
         <NavbarContent className="flex items-center gap-4 md:gap-4">
+          {/* <NavbarItem>
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              type="button"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+          </NavbarItem> */}
           <NavbarItem className="hidden md:flex">
             <Link href="/pages/planes">
               <button className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800">
