@@ -28,7 +28,7 @@ export default function ContactPage() {
                 <Phone className="w-8 h-8 text-blue-500" />
                 <h3 className="text-xl font-semibold">Soporte telefónico</h3>
                 <p className="text-gray-700 dark:text-gray-400">Habla con nuestro equipo de soporte en directo</p>
-                <Button variant="outline" className="w-full text-white dark:text-gray-300 dark:hover:text-blue-700">
+                <Button variant="outline" className="w-full text-gray-500 dark:text-gray-300 dark:hover:text-blue-700">
                   Llamar ahora
                 </Button>
               </div>
@@ -39,7 +39,7 @@ export default function ContactPage() {
                 <Mail className="w-8 h-8 text-blue-500" />
                 <h3 className="text-xl font-semibold">Envíanos un email</h3>
                 <p className="text-gray-700 dark:text-gray-400">Obtén ayuda por correo electrónico</p>
-                <Button variant="outline" className="w-full text-white dark:text-gray-300 dark:hover:text-blue-700">
+                <Button variant="outline" className="w-full text-gray-500 dark:text-gray-300 dark:hover:text-blue-700">
                   Enviar email
                 </Button>
               </div>
@@ -50,7 +50,7 @@ export default function ContactPage() {
                 <MessageSquare className="w-8 h-8 text-blue-500" />
                 <h3 className="text-xl font-semibold">Chat en directo</h3>
                 <p className="text-gray-700 dark:text-gray-400">Chatea con nuestro equipo de soporte</p>
-                <Button variant="outline" className="w-full text-white dark:text-gray-300 dark:hover:text-blue-700">
+                <Button variant="outline" className="w-full text-gray-500 dark:text-gray-300 dark:hover:text-blue-700">
                   Iniciar chat
                 </Button>
               </div>

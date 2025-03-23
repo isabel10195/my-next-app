@@ -61,7 +61,7 @@ export default function MessagesPage() {
                           <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${message.sender}`} />
                           <AvatarFallback>{message.sender[0]}</AvatarFallback>
                         </Avatar>
-                        <div className={`mx-2 py-2 px-4 rounded-lg ${message.sender === 'You' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-white'}`}>
+                        <div className={`mx-2 py-2 px-4 rounded-lg ${message.sender === 'You' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-800'}`}>
                           <p>{message.content}</p>
                           <p className="text-xs text-gray-800 dark:text-gray-700 mt-1">
                             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
