@@ -58,3 +58,5 @@ La página utiliza Tailwind CSS para los estilos, lo que permite un diseño limp
 - container mx-auto p-6: Define un contenedor centrado con relleno (padding) de 6 unidades en todos los lados.
 
 
+https://github.com/JoseValeroo/my-next-app/blob/IsaRama5/public/img_doc/faqs_claro.png
+https://github.com/JoseValeroo/my-next-app/blob/IsaRama5/public/img_doc/faqs_oscuro.png
