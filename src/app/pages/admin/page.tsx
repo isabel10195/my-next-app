@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef, useState } from "react";
 import AdminLayout from "./layout"
 import UserList from "@/components/AdminPage/user-list"

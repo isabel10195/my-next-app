@@ -36,25 +36,6 @@ const createTweet = async (req, res) => {
   }
 };
 
-// Crear un tweet
-// const createTweet = async (req, res) => {
-//   const { tweet_text } = req.body;
-//   const user_id = req.user.id;
-
-//   try {
-//     const query = "INSERT INTO tweets (user_id, tweet_text) OUTPUT INSERTED.tweet_id VALUES (@user_id, @tweet_text)";
-//     const inputs = [
-//       { name: "user_id", type: db.Int, value: user_id },
-//       { name: "tweet_text", type: db.NVarChar, value: tweet_text },
-//     ];
-
-//     const result = await executeQuery(query, inputs);
-//     res.send({ message: "Tweet creado correctamente", tweetId: result.recordset[0].id });
-//   } catch (error) {
-//     console.error("Error al crear el tweet:", error);
-//     res.status(500).send("Error al crear el tweet");
-//   }
-// };
 
 // Obtener tweets de usuarios seguidos
 const getTweetsByFollowing = async (req, res) => {
