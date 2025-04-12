@@ -16,6 +16,7 @@ const path = require('path');
 
 const app = express();
 const PORT = 3001;
+const adminRoutes = require("./routes/adminRoutes");
 
 // Middlewares
 app.use(corsMiddleware);
@@ -44,6 +45,7 @@ app.use(
     }
   }
 ));
+app.use("/api", adminRoutes);
 
 //equire("./cron/newsletterCron");
 
