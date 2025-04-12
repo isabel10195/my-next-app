@@ -20,3 +20,24 @@ export async function GET(request) {
     return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const id = url.pathname.split("/").pop(); // obtiene el último segmento (userId)
+
+    const res = await fetch(`http://localhost:3001/api/users/admin/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error("Error al eliminar usuario");
+
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("❌ Error en DELETE /api/admin/users:", error);
+    return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 });
+  }
+}
+
