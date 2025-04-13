@@ -2,9 +2,13 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
+    const cookie = request.headers.get("cookie"); // 🔥 obtenemos la cookie del usuario autenticado
+
     const res = await fetch(`http://localhost:3001/api/users/admin/${params.id}/pdf`, {
       method: "GET",
-      credentials: "include",
+      headers: {
+        Cookie: cookie ?? "", // reenviamos la cookie
+      },
     });
 
     if (!res.ok) throw new Error("Error al obtener PDF");
