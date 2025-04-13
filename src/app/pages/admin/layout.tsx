@@ -30,7 +30,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           >
             <Settings className="h-5 w-5 text-zinc-600 dark:text-white" />
           </button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-8 w-8 border border-gray-300 dark:border-gray-600 cursor-pointer">
