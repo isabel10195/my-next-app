@@ -5,7 +5,11 @@ const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ruta ABSOLUTA (cámbiala según tu sistema)
+<<<<<<< HEAD
     const uploadPath = "/public/uploads/"; // 👈 Ruta de subida
+=======
+    const uploadPath = "public/uploads/"; // 👈 Carpeta de subida
+>>>>>>> JoseRama5
     
     console.log("📁 Ruta de subida:", uploadPath); // 👈 Para debuggear
     
@@ -24,7 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { 
-    fileSize: 100 * 1024 * 1024, // 100MB (78,000KB = ~78MB)
+    fileSize: 100 * 1024 * 1024, // 100MB
     files: 4 // Máximo 4 archivos
   },
   fileFilter: (req, file, cb) => {
