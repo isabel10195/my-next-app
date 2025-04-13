@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-8 w-8 border border-gray-300 dark:border-gray-600 cursor-pointer">
-                <AvatarImage src={user?.avatarUrl || "/placeholder-user.jpg"} alt="Admin Avatar" />
+                <AvatarImage src={user?.avatarUrl} alt="Admin Avatar" />
                 <AvatarFallback>
                   <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                 </AvatarFallback>
