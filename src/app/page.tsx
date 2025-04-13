@@ -277,7 +277,7 @@ export default function HomePage() {
                                 <Line type="monotone" dataKey="likes" stroke="#8884d8" />
                               </LineChart>
                             </ResponsiveContainer>
-                            <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Usuarios más influyentes</h2>
                             <ul>
                               {sortedUsers.map(([user, likes]) => (
                                 <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
@@ -404,7 +404,7 @@ export default function HomePage() {
                                   <Line type="monotone" dataKey="likes" stroke="#8884d8" />
                                 </LineChart>
                               </ResponsiveContainer>
-                              <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
+                              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Usuarios más influyentes</h2>
                               <ul>
                                 {sortedUsers.map(([user, likes]) => (
                                   <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
