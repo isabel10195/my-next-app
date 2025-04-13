@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 export default function TweetListAdmin() {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
   const fetchAllTweets = async () => {
@@ -48,13 +49,31 @@ export default function TweetListAdmin() {
     fetchAllTweets();
   }, []);
 
+  const filteredTweets = tweets.filter((tweet) => {
+    if (searchTerm.startsWith('@')) {
+      const handle = searchTerm.slice(1).toLowerCase();
+      return tweet.user_handle.toLowerCase().includes(handle);
+    } else if (searchTerm.startsWith('#')) {
+      const text = searchTerm.slice(1).toLowerCase();
+      return tweet.tweet_text?.toLowerCase().includes(text);
+    }
+    return true;
+  });
+
   if (loading) return <p className="text-zinc-500 dark:text-zinc-400">Cargando tweets...</p>;
 
   if (tweets.length === 0) return <p className="text-zinc-500 dark:text-zinc-400">No hay tweets disponibles.</p>;
 
   return (
     <div className="space-y-4">
-      {tweets.map((tweet) => (
+      <input
+        type="text"
+        placeholder="Buscar: @usuario o #texto"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full mb-4 px-4 py-2 rounded border border-zinc-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+      />
+      {filteredTweets.map((tweet) => (
         <div key={tweet.tweet_id} className="relative">
           <Tweet
             tweet={tweet}

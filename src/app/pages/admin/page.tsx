@@ -29,15 +29,6 @@ export default function AdminPage() {
 
         {/* Cuadro de Usuarios */}
         <div className="bg-zinc-100 dark:bg-gray-800 rounded-xl p-4 shadow-md overflow-y-auto max-h-[80vh]">
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500 dark:text-zinc-300" />
-            <input
-              ref={searchRef}
-              type="search"
-              placeholder="Buscar usuarios..."
-              className="w-full pl-10 pr-4 py-2 text-sm bg-zinc-50 dark:bg-gray-700 text-gray-900 dark:text-white border border-zinc-200 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
           <UserListAdmin />
         </div>
       </div>
