@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import Tweet from '@/components/tweet/tweet';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export default function TweetListAdmin() {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchAllTweets = async () => {
     try {
@@ -26,7 +28,7 @@ export default function TweetListAdmin() {
     }
   };
 
-  const deleteTweet = async (tweetId) => {
+  const deleteTweet = async (tweetId: number) => {
     try {
       const res = await fetch(`/api/admin/tweets/${tweetId}`, {
         method: 'DELETE',
@@ -55,11 +57,11 @@ export default function TweetListAdmin() {
       {tweets.map((tweet) => (
         <div key={tweet.tweet_id} className="relative">
           <Tweet
-        tweet={tweet}
-        onLike={() => {}}
-        onComment={() => {}}
-        onRetweetChange={() => {}}
-      />
+            tweet={tweet}
+            onLike={() => {}}
+            onComment={() => {}}
+            onRetweetChange={() => {}}
+          />
 
           <div className="absolute top-2 right-2 flex gap-2">
             <button
@@ -69,7 +71,7 @@ export default function TweetListAdmin() {
               Eliminar
             </button>
             <button
-              onClick={() => console.log('Opciones usuario', tweet.user_id)}
+              onClick={() => router.push(`/profile/${tweet.user_handle}`)}
               className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white text-sm px-3 py-1 rounded-md"
             >
               Usuario ▾
