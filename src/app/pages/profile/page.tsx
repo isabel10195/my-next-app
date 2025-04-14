@@ -281,7 +281,8 @@ const handleEditTweet = async (tweetId, newText) => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden mt-2"
                   >
-                  <CardLogros user={user} achievements={userDetails.achievements} />
+                  <CardLogros user={user} achievements={userDetails.achievements} editable={true} />
+
                   <CardIntereses
                     user={user}
                     interests={userDetails.interests}
@@ -297,7 +298,7 @@ const handleEditTweet = async (tweetId, newText) => {
              
              {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
             <div className="hidden lg:block space-y-4">
-              <CardLogros user={user} achievements={userDetails.achievements} />
+            <CardLogros user={user} achievements={userDetails.achievements} editable={true} />
               <CardIntereses
                 user={user}
                 interests={userDetails.interests}

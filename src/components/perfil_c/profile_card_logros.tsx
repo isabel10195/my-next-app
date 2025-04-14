@@ -18,6 +18,7 @@ interface CardLogrosProps {
     following: number;
   } | null;
   achievements?: string[];
+  editables?: boolean;
 }
 
 const CardLogros: React.FC<CardLogrosProps> = ({ achievements = [] }) => {
