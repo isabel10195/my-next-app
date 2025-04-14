@@ -459,6 +459,28 @@ const toggleRetweet = async (req, res) => {
     res.status(500).json({ message: "Error al hacer retweet", error: error.message });
   }
 };
+const getTweetsByHandle = async (req, res) => {
+  const { handle } = req.params;
+
+  try {
+    const query = `
+      SELECT t.*
+      FROM tweets t
+      INNER JOIN users u ON t.user_id = u.user_id
+      WHERE u.user_handle = @handle
+      ORDER BY t.created_at DESC
+    `;
+
+    const inputs = [{ name: "handle", type: db.VarChar, value: handle }];
+    const result = await executeQuery(query, inputs);
+
+    res.status(200).json({ tweets: result.recordset });
+  } catch (error) {
+    console.error("❌ Error al obtener tweets por handle:", error);
+    res.status(500).json({ error: "Error al obtener los tweets" });
+  }
+};
+
 
 module.exports = {
   createTweet,
@@ -472,5 +494,6 @@ module.exports = {
   createComment,
   getCommentsByTweet,
   toggleRetweet,
-  getPopularTweets
+  getPopularTweets,
+  getTweetsByHandle
 };

@@ -174,10 +174,57 @@ const getFollowing = async (req, res) => {
     }
 };
 
+// 🔹 Obtener seguidores y seguidos por handle
+const getFollowersByHandle = async (req, res) => {
+  const { handle } = req.params;
+
+  try {
+    const query = `
+      SELECT f.follower_id, u.user_handle, u.avatar_url
+      FROM followers f
+      JOIN users u ON f.follower_id = u.user_id
+      WHERE f.following_id = (SELECT user_id FROM users WHERE user_handle = @handle)
+    `;
+
+    const inputs = [{ name: "handle", type: db.VarChar, value: handle }];
+    const result = await executeQuery(query, inputs);
+
+    res.status(200).json({ followers: result.recordset });
+  } catch (error) {
+    console.error("❌ Error al obtener followers:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+const getFollowingByHandle = async (req, res) => {
+  const { handle } = req.params;
+
+  try {
+    const query = `
+      SELECT f.following_id, u.user_handle, u.avatar_url
+      FROM followers f
+      JOIN users u ON f.following_id = u.user_id
+      WHERE f.follower_id = (SELECT user_id FROM users WHERE user_handle = @handle)
+    `;
+
+    const inputs = [{ name: "handle", type: db.VarChar, value: handle }];
+    const result = await executeQuery(query, inputs);
+
+    res.status(200).json({ seguidos: result.recordset });
+  } catch (error) {
+    console.error("❌ Error al obtener following:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+
+// 🔹 Exportar funciones para que puedan ser usadas en routes
 module.exports = {
     followUser,
     unfollowUser,
     getRecommendations,
     getFollowers,
     getFollowing,
+    getFollowersByHandle,
+    getFollowingByHandle,
 };

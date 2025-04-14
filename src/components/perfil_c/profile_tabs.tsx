@@ -71,7 +71,7 @@ const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = 
         <Separator className="bg-gray-300 dark:bg-gray-800" />
 
         {/* 🔹 TAB: Seguidores */}
-        {activeTab === "seguidores" && (
+        {activeTab === "recomendaciones" && (
           <div>
             {seguidores.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-300 text-center">Aún no tienes seguidores.</p>
