@@ -4,7 +4,7 @@ import { Edit, Trash, Check, X } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import  Image  from "next/image";
 import { useState } from "react";
 
 interface Tweet {
@@ -29,8 +29,8 @@ interface CardTweetsProps {
     followers: number;
     following: number;
   } | null;
-  handleDeleteTweet: (tweetId: string) => void;
-  handleEditTweet: (tweetId: string, text: string) => void;
+  handleDeleteTweet?: (tweetId: string) => void;
+  handleEditTweet?: (tweetId: string, text: string) => void;
 }
 
 const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet, handleEditTweet }) => {
@@ -64,13 +64,16 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
               <source src={url} type="video/mp4" />
             </video>
           ) : (
-            <img
+            <Image
               key={index}
               src={url}
               alt={`Media ${index}`}
-              className="w-full h-auto max-h-96 object-contain"
+              width={600}
+              height={400}
+              className="w-full h-auto max-h-96 object-contain rounded-lg"
               onError={(e) => {
-                e.currentTarget.style.display = 'none';
+                const el = e.currentTarget as HTMLImageElement;
+                el.style.display = "none";
               }}
             />
           )

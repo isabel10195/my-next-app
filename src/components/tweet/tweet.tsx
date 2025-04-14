@@ -10,6 +10,7 @@ import { commentTweet, fetchCommentsByTweet } from "@/server/service/tweetServic
 import { toggleRetweet } from "@/server/service/tweetService";
 import VideoPlayer from "@/components/feed_c/VideoPlayer";
 import Link from "next/link";
+import Image from "next/image";
 
 const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
     const [showCommentInput, setShowCommentInput] = useState(false);
@@ -62,14 +63,18 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
                     }
                     return (
                         <div key={index} className="relative w-full overflow-hidden rounded-lg">
-                            <img
+                            <Image
+                                key={index}
                                 src={url}
                                 alt={`Media ${index}`}
+                                width={800}
+                                height={600}
                                 className="w-full h-auto max-h-96 object-contain"
                                 onError={(e) => {
                                     e.currentTarget.style.display = "none";
                                 }}
-                            /><br></br>
+                                />
+                            <br></br>
                         </div>
                     );
                 })}
@@ -144,14 +149,20 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
                     <AvatarFallback>{tweet.user_handle ? tweet.user_handle[0] : "U"}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">@{tweet.user_handle}</h3>
+                    <Link href={`/pages/profile/${tweet.user_handle}`}>
+                    <h3 className="font-semibold text-gray-900 dark:text-white hover:underline cursor-pointer">
+                        @{tweet.user_handle}
+                    </h3>
+                    </Link>
                     {tweet.community_id && (
-                        <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
-                            Tweet de comunidad
-                        </span>
+                    <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
+                        Tweet de comunidad
+                    </span>
                     )}
                 </div>
             </div>
+
+
             <p className="text-gray-700 dark:text-gray-300 mb-4 break-words whitespace-pre-wrap">
                 {tweet.tweet_text || tweet.comment_text}
             </p>
