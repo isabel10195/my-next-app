@@ -10,6 +10,7 @@ const storyRoutes = require("./routes/storyRoutes"); // 📌 Importamos las ruta
 const newRoutes = require("./routes/newsRoutes");
 const topicsRoutes = require("./routes/topicsRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const cron = require('node-cron');
 const newsController = require('./controllers/newsController'); // 📌 Importamos el controlador de noticias
 const path = require('path');
@@ -45,9 +46,11 @@ app.use(
   }
 ));
 
+app.use("/api/messages", messageRoutes);
+
 //equire("./cron/newsletterCron");
 
-// cron.schedule('0 3 * * *', async () => { // 👈  EXPRESIÓN CRON MODIFICADA PARA PRUEBAS
+// cron.schedule('0 3 * * *', async () => { // 👈  EXPRESIÓN CRON MODIFICADA PARA PRUEBAS
 //     console.log('Ejecutando actualización de noticias... (PRUEBA CADA 10 MINUTOS)'); // Mensaje modificado para identificar pruebas
 //     await newsController.updateDailyNews(); 
 //     console.log('Actualización de noticias completada. (PRUEBA CADA 10 MINUTOS)'); // Mensaje modificado para identificar pruebas
@@ -60,6 +63,6 @@ app.use(
 // })();
 
 // Servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, () => { // Usar server en lugar de app
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
