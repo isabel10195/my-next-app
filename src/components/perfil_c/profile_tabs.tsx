@@ -18,8 +18,8 @@ interface UserTabsProps {
   seguidores: UserData[];
   following: UserData[]; // 🔹 Cambiado `seguidos` a `following` para ser consistente con la API
   recomendaciones: UserData[];
-  followUser: (userId: string) => void;
-  unfollowUser: (userId: string) => void;
+  followUser?: (userId: string) => void;
+  unfollowUser?: (userId: string) => void;
 }
 
 const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = [], recomendaciones = [], followUser, unfollowUser }) => {

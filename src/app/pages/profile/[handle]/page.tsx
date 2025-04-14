@@ -32,7 +32,12 @@ export default function ProfilePage() {
 
         const tweetsRes = await fetch(`/api/tweets/user/${handle}`, { credentials: "include" });
         const tweetsData = await tweetsRes.json();
-        setTweets(tweetsData?.tweets ?? []);
+
+        const tweetsArray = Array.isArray(tweetsData)
+          ? tweetsData
+          : tweetsData?.tweets ?? [];
+
+        setTweets(tweetsArray);
 
         const detailsRes = await fetch(`/api/users/handle/${handle}/details`, { credentials: "include" });
         const detailsData = await detailsRes.json();
@@ -50,6 +55,7 @@ export default function ProfilePage() {
         const followingData = await followingRes.json();
         setFollowing(followingData.seguidos ?? []);
       } catch (err) {
+        console.error("❌ Error en fetch de profile handle:", err);
         setError("Error al cargar los datos del usuario");
       } finally {
         setLoading(false);
@@ -59,7 +65,7 @@ export default function ProfilePage() {
     if (handle) fetchData();
   }, [handle]);
 
-  const renderTagsWithColors = (tags) => {
+  const renderTagsWithColors = (tags: string[]) => {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
     return tags.map((tag, index) => (
       <span key={index} className={`px-2 py-1 text-white rounded ${colors[index % colors.length]}`}>
@@ -85,7 +91,7 @@ export default function ProfilePage() {
           <div className="flex-1 space-y-4 w-full relative overflow-y-auto pb-24">
             <CardUsuario user={user} />
 
-            <CardTweets tweets={tweets} user={user} />
+            <CardTweets tweets={Array.isArray(tweets) ? tweets : []} user={user} />
 
             <div className="space-y-4">
               <CardLogros user={user} achievements={userDetails.achievements} />
@@ -93,7 +99,12 @@ export default function ProfilePage() {
               <CardHabilidades user={user} skills={userDetails.skills} />
             </div>
 
-            <UserTabs user={user} seguidores={followers} following={following} recomendaciones={[]} followUser={() => {}} unfollowUser={() => {}} />
+            <UserTabs
+              user={user}
+              seguidores={followers}
+              following={following}
+              recomendaciones={[]}
+            />
           </div>
         </div>
       </div>

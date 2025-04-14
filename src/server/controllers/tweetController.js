@@ -459,12 +459,13 @@ const toggleRetweet = async (req, res) => {
     res.status(500).json({ message: "Error al hacer retweet", error: error.message });
   }
 };
-const getTweetsByHandle = async (req, res) => {
+// En tu userController.js o tweetController.js (donde hagas esta lógica)
+const getTweetsByUserHandle = async (req, res) => {
   const { handle } = req.params;
 
   try {
     const query = `
-      SELECT t.*
+      SELECT t.tweet_id, t.user_id, t.tweet_text, t.media_urls, u.user_handle, u.avatar_url
       FROM tweets t
       INNER JOIN users u ON t.user_id = u.user_id
       WHERE u.user_handle = @handle
@@ -477,9 +478,10 @@ const getTweetsByHandle = async (req, res) => {
     res.status(200).json({ tweets: result.recordset });
   } catch (error) {
     console.error("❌ Error al obtener tweets por handle:", error);
-    res.status(500).json({ error: "Error al obtener los tweets" });
+    res.status(500).json({ error: "Error al obtener tweets del usuario" });
   }
 };
+
 
 
 module.exports = {
@@ -495,5 +497,5 @@ module.exports = {
   getCommentsByTweet,
   toggleRetweet,
   getPopularTweets,
-  getTweetsByHandle
+  getTweetsByUserHandle
 };
