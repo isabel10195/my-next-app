@@ -289,8 +289,13 @@ const handleEditTweet = async (tweetId, newText) => {
                     renderTagsWithColors={renderTagsWithColors}
                     onAddInterest={handleAddInterest}
                     onDeleteInterest={handleDeleteInterest}
+                    editable={true}
                   />
-                  <CardHabilidades user={user} skills={userDetails.skills} />
+                  <CardHabilidades 
+                    user={user} 
+                    skills={userDetails.skills} 
+                    editable={true}
+                  />
                 </motion.div>
               </div>
             
@@ -305,12 +310,14 @@ const handleEditTweet = async (tweetId, newText) => {
                 renderTagsWithColors={renderTagsWithColors}
                 onAddInterest={handleAddInterest}
                 onDeleteInterest={handleDeleteInterest}
+                editable={true}
               />
               <CardHabilidades
                 user={user}
                 skills={userDetails.skills}
                 onAddSkill={handleAddSkill}
                 onDeleteSkill={handleDeleteSkill}
+                editable={true}
               />
 
             </div>

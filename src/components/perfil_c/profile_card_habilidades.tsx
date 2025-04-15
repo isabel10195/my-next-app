@@ -18,6 +18,7 @@ interface CardHabilidadesProps {
     following: number;
   } | null;
   skills?: string[];
+  editable?: boolean;
   onAddSkill?: (skill: string) => Promise<void>;
   onDeleteSkill?: (skill: string) => Promise<void>;
 }
@@ -25,6 +26,7 @@ interface CardHabilidadesProps {
 const CardHabilidades: React.FC<CardHabilidadesProps> = ({
   user,
   skills = [],
+  editable = false,
   onAddSkill,
   onDeleteSkill,
 }) => {
@@ -62,7 +64,7 @@ const CardHabilidades: React.FC<CardHabilidadesProps> = ({
                 className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-full shadow"
               >
                 <span>{skill}</span>
-                {onDeleteSkill && (
+                {editable && onDeleteSkill && (
                   <button
                     onClick={() => onDeleteSkill(skill)}
                     className="ml-2 text-sm font-bold hover:text-red-300"
@@ -75,39 +77,41 @@ const CardHabilidades: React.FC<CardHabilidadesProps> = ({
           </div>
         ) : (
           <p className="text-gray-500 dark:text-gray-300 text-center mb-4">
-            No tienes habilidades.
+            {editable ? "No tienes habilidades." : "Este usuario aún no ha compartido habilidades."}
           </p>
         )}
 
-        {showInput ? (
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              placeholder="Nueva habilidad"
-              className="w-full sm:w-auto p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white"
-            />
+        {editable && (
+          showInput ? (
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                placeholder="Nueva habilidad"
+                className="w-full sm:w-auto p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white"
+              />
+              <button
+                onClick={async () => {
+                  if (onAddSkill && newSkill.trim()) {
+                    await onAddSkill(newSkill.trim());
+                    setNewSkill("");
+                    setShowInput(false);
+                  }
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Guardar
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={async () => {
-                if (onAddSkill && newSkill.trim()) {
-                  await onAddSkill(newSkill.trim());
-                  setNewSkill("");
-                  setShowInput(false);
-                }
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              onClick={() => setShowInput(true)}
+              className="mt-2 text-sm text-blue-500 hover:underline"
             >
-              Guardar
+              + Añadir habilidad
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setShowInput(true)}
-            className="mt-2 text-sm text-blue-500 hover:underline"
-          >
-            + Añadir habilidad
-          </button>
+          )
         )}
       </CardContent>
     </Card>

@@ -2,8 +2,8 @@ const db = require("mssql");
 
 // Configuración para SQL Server
 const dbConfig = {
-    user: "root",
-    password: "root",
+    user: "josetragsa",
+    password: "josetragsa",
     server: "localhost",
     database: "LURE",
     port: 1433,

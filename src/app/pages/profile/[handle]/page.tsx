@@ -126,8 +126,17 @@ export default function ProfilePage() {
 
             <div className="space-y-4">
             <CardLogros user={user} achievements={userDetails.achievements} />
-              <CardIntereses user={user} interests={userDetails.interests} renderTagsWithColors={renderTagsWithColors} />
-              <CardHabilidades user={user} skills={userDetails.skills} />
+              <CardIntereses 
+                user={user} 
+                interests={userDetails.interests} 
+                renderTagsWithColors={renderTagsWithColors} 
+                editable={false}
+                />
+              <CardHabilidades 
+                user={user} 
+                skills={userDetails.skills} 
+                editable={false}
+                />
             </div>
 
             <UserTabs
