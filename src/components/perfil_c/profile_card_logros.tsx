@@ -2,7 +2,7 @@
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CardLogrosProps {
   user: {
@@ -25,6 +25,11 @@ const CardLogros: React.FC<CardLogrosProps> = ({ user, achievements, editable = 
   const [logros, setLogros] = useState<string[]>(achievements);
   const [newLogro, setNewLogro] = useState("");
   const [showInput, setShowInput] = useState(false);
+
+  // ✅ Sincroniza los logros cuando cambian las props
+  useEffect(() => {
+    setLogros(achievements);
+  }, [achievements]);
 
   const handleAddLogro = async () => {
     const trimmed = newLogro.trim();
