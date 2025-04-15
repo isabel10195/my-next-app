@@ -163,7 +163,6 @@ const getConversation = async (req, res) => {
 //   }
 // };
 
-// Modificar la consulta SQL para obtener el mensaje insertado
 const sendMessage = async (req, res) => {
   const senderId = req.user.id;
   const { receiverId, content } = req.body;
@@ -183,16 +182,6 @@ const sendMessage = async (req, res) => {
     
     const result = await executeQuery(sqlQuery, inputs);
     const newMessage = result.recordset[0];
-
-    // Notificaciones
-    const io = req.app.get("socketio");
-    
-    // 1. Notificar al receptor
-    io.to(`user_${receiverId}`).emit("newMessage", newMessage);
-    
-    // 2. Actualizar lista de contactos de ambos usuarios
-    io.to(`user_${senderId}`).emit("updateContacts");
-    io.to(`user_${receiverId}`).emit("updateContacts");
 
     res.status(200).json({ success: true, message: newMessage });
   } catch (error) {
