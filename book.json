@@ -1,0 +1,13 @@
+{
+  "title": "Documentación de mi proyecto",
+  "summary": [
+    {
+      "title": "Introducción",
+      "path": "./docs/intro.md"
+    },
+    {
+      "title": "API",
+      "path": "./docs/api.md"
+    }
+  ]
+}

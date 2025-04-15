@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/app/context/AuthContext";
 
 import { ArticleCard } from "@/components/CardPrincipal/article-card";
-import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
+// import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
 import { SocialLinks } from "@/components/CardRedesSociales/social-links";
 import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos";
 import WeatherWidget from "@/components/Tiempo/WeatherWidget";
@@ -277,7 +277,7 @@ export default function HomePage() {
                                 <Line type="monotone" dataKey="likes" stroke="#8884d8" />
                               </LineChart>
                             </ResponsiveContainer>
-                            <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Usuarios más influyentes</h2>
                             <ul>
                               {sortedUsers.map(([user, likes]) => (
                                 <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
@@ -297,11 +297,11 @@ export default function HomePage() {
               <div className="space-y-6">
                 <CardEventos />
               </div>
-              <div className="relative grid grid-cols-2 gap-4">
+              {/* <div className="relative grid grid-cols-2 gap-4">
                 {currencyPairs.map((pair) => (
                   <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
                 ))}
-              </div>
+              </div> */}
               <div>
                 <CardinnfoSesion />
                 <br />
@@ -404,7 +404,7 @@ export default function HomePage() {
                                   <Line type="monotone" dataKey="likes" stroke="#8884d8" />
                                 </LineChart>
                               </ResponsiveContainer>
-                              <h2 className="text-xl font-bold">Usuarios más influyentes</h2>
+                              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Usuarios más influyentes</h2>
                               <ul>
                                 {sortedUsers.map(([user, likes]) => (
                                   <li key={user} className="text-sm text-gray-600 dark:text-gray-300">
@@ -423,11 +423,11 @@ export default function HomePage() {
                 )}
                 <CardPensamientos key={`mobile-pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
                 <CardAutorizacion />
-                <div className="relative grid grid-cols-2 gap-4 mt-6">
+                {/* <div className="relative grid grid-cols-2 gap-4 mt-6">
                   {currencyPairs.map((pair) => (
                     <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
                   ))}
-                </div>
+                </div> */}
                 <div className="flex justify-center items-center">
                   <CardinnfoSesion />
                   <CardCerrarSesion />

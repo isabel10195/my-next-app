@@ -70,7 +70,7 @@ const ChatIA = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Escribe tu mensaje..."
-          className="flex-grow mr-2 border-gray-500 dark:border-white bg-white"
+          className="flex-grow mr-2 border-gray-500 dark:border-white bg-white text-black"
           onKeyDown={handleKeyDown}
         />
         <Button className="mt-1 bg-blue-500 hover:bg-blue-600" onClick={sendMessage} disabled={isLoading}>

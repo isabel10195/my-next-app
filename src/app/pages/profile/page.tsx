@@ -281,15 +281,21 @@ const handleEditTweet = async (tweetId, newText) => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden mt-2"
                   >
-                  <CardLogros user={user} achievements={userDetails.achievements} />
+                  <CardLogros user={user} achievements={userDetails.achievements} editable={true} />
+
                   <CardIntereses
                     user={user}
                     interests={userDetails.interests}
                     renderTagsWithColors={renderTagsWithColors}
                     onAddInterest={handleAddInterest}
                     onDeleteInterest={handleDeleteInterest}
+                    editable={true}
                   />
-                  <CardHabilidades user={user} skills={userDetails.skills} />
+                  <CardHabilidades 
+                    user={user} 
+                    skills={userDetails.skills} 
+                    editable={true}
+                  />
                 </motion.div>
               </div>
             
@@ -297,19 +303,21 @@ const handleEditTweet = async (tweetId, newText) => {
              
              {/* Cards info de usuario en pantallas grandes, ocultas en pequeñas*/}
             <div className="hidden lg:block space-y-4">
-              <CardLogros user={user} achievements={userDetails.achievements} />
+            <CardLogros user={user} achievements={userDetails.achievements} editable={true} />
               <CardIntereses
                 user={user}
                 interests={userDetails.interests}
                 renderTagsWithColors={renderTagsWithColors}
                 onAddInterest={handleAddInterest}
                 onDeleteInterest={handleDeleteInterest}
+                editable={true}
               />
               <CardHabilidades
                 user={user}
                 skills={userDetails.skills}
                 onAddSkill={handleAddSkill}
                 onDeleteSkill={handleDeleteSkill}
+                editable={true}
               />
 
             </div>

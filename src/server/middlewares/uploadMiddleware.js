@@ -6,6 +6,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Ruta ABSOLUTA (cámbiala según tu sistema)
     const uploadPath = "public/uploads/"; // 👈 Carpeta de subida
+
     
     console.log("📁 Ruta de subida:", uploadPath); // 👈 Para debuggear
     

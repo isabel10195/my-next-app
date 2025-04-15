@@ -129,10 +129,91 @@ const deleteUserDetail = async (req, res) => {
         res.status(500).json({ error: "Error interno al eliminar detalle" });
     }
 };
+// 🔹 Obtener datos del usuario por su `handle` (para perfil público)
+const getUserByHandle = async (req, res) => {
+  const { handle } = req.params;
 
-module.exports = {
+  try {
+    const query = `
+      SELECT 
+        u.user_id,
+        u.first_name, 
+        u.last_name, 
+        u.user_handle, 
+        u.avatar_url,
+        u.cover_url, 
+        u.location, 
+        u.date_of_birth, 
+        u.email_address, 
+        u.bio, 
+        (SELECT COUNT(*) FROM followers WHERE following_id = u.user_id) AS followers,
+        (SELECT COUNT(*) FROM followers WHERE follower_id = u.user_id) AS following
+      FROM users u
+      WHERE u.user_handle = @handle
+    `;
+
+    const inputs = [{ name: "handle", type: db.VarChar, value: handle }];
+    const result = await executeQuery(query, inputs);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    return res.json(result.recordset[0]);
+  } catch (error) {
+    console.error("❌ Error al obtener usuario por handle:", error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+// 🔹 Obtener detalles por handle
+const getUserDetailsByHandle = async (req, res) => {
+  const { handle } = req.params;
+
+  try {
+    const queryUserId = `
+      SELECT user_id FROM users WHERE user_handle = @handle
+    `;
+    const resultUserId = await executeQuery(queryUserId, [
+      { name: "handle", type: db.VarChar, value: handle },
+    ]);
+
+    if (resultUserId.recordset.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const userId = resultUserId.recordset[0].user_id;
+
+    const query = `
+      SELECT category, detail_text
+      FROM user_details
+      WHERE user_id = @userId
+    `;
+    const inputs = [{ name: "userId", type: db.Int, value: userId }];
+    const result = await executeQuery(query, inputs);
+
+    const details = result.recordset.reduce((acc, row) => {
+      const key = row.category.toLowerCase();
+      acc[key] = acc[key] || [];
+      acc[key].push(row.detail_text);
+      return acc;
+    }, {});
+
+    return res.status(200).json(details);
+  } catch (error) {
+    console.error("❌ Error al obtener detalles del usuario por handle:", error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+// Exportar controladores
+// 🔹 Exportar funciones para su uso en rutas
+  module.exports = {
     getUserData,
     getUserDetails,
     updateUserDetail,
     deleteUserDetail,
-};
+    getUserByHandle,
+    getUserDetailsByHandle,
+  };
+  

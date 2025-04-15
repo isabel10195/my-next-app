@@ -36,25 +36,6 @@ const createTweet = async (req, res) => {
   }
 };
 
-// Crear un tweet
-// const createTweet = async (req, res) => {
-//   const { tweet_text } = req.body;
-//   const user_id = req.user.id;
-
-//   try {
-//     const query = "INSERT INTO tweets (user_id, tweet_text) OUTPUT INSERTED.tweet_id VALUES (@user_id, @tweet_text)";
-//     const inputs = [
-//       { name: "user_id", type: db.Int, value: user_id },
-//       { name: "tweet_text", type: db.NVarChar, value: tweet_text },
-//     ];
-
-//     const result = await executeQuery(query, inputs);
-//     res.send({ message: "Tweet creado correctamente", tweetId: result.recordset[0].id });
-//   } catch (error) {
-//     console.error("Error al crear el tweet:", error);
-//     res.status(500).send("Error al crear el tweet");
-//   }
-// };
 
 // Obtener tweets de usuarios seguidos
 const getTweetsByFollowing = async (req, res) => {
@@ -478,6 +459,30 @@ const toggleRetweet = async (req, res) => {
     res.status(500).json({ message: "Error al hacer retweet", error: error.message });
   }
 };
+// En tu userController.js o tweetController.js (donde hagas esta lógica)
+const getTweetsByUserHandle = async (req, res) => {
+  const { handle } = req.params;
+
+  try {
+    const query = `
+      SELECT t.tweet_id, t.user_id, t.tweet_text, t.media_urls, u.user_handle, u.avatar_url
+      FROM tweets t
+      INNER JOIN users u ON t.user_id = u.user_id
+      WHERE u.user_handle = @handle
+      ORDER BY t.created_at DESC
+    `;
+
+    const inputs = [{ name: "handle", type: db.VarChar, value: handle }];
+    const result = await executeQuery(query, inputs);
+
+    res.status(200).json({ tweets: result.recordset });
+  } catch (error) {
+    console.error("❌ Error al obtener tweets por handle:", error);
+    res.status(500).json({ error: "Error al obtener tweets del usuario" });
+  }
+};
+
+
 
 module.exports = {
   createTweet,
@@ -491,5 +496,6 @@ module.exports = {
   createComment,
   getCommentsByTweet,
   toggleRetweet,
-  getPopularTweets
+  getPopularTweets,
+  getTweetsByUserHandle
 };

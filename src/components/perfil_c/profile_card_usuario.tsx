@@ -47,8 +47,11 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ user }) => {
           priority 
         />
         <Avatar className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-36 h-36 border-2 border-gray-300 shadow-xl dark:border-gray-300">
-          <AvatarImage src={user.avatarUrl || "/placeholder.svg"} alt={user.name} />
-          <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={user.avatarUrl } alt={user.name} />
+          <AvatarFallback>
+          {user.name?.charAt(0)?.toUpperCase() || "U"}
+        </AvatarFallback>
+
         </Avatar>
       </div>
 
