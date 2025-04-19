@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-// 🔥 Definimos la estructura de los props
 interface UserData {
   user_id: string;
   avatar_url?: string;
@@ -16,20 +15,27 @@ interface UserData {
 interface UserTabsProps {
   user: any;
   seguidores: UserData[];
-  following: UserData[]; // 🔹 Cambiado `seguidos` a `following` para ser consistente con la API
+  following: UserData[];
   recomendaciones: UserData[];
-  followUser?: (userId: string) => void;
-  unfollowUser?: (userId: string) => void;
+  followUser: (userId: string) => void;
+  unfollowUser: (userId: string) => void;
 }
 
-const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = [], recomendaciones = [], followUser, unfollowUser }) => {
+const UserTabs: React.FC<UserTabsProps> = ({
+  user,
+  seguidores = [],
+  following = [],
+  recomendaciones = [],
+  followUser,
+  unfollowUser,
+}) => {
   const [activeTab, setActiveTab] = React.useState("seguidores");
+  const [localRecomendaciones, setLocalRecomendaciones] = React.useState(recomendaciones);
 
-  // 🔍 Depuración: Verificar datos que llegan al componente
-  console.log("📌 Renderizando UserTabs");
-  console.log("👥 Seguidores:", seguidores);
-  console.log("➡️ Siguiendo (following):", following);
-  console.log("✨ Recomendaciones:", recomendaciones);
+  const handleFollow = (userId: string) => {
+    followUser(userId);
+    setLocalRecomendaciones((prev) => prev.filter((u) => u.user_id !== userId));
+  };
 
   if (!user) {
     return (
@@ -39,11 +45,35 @@ const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = 
         </CardHeader>
         <Separator className="bg-gray-300 dark:bg-gray-800" />
         <CardContent className="p-6 text-center">
-          <p className="text-gray-500 dark:text-gray-300">Inicia sesión para ver tu red de conexiones.</p>
+          <p className="text-gray-500 dark:text-gray-300">
+            Inicia sesión para ver tu red de conexiones.
+          </p>
         </CardContent>
       </Card>
     );
   }
+
+  const renderList = (usuarios: UserData[], actionButton?: (id: string) => React.ReactNode) =>
+    usuarios.map((user) => (
+      <div
+        key={user.user_id}
+        className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2"
+      >
+        <div className="flex items-center space-x-3">
+          <Image
+            src={user.avatar_url || "/placeholder-user.jpg"}
+            alt="Avatar"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <div>
+            <h4 className="font-bold text-gray-900 dark:text-white">{user.user_handle}</h4>
+          </div>
+        </div>
+        {actionButton && actionButton(user.user_id)}
+      </div>
+    ));
 
   return (
     <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
@@ -52,85 +82,69 @@ const UserTabs: React.FC<UserTabsProps> = ({ user, seguidores = [], following = 
       </CardHeader>
       <Separator className="bg-gray-300 dark:bg-gray-800" />
       <CardContent className="pt-6">
-        {/* 🔹 Tabs para cambiar entre Seguidores, Seguidos y Sugerencias */}
+        {/* 🔹 Tabs */}
         <div className="flex justify-around mb-4">
-          <Button className={` whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "seguidores" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
-                  onClick={() => setActiveTab("seguidores")}>
-            Seguidores
-          </Button>
-          <Button className={`inline-flex items-center justify-center whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "following" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
-                  onClick={() => setActiveTab("following")}>
-            Siguiendo
-          </Button>
-          <Button className={`inline-flex items-center justify-center whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs sm:text-xs md:text-sm lg:text-sm font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white ${activeTab === "recomendaciones" ? "bg-gray-300 dark:bg-gray-600" : ""}`}
-                  onClick={() => setActiveTab("recomendaciones")}>
-            Sugerencias
-          </Button>
+          {["seguidores", "following", "recomendaciones"].map((tab) => (
+            <Button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 ${
+                activeTab === tab ? "bg-gray-300 dark:bg-gray-600" : ""
+              }`}
+            >
+              {tab === "seguidores"
+                ? "Seguidores"
+                : tab === "following"
+                ? "Siguiendo"
+                : "Sugerencias"}
+            </Button>
+          ))}
         </div>
 
         <Separator className="bg-gray-300 dark:bg-gray-800" />
 
-        {/* 🔹 TAB: Seguidores */}
-        {activeTab === "recomendaciones" && (
+        {/* 🔹 Contenido de Tabs */}
+        {activeTab === "seguidores" && (
           <div>
             {seguidores.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-300 text-center">Aún no tienes seguidores.</p>
             ) : (
-              seguidores.map((user) => (
-                <div key={user.user_id} className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2">
-                  <div className="flex items-center space-x-3">
-                    <Image src={user.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={40} height={40} className="rounded-full" />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">{user.user_handle}</h4>
-                    </div>
-                  </div>
-                </div>
-              ))
+              renderList(seguidores)
             )}
           </div>
         )}
 
-        {/* 🔹 TAB: Siguiendo (siguiendo) */}
         {activeTab === "following" && (
           <div>
             {following.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-300 text-center">Aún no sigues a nadie.</p>
             ) : (
-              following.map((user) => (
-                <div key={user.user_id} className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2">
-                  <div className="flex items-center space-x-3">
-                    <Image src={user.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={40} height={40} className="rounded-full" />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">{user.user_handle}</h4>
-                    </div>
-                  </div>
-                  <Button onClick={() => unfollowUser(user.user_id)} className="bg-red-500 text-white px-4 py-2 rounded-lg">
-                    Dejar de seguir
-                  </Button>
-                </div>
+              renderList(following, (id) => (
+                <Button
+                  onClick={() => unfollowUser(id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Dejar de seguir
+                </Button>
               ))
             )}
           </div>
         )}
 
-        {/* 🔹 TAB: Sugerencias */}
-        {activeTab === "sugerencias" && (
+        {activeTab === "recomendaciones" && (
           <div>
-            {recomendaciones.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-300 text-center">No hay sugerencias disponibles.</p>
+            {localRecomendaciones.length === 0 ? (
+              <p className="text-gray-500 dark:text-gray-300 text-center">
+                No hay sugerencias disponibles.
+              </p>
             ) : (
-              recomendaciones.map((user) => (
-                <div key={user.user_id} className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow">
-                  <div className="flex items-center space-x-3">
-                    <Image src={user.avatar_url || "/placeholder-user.jpg"} alt="Avatar" width={40} height={40} className="rounded-full" />
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">{user.user_handle}</h4>
-                    </div>
-                  </div>
-                  <Button onClick={() => followUser(user.user_id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-                    Seguir
-                  </Button>
-                </div>
+              renderList(localRecomendaciones, (id) => (
+                <Button
+                  onClick={() => handleFollow(id)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Seguir
+                </Button>
               ))
             )}
           </div>
