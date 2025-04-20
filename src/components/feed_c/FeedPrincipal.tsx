@@ -187,7 +187,7 @@ export default function Feed() {
                 type="text"
                 value={newTweet}
                 onChange={(e) => setNewTweet(e.target.value)}
-                placeholder="What's happening?"
+                placeholder="Escribe algo..."
                 className="flex-1 bg-gray-100 text-black dark:text-black"
               />
               <Button

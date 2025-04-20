@@ -1,12 +1,11 @@
 const express = require("express");
-const router = express.Router();
-const storyController = require("../controllers/storyController");
+const { createStory, getFollowingStories } = require("../controllers/storyController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const upload = require("../middlewares/uploadMiddleware");
 
-// Obtener stories de usuarios seguidos
-router.get("/", authMiddleware, storyController.getStories);
+const router = express.Router();
 
-// Subir una nueva story
-router.post("/", authMiddleware, storyController.createStory);
+router.post("/create", authMiddleware, upload, createStory);
+router.get("/following", authMiddleware, getFollowingStories);
 
 module.exports = router;

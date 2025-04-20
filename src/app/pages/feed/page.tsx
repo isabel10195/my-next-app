@@ -18,7 +18,7 @@ export default function FeedPage() {
       </section>
 
       {/* Panel derecho */}
-      <div className="hidden lg:block lg:w-[350px] flex-shrink-0 mt-4">
+      <div className="hidden lg:block lg:w-[380px] flex-shrink-0 mt-4">
         <PanelDerecho />
       </div>
 

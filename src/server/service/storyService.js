@@ -1,42 +1,27 @@
-const db = require("../config/database");
+const API_URL = "http://localhost:3001/api/stories";
 
-exports.fetchStories = async (userId) => {
-    try {
-        const query = `
-            SELECT 
-                s.story_id, 
-                s.image_url, 
-                COALESCE(s.description, '') AS description, -- Evita NULL en la descripción
-                s.created_at, 
-                u.user_id, 
-                u.user_handle, 
-                COALESCE(u.avatar_url, 'https://example.com/default-avatar.png') AS avatar_url -- Avatar por defecto si es NULL
-            FROM stories s
-            JOIN users u ON s.user_id = u.user_id
-            JOIN followers f ON u.user_id = f.following_id
-            WHERE f.follower_id = ?
-            ORDER BY s.created_at DESC;
-        `;
+export const uploadStory = async (file, description) => {
+  const formData = new FormData();
+  formData.append('media', file);
+  formData.append('description', description);
 
-        const [rows] = await db.execute(query, [userId]);
-
-        return rows.length > 0 ? rows : []; // Si no hay stories, devuelve un array vacío
-    } catch (error) {
-        console.error("❌ Error al obtener las stories:", error);
-        throw new Error("Error al obtener las stories");
-    }
+  const response = await fetch(`${API_URL}/create`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al subir el Story");
+  }
+  return response.json();
 };
 
-exports.addStory = async (userId, imageUrl, description = "") => {
-    try {
-        const query = `
-            INSERT INTO stories (user_id, image_url, description, created_at)
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP);
-        `;
-
-        await db.execute(query, [userId, imageUrl, description]);
-    } catch (error) {
-        console.error("❌ Error al insertar la story en la base de datos:", error);
-        throw new Error("Error al insertar la story en la base de datos");
-    }
+export const fetchFollowingStories = async () => {
+  const response = await fetch(`${API_URL}/following`, {
+    credentials: "include",
+  });
+  if (!response.ok) throw new Error("Error al obtener Stories");
+  return response.json();
 };
