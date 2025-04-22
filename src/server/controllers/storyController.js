@@ -11,14 +11,6 @@ const createStory = async (req, res) => {
         return res.status(400).json({ message: "Debes subir un archivo para el Story" });
       }
   
-      // Eliminar stories previos del mismo usuario
-      const deleteQuery = `
-        DELETE FROM stories 
-        WHERE user_id = @user_id 
-        AND created_at >= DATEADD(HOUR, -24, GETDATE())
-      `;
-      await executeQuery(deleteQuery, [{ name: "user_id", type: db.Int, value: user_id }]);
-  
       // Subir nuevo story
       const mediaFile = req.files[0];
       const mediaUrl = `http://localhost:3001/uploads/${mediaFile.filename}`;
