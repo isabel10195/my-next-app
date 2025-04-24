@@ -18,7 +18,7 @@ export const fetchPopularTweets = async () => {
 };
 
 export const fetchForYouTweets = async () => {
-  const response = await fetch(`${API_URL}/interest`, {
+  const response = await fetch("http://localhost:3001/api/tweets/foryou", {
     credentials: "include",
   });
   if (!response.ok) {
@@ -31,6 +31,7 @@ export const fetchForYouTweets = async () => {
   }));
 };
 
+
 export const fetchFollowingTweets = async () => {
   const response = await fetch(`${API_URL}/following`, {
     credentials: "include",
@@ -41,17 +42,6 @@ export const fetchFollowingTweets = async () => {
   const data = await response.json();
   return data.tweets;
 };
-
-// export const createTweet = async (tweet_text) => {
-//   const response = await fetch(`${API_URL}/create`, {
-//     method: "POST",
-//     credentials: "include",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ tweet_text }),
-//   });
-//   if (!response.ok) throw new Error("Error creando el tweet");
-//   return response.json();
-// };
 
 export const createTweet = async (tweetData) => {
   const formData = new FormData();

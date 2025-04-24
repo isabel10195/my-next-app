@@ -22,7 +22,7 @@ const upload = require('../middlewares/uploadMiddleware');
 router.post("/create", authMiddleware, upload, createTweet); // Crear un tweet
 router.get("/", authMiddleware, getTweets); // Obtener tweets del usuario
 router.get("/following", authMiddleware, getFollowingTweets); // Obtener tweets de seguidos
-router.get("/interest", authMiddleware, getTweetsByInterest); // Obtener tweets por intereses
+router.get("/foryou", authMiddleware, getTweetsByInterest); // Obtener tweets para ti
 router.post("/like", authMiddleware, likeTweet);     // Endpoint para like
 router.delete("/delete/:tweet_id", authMiddleware, deleteTweet); // Eliminar tweet
 router.put("/edit/:tweet_id", authMiddleware, editTweet); // Editar tweet

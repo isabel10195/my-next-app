@@ -52,11 +52,13 @@ export default function Feed() {
   const loadForYouTweets = async () => {
     try {
       const tweets = await fetchForYouTweets();
+      console.log("📦 ForYou tweets:", tweets); // 👈
       setForYouTweets(tweets);
     } catch (error) {
-      console.error(error);
+      console.error("❌ Error en fetchForYouTweets:", error);
     }
   };
+  
 
   const loadFollowingTweets = async () => {
     try {

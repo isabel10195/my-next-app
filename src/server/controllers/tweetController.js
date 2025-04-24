@@ -123,35 +123,68 @@ const getPopularTweets = async (req, res) => {
 // Obtener tweets de usuarios con intereses en común (excluyendo al usuario autenticado)
 const getTweetsByInterest = async (req, res) => {
   const userId = req.user.id;
-  
+
   try {
     const query = `
-      SELECT DISTINCT t.tweet_id, t.tweet_text, t.media_urls, t.num_likes, t.num_retweets, t.num_comments, t.created_at,
-             u.user_handle, u.first_name, u.last_name, u.avatar_url
-      FROM tweets t
-      JOIN users u ON t.user_id = u.user_id
-      WHERE u.user_id <> @userId
-        AND EXISTS (
-          SELECT 1
+      SELECT *
+      FROM (
+        SELECT DISTINCT
+          t.tweet_id,
+          t.tweet_text,
+          t.media_urls,
+          t.num_likes,
+          t.num_retweets,
+          t.num_comments,
+          t.created_at,
+          u.user_handle,
+          u.first_name,
+          u.last_name,
+          u.avatar_url,
+          CASE
+            WHEN i.user_id IS NOT NULL AND c.user_id IS NOT NULL THEN 2
+            WHEN i.user_id IS NOT NULL THEN 1
+            WHEN c.user_id IS NOT NULL THEN 1
+            ELSE 0
+          END AS prioridad
+        FROM tweets t
+        JOIN users u ON t.user_id = u.user_id
+        LEFT JOIN (
+          SELECT DISTINCT ud.user_id
           FROM user_details ud
-          WHERE ud.user_id = u.user_id
-            AND ud.category = 'interest'
+          WHERE ud.category = 'interest'
             AND ud.detail_text IN (
-              SELECT detail_text 
-              FROM user_details
+              SELECT detail_text FROM user_details
               WHERE user_id = @userId AND category = 'interest'
             )
-        )
-      ORDER BY t.created_at DESC
+            AND ud.user_id != @userId
+        ) i ON u.user_id = i.user_id
+        LEFT JOIN (
+          SELECT DISTINCT cm.user_id
+          FROM community_members cm
+          WHERE cm.community_id IN (
+            SELECT community_id FROM community_members WHERE user_id = @userId
+          )
+          AND cm.user_id != @userId
+        ) c ON u.user_id = c.user_id
+        WHERE u.user_id != @userId
+          AND u.user_id NOT IN (
+            SELECT following_id FROM followers WHERE follower_id = @userId
+          )
+          AND (i.user_id IS NOT NULL OR c.user_id IS NOT NULL)
+      ) AS resultados
+      ORDER BY prioridad DESC, created_at DESC;
     `;
+
     const inputs = [{ name: "userId", type: db.Int, value: userId }];
     const result = await executeQuery(query, inputs);
-    res.send({ tweets: result.recordset });
+
+    res.status(200).json({ tweets: result.recordset });
   } catch (error) {
-    console.error("Error al obtener tweets por interés:", error);
-    res.status(500).send("Error al obtener tweets por interés");
+    console.error("❌ Error al obtener tweets por interés:", error);
+    res.status(500).json({ error: "Error al obtener tweets por interés" });
   }
-};  
+};
+
 
 // Obtener tweets de los usuarios seguidos (otra versión)
 const getFollowingTweets = async (req, res) => {
