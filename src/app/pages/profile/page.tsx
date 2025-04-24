@@ -186,7 +186,13 @@ export default function ProfilePage() {
               <CardHabilidades user={user} skills={userDetails.skills} onAddSkill={handleAddSkill} onDeleteSkill={handleDeleteSkill} editable={true} />
             </div>
 
-            <UserTabs user={user} seguidores={followers} following={following} recomendaciones={recommendations} followUser={() => {}} unfollowUser={() => {}} />
+            <UserTabs 
+              user={user} 
+              seguidores={followers} 
+              following={following} 
+              recomendaciones={recommendations} 
+              followUser={() => {}} 
+              unfollowUser={() => {}} />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -54,26 +55,34 @@ const UserTabs: React.FC<UserTabsProps> = ({
   }
 
   const renderList = (usuarios: UserData[], actionButton?: (id: string) => React.ReactNode) =>
-    usuarios.map((user) => (
-      <div
-        key={user.user_id}
-        className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2"
-      >
-        <div className="flex items-center space-x-3">
-          <Image
-            src={user.avatar_url || "/placeholder-user.jpg"}
-            alt="Avatar"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          <div>
-            <h4 className="font-bold text-gray-900 dark:text-white">{user.user_handle}</h4>
+    usuarios.map((user) => {
+      const key = `user-${user.user_id}-${user.user_handle}`; // 👈 clave 100% única
+      return (
+        <div
+          key={key}
+          className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2"
+        >
+          <div className="flex items-center space-x-3">
+            <Image
+              src={user.avatar_url || "/placeholder-user.jpg"}
+              alt="Avatar"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <div>
+              <Link href={`/pages/profile/${user.user_handle}`} className="font-bold text-blue-500 hover:underline">
+                @{user.user_handle}
+              </Link>
+            </div>
           </div>
+          {actionButton && (
+            <div key={`${key}-button`}>{actionButton(user.user_id)}</div>
+          )}
         </div>
-        {actionButton && actionButton(user.user_id)}
-      </div>
-    ));
+      );
+    });
+  
 
   return (
     <Card className="text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-none shadow-xl">
@@ -82,7 +91,6 @@ const UserTabs: React.FC<UserTabsProps> = ({
       </CardHeader>
       <Separator className="bg-gray-300 dark:bg-gray-800" />
       <CardContent className="pt-6">
-        {/* 🔹 Tabs */}
         <div className="flex justify-around mb-4">
           {["seguidores", "following", "recomendaciones"].map((tab) => (
             <Button
@@ -103,7 +111,6 @@ const UserTabs: React.FC<UserTabsProps> = ({
 
         <Separator className="bg-gray-300 dark:bg-gray-800" />
 
-        {/* 🔹 Contenido de Tabs */}
         {activeTab === "seguidores" && (
           <div>
             {seguidores.length === 0 ? (
@@ -121,9 +128,9 @@ const UserTabs: React.FC<UserTabsProps> = ({
             ) : (
               renderList(following, (id) => (
                 <Button
+                  key={`unfollow-${id}`}
                   onPress={() => unfollowUser(id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                >
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg">
                   Dejar de seguir
                 </Button>
               ))
@@ -140,6 +147,7 @@ const UserTabs: React.FC<UserTabsProps> = ({
             ) : (
               renderList(localRecomendaciones, (id) => (
                 <Button
+                  key={`follow-${id}`}
                   onPress={() => handleFollow(id)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                 >
