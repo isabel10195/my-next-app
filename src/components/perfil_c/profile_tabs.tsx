@@ -31,7 +31,13 @@ const UserTabs: React.FC<UserTabsProps> = ({
   unfollowUser,
 }) => {
   const [activeTab, setActiveTab] = React.useState("seguidores");
-  const [localRecomendaciones, setLocalRecomendaciones] = React.useState(recomendaciones);
+  
+  const [localRecomendaciones, setLocalRecomendaciones] = React.useState<UserData[]>([]);
+
+  React.useEffect(() => {
+    setLocalRecomendaciones(recomendaciones);
+  }, [recomendaciones]);
+  
 
   const handleFollow = (userId: string) => {
     followUser(userId);

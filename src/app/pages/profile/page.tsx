@@ -198,7 +198,8 @@ export default function ProfilePage() {
               following={following} 
               recomendaciones={recommendations} 
               followUser={() => {}} 
-              unfollowUser={() => {}} />
+              unfollowUser={() => {}} 
+              />
           </div>
         </div>
       </div>
