@@ -168,15 +168,15 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
             </p>
             {renderMedia()}
             <div className="flex items-center justify-start space-x-4 text-gray-500 dark:text-gray-400">
-                <Button variant="ghost" size="sm" onClick={() => onLike(tweet)}>
+                <Button variant="ghost" size="sm" onPress={() => onLike(tweet)}>
                     <Heart className="mr-2 h-4 w-4" color={tweet.liked ? "red" : "currentColor"} fill={tweet.liked ? "red" : "none"} />
                     {tweet.num_likes || 0}
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowCommentInput(!showCommentInput)}>
+                <Button variant="ghost" size="sm" onPress={() => setShowCommentInput(!showCommentInput)}>
                     <MessageCircle className="mr-2 h-4 w-4" />
                     {numComments}
                 </Button>
-                <Button variant="ghost" size="sm" onClick={handleRetweet}>
+                <Button variant="ghost" size="sm" onPress={handleRetweet}>
                     {isRetweetedLocal ? (
                         <Repeat1 className="mr-2 h-4 w-4 text-green-500" />
                     ) : (

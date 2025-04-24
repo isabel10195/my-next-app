@@ -140,7 +140,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={async () => {
+                          onPress={async () => {
                             await handleEditTweet(tweet.tweet_id, editedText);
                             setEditingTweetId(null);
                           }}
@@ -151,7 +151,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => setEditingTweetId(null)}
+                          onPress={() => setEditingTweetId(null)}
                           className="text-white bg-red-600 hover:bg-red-500 p-2 rounded-lg shadow-md"
                         >
                           <X className="h-5 w-5" />
@@ -162,7 +162,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => {
+                          onPress={() => {
                             setEditingTweetId(tweet.tweet_id);
                             setEditedText(tweet.tweet_text);
                           }}
@@ -173,7 +173,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => handleDeleteTweet(tweet.tweet_id)}
+                          onPress={() => handleDeleteTweet(tweet.tweet_id)}
                           className="text-red-500 hover:text-red-400 p-2 rounded-lg shadow-md"
                         >
                           <Trash className="h-5 w-5" />

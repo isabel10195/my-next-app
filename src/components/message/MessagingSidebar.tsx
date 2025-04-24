@@ -79,7 +79,7 @@ export default function MessagingSidebar({ onSelectContact }) {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button onClick={handleSearch}>Buscar</Button>
+        <Button onPress={handleSearch}>Buscar</Button>
       </div>
 
       {error && <p className="text-red-600">{error}</p>}
@@ -88,8 +88,8 @@ export default function MessagingSidebar({ onSelectContact }) {
         <div className="mb-4 p-2 border rounded">
           <p className="font-bold">{userResult.user_handle}</p>
           <div className="flex gap-2">
-            <Button onClick={handleAddContact}>Agregar a Contactos</Button>
-            <Button onClick={() => onSelectContact(userResult)}>Iniciar Chat</Button>
+            <Button onPress={handleAddContact}>Agregar a Contactos</Button>
+            <Button onPress={() => onSelectContact(userResult)}>Iniciar Chat</Button>
           </div>
         </div>
       )}

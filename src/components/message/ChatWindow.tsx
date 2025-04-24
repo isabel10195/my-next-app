@@ -93,7 +93,7 @@ export default function ChatWindow({ contact, currentUserId }) {
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           className="flex-1 mr-2"
         />
-        <Button onClick={handleSendMessage}>Enviar</Button>
+        <Button onPress={handleSendMessage}>Enviar</Button>
       </div>
     </div>
   );

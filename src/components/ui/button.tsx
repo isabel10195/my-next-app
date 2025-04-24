@@ -14,10 +14,10 @@ const buttonVariants = cva("rounded-md", {
       link: "text-blue-500 underline hover:no-underline",
     },
     size: {
-      default: "h-8 px-3 py-1.5 text-sm", // Texto un poco más pequeño
-      sm: "h-7 px-3 py-1 text-xs", // Tamaño pequeño con texto más pequeño
-      lg: "h-9 px-4 py-2 text-base", // Tamaño más grande con texto estándar
-      icon: "h-8 w-8 text-sm", // Ícono reducido con texto pequeño
+      default: "h-8 px-3 py-1.5 text-sm",
+      sm: "h-7 px-3 py-1 text-xs",
+      lg: "h-9 px-4 py-2 text-base",
+      icon: "h-8 w-8 text-sm",
     },
   },
   defaultVariants: {
@@ -30,10 +30,11 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  onPress?: () => void; // ✅ Soporte para onPress
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, onPress, onClick, ...props }, ref) => {
     const Comp = asChild ? Slot : NextUIButton;
 
     return (
@@ -41,6 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={buttonVariants({ variant, size, className })}
         ref={ref}
         {...props}
+        onClick={onPress || onClick} // ✅ Prioriza onPress si se usa
       >
         {props.children}
       </Comp>

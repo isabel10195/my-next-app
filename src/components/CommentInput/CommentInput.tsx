@@ -24,7 +24,7 @@ const CommentInput = ({ tweetId, onCommentSubmit }) => {
       />
       <Button
         size="sm"
-        onClick={handleSubmit}
+        onPress={handleSubmit}
         className="bg-blue-500 text-white hover:bg-blue-600"
       >
         Comentar

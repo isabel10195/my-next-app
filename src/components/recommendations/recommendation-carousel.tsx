@@ -60,7 +60,7 @@ export function RecommendationCarousel() {
             variant="ghost"
             size="icon"
             className="absolute -left-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full dark:bg-gray-700 dark:text-gray-100"
-            onClick={scrollLeft}
+            onPress={scrollLeft}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -70,7 +70,7 @@ export function RecommendationCarousel() {
             variant="ghost"
             size="icon"
             className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full dark:bg-gray-700 dark:text-gray-100"
-            onClick={scrollRight}
+            onPress={scrollRight}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

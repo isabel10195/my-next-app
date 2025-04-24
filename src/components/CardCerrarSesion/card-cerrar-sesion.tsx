@@ -41,7 +41,7 @@ export default function CardCerrarSesion() {
           variant="destructive"
           className="w-full transition-all duration-300 hover:bg-red-600 active:bg-red-700 
           dark:hover:bg-red-500 dark:active:bg-red-600"
-          onClick={logout} // 🔥 Ahora usa la función de logout desde `useAuth()`
+          onPress={logout} // 🔥 Ahora usa la función de logout desde `useAuth()`
         >
           <LogOut className="w-4 h-4 mr-2" />
           Cerrar sesión

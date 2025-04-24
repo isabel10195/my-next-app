@@ -87,7 +87,7 @@ const UserTabs: React.FC<UserTabsProps> = ({
           {["seguidores", "following", "recomendaciones"].map((tab) => (
             <Button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onPress={() => setActiveTab(tab)}
               className={`whitespace-nowrap rounded-2xl px-3 py-1.5 text-xs font-medium transition-all hover:bg-gray-300 dark:hover:bg-gray-600 ${
                 activeTab === tab ? "bg-gray-300 dark:bg-gray-600" : ""
               }`}
@@ -121,7 +121,7 @@ const UserTabs: React.FC<UserTabsProps> = ({
             ) : (
               renderList(following, (id) => (
                 <Button
-                  onClick={() => unfollowUser(id)}
+                  onPress={() => unfollowUser(id)}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg"
                 >
                   Dejar de seguir
@@ -140,7 +140,7 @@ const UserTabs: React.FC<UserTabsProps> = ({
             ) : (
               renderList(localRecomendaciones, (id) => (
                 <Button
-                  onClick={() => handleFollow(id)}
+                  onPress={() => handleFollow(id)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                 >
                   Seguir

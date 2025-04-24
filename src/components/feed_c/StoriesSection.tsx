@@ -185,7 +185,7 @@ export default function StoriesSection() {
                 onChange={e => setDescription(e.target.value)}
                 className="flex-1 bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
               />
-              <Button onClick={handlePublish} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+              <Button onPress={handlePublish} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                 Publicar
               </Button>
             </div>
@@ -240,7 +240,7 @@ export default function StoriesSection() {
                         onClick={togglePlayPause}
                       />
                       <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-                        <Button variant="ghost" size="icon" className="bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10" onClick={toggleMute}>
+                        <Button variant="ghost" size="icon" className="bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10" onPress={toggleMute}>
                           {isMuted ? <VolumeX className="h-6 w-6 text-white" /> : <Volume2 className="h-6 w-6 text-white" />}
                         </Button>
                         <input
@@ -252,7 +252,7 @@ export default function StoriesSection() {
                           onChange={handleVolumeChange}
                           className="w-24 h-1 rounded-lg"
                         />
-                        <Button variant="ghost" size="icon" className="bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10" onClick={togglePlayPause}>
+                        <Button variant="ghost" size="icon" className="bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10" onPress={togglePlayPause}>
                           {isPlaying ? <Pause className="h-6 w-6 text-white" /> : <Play className="h-6 w-6 text-white" />}
                         </Button>
                       </div>
@@ -295,7 +295,7 @@ export default function StoriesSection() {
                         variant="ghost"
                         size="icon"
                         className="absolute left-4 z-20 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10 transition-opacity"
-                        onClick={() => { setIsPaused(false); prevStory(); }}
+                        onPress={() => { setIsPaused(false); prevStory(); }}
                       >
                         <ChevronLeft className="h-8 w-8 text-white stroke-[3]" />
                       </Button>
@@ -303,7 +303,7 @@ export default function StoriesSection() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-4 z-20 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 rounded-full p-2 h-10 w-10 transition-opacity"
-                        onClick={() => { setIsPaused(false); nextStory(); }}
+                        onPress={() => { setIsPaused(false); nextStory(); }}
                       >
                         <ChevronRight className="h-8 w-8 text-white stroke-[3]" />
                       </Button>
