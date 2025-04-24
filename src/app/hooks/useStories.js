@@ -1,80 +1,33 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@/app/context/AuthContext";
+import { useState, useEffect } from 'react';
+import { fetchFollowingStories, uploadStory } from '../../server/service/storyService';
 
 export const useStories = () => {
-    const { user, token } = useAuth();
-    const [stories, setStories] = useState([]);
-    const [followingUsers, setFollowingUsers] = useState([]);
-    const [error, setError] = useState(null);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    // Obtener stories desde la API
-    const fetchStories = async () => {
-        if (!token) return;
+  const loadStories = async () => {
+    try {
+      const { stories } = await fetchFollowingStories();
+      setStories(stories);
+    } catch (error) {
+      console.error("Error cargando Stories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        try {
-            const res = await fetch("/api/stories", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+  useEffect(() => {
+    loadStories();
+  }, []);
 
-            if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+  const handleUpload = async (file, description) => {
+    try {
+      await uploadStory(file, description);
+      await loadStories(); // Recargar Stories después de subir
+    } catch (error) {
+      throw error;
+    }
+  };
 
-            const data = await res.json();
-            setStories(data.stories || []);
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
-    // Obtener usuarios seguidos
-    const fetchFollowing = async () => {
-        if (!token) return;
-
-        try {
-            const res = await fetch("/api/followers/following", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-
-            const data = await res.json();
-            setFollowingUsers(data.seguidos || []);
-        } catch (error) {
-            setFollowingUsers([]);
-        }
-    };
-
-    // **Función para subir una nueva story**
-    const uploadStory = async (imageUrl, description = "") => {
-        if (!token) return;
-
-        try {
-            const res = await fetch("/api/stories", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ image_url: imageUrl, description }),
-            });
-
-            if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-
-            await fetchStories(); // 🔥 Recargar las stories después de subir una nueva
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
-    useEffect(() => {
-        fetchStories();
-        fetchFollowing();
-    }, [token]);
-
-    return { stories, followingUsers, fetchStories, uploadStory, error };
+  return { stories, loading, uploadStory: handleUpload };
 };
