@@ -145,7 +145,7 @@ const Tweet = ({ tweet, onLike, onComment, onRetweetChange }) => {
             )} <br />
             <div className="flex items-center mb-4">
                 <Avatar className="h-10 w-10 mr-4">
-                    <AvatarImage src={tweet.avatar_url || "/placeholder-user.jpg"} alt={tweet.user_handle} />
+                    <AvatarImage src={tweet.avatar_url} alt={tweet.user_handle} />
                     <AvatarFallback>{tweet.user_handle ? tweet.user_handle[0] : "U"}</AvatarFallback>
                 </Avatar>
                 <div>

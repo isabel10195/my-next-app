@@ -110,7 +110,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({
               <li key={tweet.tweet_id} className="p-4 border rounded-lg">
                 <div className="flex items-start gap-3">
                   <Image
-                    src={tweet.avatar_url || "/placeholder-user.jpg"}
+                    src={tweet.avatar_url}
                     alt="Avatar"
                     width={48}
                     height={48}

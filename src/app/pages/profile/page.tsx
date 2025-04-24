@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
+
 import CardUsuario from "@/components/perfil_c/profile_card_usuario";
 import CardTweets from "@/components/perfil_c/profile_card_tweets";
 import PerfilNav from "@/components/perfil_c/perfil_nav";
@@ -75,7 +76,42 @@ export default function ProfilePage() {
 
     fetchData();
   }, []);
-
+  const followUser = async (userId: string) => {
+    try {
+      const res = await fetch("/api/followers/follow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ follow_user_id: userId }),
+      });
+      if (!res.ok) throw new Error("Error al seguir al usuario");
+      const data = await res.json();
+      setFollowing(data.followedUsers ?? []);
+    } catch (err) {
+      console.error("❌ Error al seguir:", err);
+    }
+  };
+  
+  const unfollowUser = async (userId: string) => {
+    try {
+      const res = await fetch("/api/followers/unfollow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ follow_user_id: parseInt(userId, 10) }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Error al dejar de seguir al usuario");
+      }
+      const data = await res.json();
+      setFollowing(data.followedUsers ?? []);
+    } catch (error) {
+      console.error("❌ Error al dejar de seguir:", error);
+    }
+  };
+  
+  
   const handleAddSkill = async (newSkill) => {
     const res = await fetch("/api/users/details", {
       method: "POST",
@@ -195,11 +231,12 @@ export default function ProfilePage() {
             <UserTabs 
               user={user} 
               seguidores={followers} 
-              following={following} 
+              following={following}
+              setFollowing={setFollowing} 
               recomendaciones={recommendations} 
-              followUser={() => {}} 
-              unfollowUser={() => {}} 
-              />
+              followUser={followUser} 
+              unfollowUser={unfollowUser}
+            />
           </div>
         </div>
       </div>

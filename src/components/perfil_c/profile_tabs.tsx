@@ -20,6 +20,7 @@ interface UserTabsProps {
   recomendaciones: UserData[];
   followUser: (userId: string) => void;
   unfollowUser: (userId: string) => void;
+  setFollowing: React.Dispatch<React.SetStateAction<UserData[]>>; 
 }
 
 const UserTabs: React.FC<UserTabsProps> = ({
@@ -29,6 +30,7 @@ const UserTabs: React.FC<UserTabsProps> = ({
   recomendaciones = [],
   followUser,
   unfollowUser,
+  setFollowing
 }) => {
   const [activeTab, setActiveTab] = React.useState("seguidores");
   
@@ -69,13 +71,14 @@ const UserTabs: React.FC<UserTabsProps> = ({
           className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow mt-2"
         >
           <div className="flex items-center space-x-3">
-            <Image
-              src={user.avatar_url || "/placeholder-user.jpg"}
-              alt="Avatar"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
+          <Image
+            src={user.avatar_url || "/placeholder-user.jpg"}
+            alt="Avatar"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+
             <div>
               <Link href={`/pages/profile/${user.user_handle}`} className="font-bold text-blue-500 hover:underline">
                 @{user.user_handle}
@@ -135,15 +138,23 @@ const UserTabs: React.FC<UserTabsProps> = ({
               renderList(following, (id) => (
                 <Button
                   key={`unfollow-${id}`}
-                  onPress={() => unfollowUser(id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg">
+                  onPress={async () => {
+                    try {
+                      const stringId = String(id); // Aseguramos que sea string
+                      await unfollowUser(stringId);
+                      setFollowing((prev) => prev.filter((u) => u.user_id !== stringId));
+                    } catch (error) {
+                      console.error("Error al dejar de seguir usuario", error);
+                    }
+                  }}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                >
                   Dejar de seguir
                 </Button>
               ))
             )}
           </div>
         )}
-
         {activeTab === "recomendaciones" && (
           <div>
             {localRecomendaciones.length === 0 ? (
