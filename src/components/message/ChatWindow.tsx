@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/ScrollArea";
-import { fetchConversation, sendMessage as sendMsgService } from '@/server/service/messageService';
-import { markMessagesAsRead } from '@/server/service/messageService';
+import { fetchConversation, sendMessage as sendMsgService, markMessagesAsRead } from '@/server/service/messageService';
 
 export default function ChatWindow({ contact, currentUserId }) {
   const [messages, setMessages] = useState([]);
@@ -15,12 +14,10 @@ export default function ChatWindow({ contact, currentUserId }) {
 
   useEffect(() => {
     if (contact && messages.length > 0) {
-      // Marcar mensajes como leídos al abrir el chat
       markMessagesAsRead(contact.user_id);
     }
   }, [contact, messages]);
 
-  // Cargar la conversación del contacto seleccionado
   useEffect(() => {
     const loadConversation = async () => {
       if (contact) {
@@ -32,35 +29,31 @@ export default function ChatWindow({ contact, currentUserId }) {
         }
       }
     };
-
     loadConversation();
   }, [contact]);
 
-  // Función para enviar mensaje
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
     try {
       const messageData = { receiverId: contact.user_id, content: newMessage };
       await sendMsgService(messageData);
-
-      // Actualiza la conversación localmente agregando el mensaje enviado
       const sentMessage = { sender_id: currentUserId, content: newMessage, sent_at: new Date().toISOString() };
       setMessages([...messages, sentMessage]);
       setNewMessage('');
-
     } catch (error) {
       console.error("Error al enviar mensaje:", error);
     }
   };
 
-  // Función para determinar si el mensaje es del usuario actual
   const isOwnMessage = (msg) => msg.sender_id === currentUserId;
 
   return (
-    <div className="flex flex-col h-full">
-      <Card className="flex-1 bg-white">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900 text-black dark:text-white rounded-xl shadow">
+      <Card className="flex-1 bg-white dark:bg-gray-900 border-none shadow-md">
         <CardHeader>
-          <CardTitle>{contact ? `Chat con ${contact.user_handle}` : 'Selecciona un contacto'}</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            {contact ? `Chat con ${contact.user_handle}` : 'Selecciona un contacto'}
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-y-auto">
           <ScrollArea className="h-[600px] pr-4">
@@ -71,9 +64,13 @@ export default function ChatWindow({ contact, currentUserId }) {
                     <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${msg.sender_id}`} />
                     <AvatarFallback>{String(msg.sender_id)[0] || "?"}</AvatarFallback>
                   </Avatar>
-                  <div className={`mx-2 py-2 px-4 rounded-lg ${isOwnMessage(msg) ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
+                  <div className={`mx-2 py-2 px-4 rounded-lg max-w-xs break-words
+                    ${isOwnMessage(msg)
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-black dark:bg-gray-700 dark:text-white"}
+                  `}>
                     <p>{msg.content}</p>
-                    <p className="text-xs mt-1">
+                    <p className="text-xs mt-1 opacity-70">
                       {new Date(msg.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -83,15 +80,17 @@ export default function ChatWindow({ contact, currentUserId }) {
           </ScrollArea>
         </CardContent>
       </Card>
-      <Separator className="my-4" />
-      <div className="flex mt-4">
+
+      <Separator className="my-4 bg-gray-300 dark:bg-gray-700" />
+
+      <div className="flex items-center mt-2 p-2 bg-white dark:bg-gray-900">
         <Input
           type="text"
           placeholder="Escribe un mensaje..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          className="flex-1 mr-2"
+          className="flex-1 mr-2 bg-gray-100 dark:bg-gray-800 text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
         />
         <Button onPress={handleSendMessage}>Enviar</Button>
       </div>

@@ -3,32 +3,34 @@ import React, { useState } from "react";
 import MessagingSidebar from "@/components/message/MessagingSidebar";
 import ChatWindow from "@/components/message/ChatWindow";
 import BackButton from "@/components/ui/BackButton";
-import { useAuth } from "@/app/context/AuthContext"; // Ajusta la ruta según la ubicación real de tu AuthContext
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function MessagesPage() {
   const [selectedContact, setSelectedContact] = useState(null);
   const { user, loading } = useAuth();
 
-  // Muestra un estado de carga mientras se verifica la autenticación
-  if (loading) return <div>Loading...</div>;
-  
-  // Si el usuario no está autenticado, puedes redirigir o mostrar un mensaje
-  if (!user) return <div>No autenticado</div>;
+  if (loading) return <div className="text-center text-gray-700 dark:text-gray-300 mt-10">Cargando...</div>;
 
-  // Extrae el ID real del usuario autenticado
-  const currentUserId = user.user_id; // O user.id, según cómo almacenes el ID
+  if (!user) return <div className="text-center text-red-600 dark:text-red-400 mt-10">No autenticado</div>;
+
+  const currentUserId = user.user_id;
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="w-1/3 border-r">
-        <BackButton href="/" />
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-white">
+      {/* Sidebar de mensajes */}
+      <div className="w-1/3 border-r border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900">
+        <div className="p-2">
+          <BackButton href="/" />
+        </div>
         <MessagingSidebar onSelectContact={(contact) => setSelectedContact(contact)} />
       </div>
-      <div className="w-2/3">
+
+      {/* Ventana de chat */}
+      <div className="w-2/3 bg-white dark:bg-gray-900">
         {selectedContact ? (
           <ChatWindow contact={selectedContact} currentUserId={currentUserId} />
         ) : (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
             <p>Selecciona un contacto para iniciar el chat</p>
           </div>
         )}
