@@ -178,7 +178,13 @@ export default function ProfilePage() {
               </motion.div>
             </div>
 
-            <CardTweets tweets={tweets} user={user} handleDeleteTweet={handleDeleteTweet} handleEditTweet={handleEditTweet} />
+            <CardTweets 
+            tweets={tweets} 
+            user={user} 
+            handleDeleteTweet={handleDeleteTweet} 
+            handleEditTweet={handleEditTweet} 
+            editable={true}
+            />
 
             <div className="hidden lg:block space-y-4">
               <CardLogros user={user} achievements={userDetails.achievements} editable={true} />

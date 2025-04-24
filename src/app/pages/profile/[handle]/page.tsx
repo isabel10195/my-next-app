@@ -122,7 +122,7 @@ export default function ProfilePage() {
 
           <div className="flex-1 space-y-4 w-full relative overflow-y-auto pb-24">
             <CardUsuario user={user} />
-            <CardTweets tweets={tweets} user={user} />
+            <CardTweets tweets={tweets} user={user} editable={false}/>
 
             <div className="space-y-4">
             <CardLogros user={user} achievements={userDetails.achievements} />

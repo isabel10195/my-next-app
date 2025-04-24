@@ -4,7 +4,7 @@ import { Edit, Trash, Check, X } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import  Image  from "next/image";
+import Image from "next/image";
 import { useState } from "react";
 
 interface Tweet {
@@ -31,16 +31,22 @@ interface CardTweetsProps {
   } | null;
   handleDeleteTweet?: (tweetId: string) => void;
   handleEditTweet?: (tweetId: string, text: string) => void;
+  editable?: boolean;
 }
 
-const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet, handleEditTweet }) => {
+const CardTweets: React.FC<CardTweetsProps> = ({
+  tweets,
+  user,
+  handleDeleteTweet,
+  handleEditTweet,
+  editable = false,
+}) => {
   const [editingTweetId, setEditingTweetId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState("");
 
-  // Función para renderizar imágenes y videos
   const renderMedia = (mediaUrlsString: string | null) => {
     if (!mediaUrlsString) return null;
-    
+
     let mediaUrls;
     try {
       mediaUrls = JSON.parse(mediaUrlsString);
@@ -53,14 +59,7 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
       <div className={`grid gap-2 mt-2 ${mediaUrls.length >= 2 ? "grid-cols-2" : "grid-cols-1"}`}>
         {mediaUrls.map((url: string, index: number) => (
           url.match(/\.(mp4|mov|avi)$/i) ? (
-            <video 
-              key={index} 
-              controls 
-              className="w-full h-auto max-h-96 object-contain"
-              playsInline
-              autoPlay
-              muted
-            >
+            <video key={index} controls className="w-full h-auto max-h-96 object-contain" playsInline autoPlay muted>
               <source src={url} type="video/mp4" />
             </video>
           ) : (
@@ -110,77 +109,78 @@ const CardTweets: React.FC<CardTweetsProps> = ({ tweets, user, handleDeleteTweet
             {tweets.map((tweet) => (
               <li key={tweet.tweet_id} className="p-4 border rounded-lg">
                 <div className="flex items-start gap-3">
-                  <Image 
-                    src={tweet.avatar_url || "/placeholder-user.jpg"} 
-                    alt="Avatar" 
-                    width={48} 
-                    height={48} 
-                    className="rounded-full" 
+                  <Image
+                    src={tweet.avatar_url || "/placeholder-user.jpg"}
+                    alt="Avatar"
+                    width={48}
+                    height={48}
+                    className="rounded-full"
                   />
                   <div className="flex-1">
                     <h4 className="font-bold text-white">{tweet.user_handle}</h4>
                     {editingTweetId === tweet.tweet_id ? (
                       <textarea
-                        className="w-full p-2 text-black rounded-lg"
+                        className="w-full p-2 text-black bg-white rounded-lg"
                         value={editedText}
                         onChange={(e) => setEditedText(e.target.value)}
                       />
                     ) : (
                       <>
                         <p className="mt-1 text-white dark:text-gray-400">{tweet.tweet_text}</p>
-                        {/* Renderizar medios si existen */}
                         {renderMedia(tweet.media_urls)}
                       </>
                     )}
                   </div>
 
-                  <div className="flex gap-2 ml-auto items-center">
-                    {editingTweetId === tweet.tweet_id ? (
-                      <>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onPress={async () => {
-                            await handleEditTweet(tweet.tweet_id, editedText);
-                            setEditingTweetId(null);
-                          }}
-                          className="text-white bg-green-600 hover:bg-green-500 p-2 rounded-lg shadow-md"
-                        >
-                          <Check className="h-5 w-5" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onPress={() => setEditingTweetId(null)}
-                          className="text-white bg-red-600 hover:bg-red-500 p-2 rounded-lg shadow-md"
-                        >
-                          <X className="h-5 w-5" />
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onPress={() => {
-                            setEditingTweetId(tweet.tweet_id);
-                            setEditedText(tweet.tweet_text);
-                          }}
-                          className="text-blue-500 hover:text-blue-400 p-2 rounded-lg shadow-md"
-                        >
-                          <Edit className="h-5 w-5" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onPress={() => handleDeleteTweet(tweet.tweet_id)}
-                          className="text-red-500 hover:text-red-400 p-2 rounded-lg shadow-md"
-                        >
-                          <Trash className="h-5 w-5" />
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                  {editable && (
+                    <div className="flex gap-2 ml-auto items-center">
+                      {editingTweetId === tweet.tweet_id ? (
+                        <>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onPress={async () => {
+                              await handleEditTweet(tweet.tweet_id, editedText);
+                              setEditingTweetId(null);
+                            }}
+                            className="text-white bg-green-600 hover:bg-green-500 p-2 rounded-lg shadow-md"
+                          >
+                            <Check className="h-5 w-5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onPress={() => setEditingTweetId(null)}
+                            className="text-white bg-red-600 hover:bg-red-500 p-2 rounded-lg shadow-md"
+                          >
+                            <X className="h-5 w-5" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onPress={() => {
+                              setEditingTweetId(tweet.tweet_id);
+                              setEditedText(tweet.tweet_text);
+                            }}
+                            className="text-blue-500 hover:text-blue-400 p-2 rounded-lg shadow-md"
+                          >
+                            <Edit className="h-5 w-5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onPress={() => handleDeleteTweet(tweet.tweet_id)}
+                            className="text-red-500 hover:text-red-400 p-2 rounded-lg shadow-md"
+                          >
+                            <Trash className="h-5 w-5" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </li>
             ))}

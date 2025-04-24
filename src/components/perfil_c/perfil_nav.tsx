@@ -15,7 +15,6 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { icon: Home, label: "Inicio", path: "/" },
   { icon: User, label: "Feed", path: "/pages/feed" },
-  { icon: Bell, label: "Notificaciones", path: "/pages/notifications" },
   { icon: Mail, label: "Mensajes", path: "/pages/chats" },
   { icon: Settings, label: "Configuración", path: "/pages/settings" },
 ];
