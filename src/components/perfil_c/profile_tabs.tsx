@@ -20,7 +20,9 @@ interface UserTabsProps {
   recomendaciones: UserData[];
   followUser: (userId: string) => void;
   unfollowUser: (userId: string) => void;
-  setFollowing: React.Dispatch<React.SetStateAction<UserData[]>>; 
+  setFollowing: React.Dispatch<React.SetStateAction<UserData[]>>;
+  refetchFollowing: () => Promise<void>;
+
 }
 
 const UserTabs: React.FC<UserTabsProps> = ({
@@ -30,7 +32,8 @@ const UserTabs: React.FC<UserTabsProps> = ({
   recomendaciones = [],
   followUser,
   unfollowUser,
-  setFollowing
+  setFollowing,
+  refetchFollowing
 }) => {
   const [activeTab, setActiveTab] = React.useState("seguidores");
   
@@ -41,10 +44,12 @@ const UserTabs: React.FC<UserTabsProps> = ({
   }, [recomendaciones]);
   
 
-  const handleFollow = (userId: string) => {
-    followUser(userId);
+  const handleFollow = async (userId: string) => {
+    await followUser(userId);
     setLocalRecomendaciones((prev) => prev.filter((u) => u.user_id !== userId));
+    await refetchFollowing(); // ✅ fuerza actualización
   };
+  
 
   if (!user) {
     return (
@@ -137,17 +142,14 @@ const UserTabs: React.FC<UserTabsProps> = ({
             ) : (
               renderList(following, (id) => (
                 <Button
-                  key={`unfollow-${id}`}
                   onPress={async () => {
                     try {
-                      const stringId = String(id); // Aseguramos que sea string
-                      await unfollowUser(stringId);
-                      setFollowing((prev) => prev.filter((u) => u.user_id !== stringId));
+                      await unfollowUser(id);
+                      setFollowing((prev) => prev.filter((u) => u.user_id !== id));
                     } catch (error) {
                       console.error("Error al dejar de seguir usuario", error);
                     }
                   }}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
                 >
                   Dejar de seguir
                 </Button>

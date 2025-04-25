@@ -91,6 +91,14 @@ export default function ProfilePage() {
       console.error("❌ Error al seguir:", err);
     }
   };
+
+  const refetchFollowing = async () => {
+    const res = await fetch("/api/followers/following", { credentials: "include" });
+    if (res.ok) {
+      const data = await res.json();
+      setFollowing(data.seguidos ?? []);
+    }
+  };
   
   const unfollowUser = async (userId: string) => {
     try {
@@ -98,18 +106,21 @@ export default function ProfilePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ follow_user_id: parseInt(userId, 10) }),
+        body: JSON.stringify({ follow_user_id: userId }), // 👈 sin parseInt
       });
+  
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Error al dejar de seguir al usuario");
       }
+  
       const data = await res.json();
-      setFollowing(data.followedUsers ?? []);
+      return data; // devolvemos los datos por si quieres usarlos
     } catch (error) {
       console.error("❌ Error al dejar de seguir:", error);
     }
   };
+  
   
   
   const handleAddSkill = async (newSkill) => {
@@ -236,6 +247,7 @@ export default function ProfilePage() {
               recomendaciones={recommendations} 
               followUser={followUser} 
               unfollowUser={unfollowUser}
+              refetchFollowing={refetchFollowing}
             />
           </div>
         </div>
