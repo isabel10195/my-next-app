@@ -85,11 +85,12 @@ export default function ProfilePage() {
 
         // 🔥 Comprobar si ya lo sigo
         const checkFollowingRes = await fetch("/api/followers/following", { credentials: "include" });
-        if (checkFollowingRes.ok) {
-          const data = await checkFollowingRes.json();
-          const yaLoSigo = data.seguidos.some((u: any) => u.user_handle === handle);
-          setIsFollowing(yaLoSigo);
-        }
+          if (checkFollowingRes.ok) {
+            const data = await checkFollowingRes.json();
+            const yaLoSigo = data.seguidos.some((u: any) => u.user_id === userData.user_id); // 👈 comparamos user_id
+            setIsFollowing(yaLoSigo);
+          }
+
       } catch (err) {
         console.error("❌ Error en fetch de profile handle:", err);
         setError("Error al cargar los datos del usuario");

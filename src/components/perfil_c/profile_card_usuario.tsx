@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Calendar, Mail, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +9,7 @@ import Image from "next/image";
 
 type CardUsuarioProps = {
   user: {
-    user_id: number; // ✅ necesario para follow/unfollow
+    user_id: number;
     name: string;
     user_handle: string;
     avatarUrl?: string;
@@ -29,6 +29,11 @@ type CardUsuarioProps = {
 const CardUsuario: React.FC<CardUsuarioProps> = ({ user, isFollowing: initialIsFollowing = false, isOwnProfile, onToggleFollow }) => {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
 
+  // 🔥 Escuchar cambios de isFollowing externo
+  useEffect(() => {
+    setIsFollowing(initialIsFollowing);
+  }, [initialIsFollowing]);
+
   const handleToggleFollow = async () => {
     if (!user) return;
     try {
@@ -37,7 +42,7 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ user, isFollowing: initialIsF
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ follow_user_id: user.user_id }), // ✅ usar user_id como espera el backend
+        body: JSON.stringify({ follow_user_id: user.user_id }),
       });
 
       if (res.ok) {
@@ -82,9 +87,10 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ user, isFollowing: initialIsF
         <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300">{user.name}</h2>
         <p className="text-gray-700 dark:text-gray-400">@{user.user_handle}</p>
 
-        {!isOwnProfile && onToggleFollow &&(
+        {/* Botón de seguir/dejar de seguir */}
+        {!isOwnProfile && (
           <button
-            onClick={handleToggleFollow}
+            onClick={onToggleFollow ? onToggleFollow : handleToggleFollow}
             className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full text-sm transition-all"
           >
             {isFollowing ? "Dejar de seguir" : "Seguir"}
