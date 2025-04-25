@@ -248,6 +248,7 @@ export default function ProfilePage() {
               followUser={followUser} 
               unfollowUser={unfollowUser}
               refetchFollowing={refetchFollowing}
+              isOwnProfile={true}
             />
           </div>
         </div>

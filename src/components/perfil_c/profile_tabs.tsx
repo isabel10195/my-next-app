@@ -22,6 +22,7 @@ interface UserTabsProps {
   unfollowUser: (userId: string) => void;
   setFollowing: React.Dispatch<React.SetStateAction<UserData[]>>;
   refetchFollowing: () => Promise<void>;
+  isOwnProfile: boolean;
 
 }
 
@@ -33,8 +34,10 @@ const UserTabs: React.FC<UserTabsProps> = ({
   followUser,
   unfollowUser,
   setFollowing,
-  refetchFollowing
+  refetchFollowing,
+  isOwnProfile 
 }) => {
+
   const [activeTab, setActiveTab] = React.useState("seguidores");
   
   const [localRecomendaciones, setLocalRecomendaciones] = React.useState<UserData[]>([]);
@@ -140,20 +143,26 @@ const UserTabs: React.FC<UserTabsProps> = ({
             {following.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-300 text-center">Aún no sigues a nadie.</p>
             ) : (
-              renderList(following, (id) => (
-                <Button
-                  onPress={async () => {
-                    try {
-                      await unfollowUser(id);
-                      setFollowing((prev) => prev.filter((u) => u.user_id !== id));
-                    } catch (error) {
-                      console.error("Error al dejar de seguir usuario", error);
-                    }
-                  }}
-                >
-                  Dejar de seguir
-                </Button>
-              ))
+              renderList(
+                following,
+                isOwnProfile
+                  ? (id) => (
+                      <Button
+                        onPress={async () => {
+                          try {
+                            await unfollowUser(id);
+                            setFollowing((prev) => prev.filter((u) => u.user_id !== id));
+                          } catch (error) {
+                            console.error("Error al dejar de seguir usuario", error);
+                          }
+                        }}
+                      >
+                        Dejar de seguir
+                      </Button>
+                    )
+                  : undefined // ❌ no hay botón si no es tu perfil
+              )
+              
             )}
           </div>
         )}

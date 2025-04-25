@@ -179,6 +179,7 @@ export default function ProfilePage() {
               unfollowUser={() => {}}
               setFollowing={() => {}}
               refetchFollowing={async() => {}}
+              isOwnProfile={false}
             />
           </div>
         </div>
