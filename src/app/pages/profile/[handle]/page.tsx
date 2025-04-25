@@ -13,6 +13,7 @@ import CardHabilidades from "@/components/perfil_c/profile_card_habilidades";
 import UserTabs from "@/components/perfil_c/profile_tabs";
 
 interface NormalizedUser {
+  user_id: number;
   name: string;
   user_handle: string;
   avatarUrl?: string;
@@ -27,7 +28,6 @@ interface NormalizedUser {
 
 export default function ProfilePage() {
   const { handle } = useParams();
-
   const [user, setUser] = useState<NormalizedUser | null>(null);
   const [tweets, setTweets] = useState<any[]>([]);
   const [userDetails, setUserDetails] = useState({
@@ -49,6 +49,7 @@ export default function ProfilePage() {
         const userData = await userRes.json();
 
         const normalizedUser: NormalizedUser = {
+          user_id: userData.user_id,
           name: `${userData.first_name ?? ""} ${userData.last_name ?? ""}`.trim(),
           user_handle: userData.user_handle,
           avatarUrl: userData.avatar_url,
@@ -81,6 +82,14 @@ export default function ProfilePage() {
         const followingRes = await fetch(`/api/followers/handle/${handle}/following`, { credentials: "include" });
         const followingData = await followingRes.json();
         setFollowing(followingData.seguidos ?? []);
+
+        // 🔥 Comprobar si ya lo sigo
+        const checkFollowingRes = await fetch("/api/followers/following", { credentials: "include" });
+        if (checkFollowingRes.ok) {
+          const data = await checkFollowingRes.json();
+          const yaLoSigo = data.seguidos.some((u: any) => u.user_handle === handle);
+          setIsFollowing(yaLoSigo);
+        }
       } catch (err) {
         console.error("❌ Error en fetch de profile handle:", err);
         setError("Error al cargar los datos del usuario");
@@ -89,23 +98,7 @@ export default function ProfilePage() {
       }
     };
 
-    const checkFollowing = async () => {
-      try {
-        const res = await fetch("/api/followers/following", { credentials: "include" });
-        if (res.ok) {
-          const data = await res.json();
-          const sigue = data.seguidos.some((u: any) => u.user_handle === handle);
-          setIsFollowing(sigue);
-        }
-      } catch (error) {
-        console.error("Error al comprobar seguimiento", error);
-      }
-    };
-
-    if (handle) {
-      fetchData();
-      checkFollowing();
-    }
+    if (handle) fetchData();
   }, [handle]);
 
   const handleToggleFollow = async () => {
@@ -115,14 +108,17 @@ export default function ProfilePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ follow_user_id: user?.user_handle }),
+        body: JSON.stringify({ follow_user_id: user?.user_id }),
       });
 
       if (res.ok) {
-        setIsFollowing(!isFollowing);
+        setIsFollowing((prev) => !prev);
+      } else {
+        const data = await res.json();
+        throw new Error(data.error || "Error al seguir/dejar de seguir");
       }
     } catch (error) {
-      console.error("Error al seguir/dejar de seguir", error);
+      console.error("❌ Error al seguir/dejar de seguir:", error);
     }
   };
 
@@ -136,12 +132,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="bg-gray-200 dark:bg-gray-950 min-h-screen overflow-x-hidden"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-gray-200 dark:bg-gray-950 min-h-screen overflow-x-hidden">
       <Toaster />
       <div className="mx-auto px-4 lg:px-8 flex justify-center mt-4">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
@@ -153,12 +144,10 @@ export default function ProfilePage() {
             <CardUsuario
               user={user}
               isFollowing={isFollowing}
-              onToggleFollow={handleToggleFollow}
               isOwnProfile={false}
+              onToggleFollow={handleToggleFollow}
             />
-
             <CardTweets tweets={tweets} user={user} editable={false} />
-
             <div className="space-y-4">
               <CardLogros user={user} achievements={userDetails.achievements} />
               <CardIntereses
@@ -178,7 +167,7 @@ export default function ProfilePage() {
               followUser={() => {}}
               unfollowUser={() => {}}
               setFollowing={() => {}}
-              refetchFollowing={async() => {}}
+              refetchFollowing={async () => {}}
               isOwnProfile={false}
             />
           </div>

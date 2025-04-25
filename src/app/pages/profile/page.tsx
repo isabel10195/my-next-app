@@ -206,9 +206,11 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex-1 space-y-4 w-full relative overflow-y-auto pb-24">
-            <CardUsuario 
+          <CardUsuario
             user={user}
-            />
+            isOwnProfile={true} // <- estás en tu propio perfil
+          />
+
 
             <div className="lg:hidden">
               <button onClick={() => setIsExpanded(!isExpanded)} className="w-full flex py-1 px-2 bg-white dark:bg-gray-900 rounded-md shadow-sm mb-6">
