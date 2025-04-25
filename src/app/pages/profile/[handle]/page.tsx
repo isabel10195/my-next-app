@@ -12,7 +12,6 @@ import CardIntereses from "@/components/perfil_c/profile_card_intereses";
 import CardHabilidades from "@/components/perfil_c/profile_card_habilidades";
 import UserTabs from "@/components/perfil_c/profile_tabs";
 
-// 🧩 Interfaz para normalizar usuario
 interface NormalizedUser {
   name: string;
   user_handle: string;
@@ -38,6 +37,7 @@ export default function ProfilePage() {
   });
   const [followers, setFollowers] = useState<any[]>([]);
   const [following, setFollowing] = useState<any[]>([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -45,7 +45,6 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 🔹 Datos básicos del usuario
         const userRes = await fetch(`/api/users/handle/${handle}`, { credentials: "include" });
         const userData = await userRes.json();
 
@@ -63,13 +62,10 @@ export default function ProfilePage() {
         };
         setUser(normalizedUser);
 
-        // 🔹 Tweets
         const tweetsRes = await fetch(`/api/tweets/user/${handle}`, { credentials: "include" });
         const tweetsData = await tweetsRes.json();
-        const tweetsArray = Array.isArray(tweetsData) ? tweetsData : tweetsData?.tweets ?? [];
-        setTweets(tweetsArray);
+        setTweets(Array.isArray(tweetsData) ? tweetsData : tweetsData?.tweets ?? []);
 
-        // 🔹 Detalles
         const detailsRes = await fetch(`/api/users/handle/${handle}/details`, { credentials: "include" });
         const detailsData = await detailsRes.json();
         setUserDetails({
@@ -78,7 +74,6 @@ export default function ProfilePage() {
           skills: detailsData.skill ?? [],
         });
 
-        // 🔹 Seguidores y seguidos
         const followersRes = await fetch(`/api/followers/handle/${handle}`, { credentials: "include" });
         const followersData = await followersRes.json();
         setFollowers(followersData.followers ?? []);
@@ -94,8 +89,42 @@ export default function ProfilePage() {
       }
     };
 
-    if (handle) fetchData();
+    const checkFollowing = async () => {
+      try {
+        const res = await fetch("/api/followers/following", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          const sigue = data.seguidos.some((u: any) => u.user_handle === handle);
+          setIsFollowing(sigue);
+        }
+      } catch (error) {
+        console.error("Error al comprobar seguimiento", error);
+      }
+    };
+
+    if (handle) {
+      fetchData();
+      checkFollowing();
+    }
   }, [handle]);
+
+  const handleToggleFollow = async () => {
+    try {
+      const endpoint = isFollowing ? "/api/followers/unfollow" : "/api/followers/follow";
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ follow_user_id: user?.user_handle }),
+      });
+
+      if (res.ok) {
+        setIsFollowing(!isFollowing);
+      }
+    } catch (error) {
+      console.error("Error al seguir/dejar de seguir", error);
+    }
+  };
 
   const renderTagsWithColors = (tags: string[]) => {
     const colors = ["bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"];
@@ -121,22 +150,24 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex-1 space-y-4 w-full relative overflow-y-auto pb-24">
-            <CardUsuario user={user} />
-            <CardTweets tweets={tweets} user={user} editable={false}/>
+            <CardUsuario
+              user={user}
+              isFollowing={isFollowing}
+              onToggleFollow={handleToggleFollow}
+              isOwnProfile={false}
+            />
+
+            <CardTweets tweets={tweets} user={user} editable={false} />
 
             <div className="space-y-4">
-            <CardLogros user={user} achievements={userDetails.achievements} />
-              <CardIntereses 
-                user={user} 
-                interests={userDetails.interests} 
-                renderTagsWithColors={renderTagsWithColors} 
+              <CardLogros user={user} achievements={userDetails.achievements} />
+              <CardIntereses
+                user={user}
+                interests={userDetails.interests}
+                renderTagsWithColors={renderTagsWithColors}
                 editable={false}
-                />
-              <CardHabilidades 
-                user={user} 
-                skills={userDetails.skills} 
-                editable={false}
-                />
+              />
+              <CardHabilidades user={user} skills={userDetails.skills} editable={false} />
             </div>
 
             <UserTabs
@@ -146,6 +177,8 @@ export default function ProfilePage() {
               recomendaciones={[]}
               followUser={() => {}}
               unfollowUser={() => {}}
+              setFollowing={() => {}}
+              refetchFollowing={async() => {}}
             />
           </div>
         </div>

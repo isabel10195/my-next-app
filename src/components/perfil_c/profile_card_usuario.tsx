@@ -20,9 +20,12 @@ type CardUsuarioProps = {
     followers: number;
     following: number;
   } | null;
+  isFollowing?: boolean;
+  onToggleFollow?: () => void;
+  isOwnProfile?: boolean; // <- para ocultar el botón si es tu propio perfil
 };
 
-const CardUsuario: React.FC<CardUsuarioProps> = ({ user }) => {
+const CardUsuario: React.FC<CardUsuarioProps> = ({ user, isFollowing, isOwnProfile, onToggleFollow }) => {
   // 🔹 Si el usuario no está autenticado, mostramos un mensaje en lugar de intentar renderizar datos inexistentes
   if (!user) {
     return (
@@ -56,9 +59,18 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ user }) => {
       </div>
 
       {/* 🔹 Información del usuario */}
-      <CardContent className="mt-20 p-6 text-center">
+      <CardContent className="mt-20 p-6 text-center relative">
         <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300">{user.name}</h2>
+        
         <p className="text-gray-700 dark:text-gray-400">@{user.user_handle}</p>
+              {!isOwnProfile && onToggleFollow && (
+                <button
+                  onClick={onToggleFollow}
+                  className="absolute top-4 right-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full text-sm transition-all"
+                >
+            {isFollowing ? "Dejar de seguir" : "Seguir"}
+          </button>
+        )}
         <p className="mt-2 text-gray-700 dark:text-gray-300 p-2">{user.bio || "Sin biografía"}</p>
 
         <Separator className="bg-gray-300 dark:bg-gray-800" />
