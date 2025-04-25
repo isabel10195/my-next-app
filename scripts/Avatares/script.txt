@@ -1,0 +1,21 @@
+-- 1. Crear tabla temporal con las imágenes
+DECLARE @avatars TABLE (avatar_index INT, url NVARCHAR(500));
+INSERT INTO @avatars VALUES
+(1, 'https://static.vecteezy.com/system/resources/previews/011/209/565/non_2x/user-profile-avatar-free-vector.jpg'),
+(2, 'https://static.vecteezy.com/system/resources/previews/010/481/026/non_2x/user-avatar-silhouette-free-vector.jpg'),
+(3, 'https://static.vecteezy.com/system/resources/previews/010/528/190/non_2x/user-avatar-silhouette-free-vector.jpg'),
+(4, 'https://static.vecteezy.com/system/resources/previews/019/169/990/non_2x/avatar-human-man-people-person-profile-user-abstract-flat-color-icon-template-free-vector.jpg'),
+(5, 'https://static.vecteezy.com/system/resources/previews/007/654/158/non_2x/user-sign-in-profile-avatar-user-icon-in-flat-style-user-icon-for-the-website-team-logo-vector.jpg');
+
+-- 2. Crear tabla temporal con IDs de los usuarios insertados
+DECLARE @usuarios TABLE (orden INT IDENTITY(1,1), user_id INT);
+INSERT INTO @usuarios (user_id)
+SELECT user_id FROM users WHERE user_id >= 1021 ORDER BY user_id;
+
+-- 3. Actualizar avatar_url en bucle usando el índice cíclico (mod avatar_count)
+UPDATE u
+SET avatar_url = a.url
+FROM users u
+JOIN @usuarios temp ON u.user_id = temp.user_id
+JOIN @avatars a ON ((temp.orden - 1) % (SELECT COUNT(*) FROM @avatars)) + 1 = a.avatar_index
+WHERE u.user_id >= 1021;

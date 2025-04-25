@@ -1,0 +1,31 @@
+En este caso como era mas facil lo ejecutamos en ssms directamente:
+
+
+-- 1. Tabla temporal con intereses
+DECLARE @interests TABLE (interest NVARCHAR(50));
+INSERT INTO @interests VALUES 
+('SQL'), ('Web'), ('Cocina'), ('HTML'), ('Node.js'), ('Diseño'),
+('React'), ('AWS'), ('MongoDB'), ('Astro'), ('Logitech'), ('PC'), ('Consola');
+
+-- 2. Cursor para recorrer todos los usuarios insertados (user_id >= 1021)
+DECLARE @user_id INT;
+
+DECLARE user_cursor CURSOR FOR
+SELECT user_id FROM users WHERE user_id >= 1021;
+
+OPEN user_cursor;
+FETCH NEXT FROM user_cursor INTO @user_id;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Insertar 4 intereses aleatorios distintos para cada usuario
+    INSERT INTO user_details (user_id, category, detail_text)
+    SELECT TOP 4 @user_id, 'interest', interest
+    FROM @interests
+    ORDER BY NEWID(); -- Mezcla aleatoriamente
+
+    FETCH NEXT FROM user_cursor INTO @user_id;
+END
+
+CLOSE user_cursor;
+DEALLOCATE user_cursor;
