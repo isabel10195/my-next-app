@@ -69,7 +69,7 @@ export default function RegisterPage() {
         setTimeout(() => setSuccessMessage(""), 4000);
       }
     } catch (err: any) {
-      console.error("❌ Error en el registro:", err);
+      // console.error("❌ Error en el registro:", err);
 
       if (err.response?.status === 400) {
         setError(err.response.data.error || "❌ El nombre de usuario, email o número de teléfono ya están en uso.");
