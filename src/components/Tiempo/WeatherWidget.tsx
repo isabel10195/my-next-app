@@ -69,12 +69,14 @@ const WeatherWidget = ({ summary = false, location, onSummaryClick, session }: W
                   });
                 }
               },
-              (error) => {
-                console.error("Error obteniendo la ubicación:", error);
-                // Si falla, se usa la ubicación por defecto (Madrid)
-                if (isMounted) setCoords({ latitude: 40.4168, longitude: -3.7038 });
+              (_geoError) => {
+                // Geolocalización fallida: fallback a Madrid
+                if (isMounted) {
+                  setCoords({ latitude: 40.4168, longitude: -3.7038 });
+                }
               }
             );
+            
           } else {
             // Si el navegador no soporta geolocalización, se usa la ubicación por defecto
             if (isMounted) setCoords({ latitude: 40.4168, longitude: -3.7038 });

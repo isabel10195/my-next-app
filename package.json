@@ -14,6 +14,7 @@
     "@nextui-org/react": "^2.6.10",
     "@stitches/react": "^1.2.8",
     "@tanstack/react-query": "^5.64.0",
+    "@types/date-fns": "^2.6.3",
     "@types/leaflet": "^1.9.17",
     "antd": "^5.22.5",
     "axios": "^1.7.9",
@@ -41,6 +42,7 @@
     "react-player": "^2.16.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "swr": "^2.3.3",
     "turbopack": "^0.0.1",
     "ws": "^8.18.1"
   },
