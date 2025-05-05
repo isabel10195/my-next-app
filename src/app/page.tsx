@@ -12,7 +12,7 @@ import WeatherWidget from "@/components/Tiempo/WeatherWidget";
 
 import CardAutorizacion from "@/components/ui/cardAutorizacion";
 import CardEventos from "@/components/CardEventosPorUsuario/CardEventos";
-import CardCerrarSesion from "@/components/CardCerrarSesion/card-cerrar-sesion";
+//import CardCerrarSesion from "@/components/CardCerrarSesion/card-cerrar-sesion";
 import CardinnfoSesion from "@/components/CardInfoSesion/card-infosesion";
 import CombinedNavbar from "@/components/navbar/combinednavbar";
 import { TweetCard } from "@/components/CardPrincipal/tweet-cards";
@@ -303,14 +303,8 @@ export default function HomePage() {
                 ))}
               </div> */}
               <div>
-                <CardinnfoSesion />
-                <br />
-                <CardCerrarSesion />
-                <br />
-                <SocialLinks />
-                <br />
                 {/* Renderizamos el WeatherWidget en resumen y pasamos la ubicación del usuario */}
-                {isAuthenticated ? (
+                  {isAuthenticated ? (
                   <WeatherWidget
                     summary={true}
                     location={user.location}
@@ -319,8 +313,16 @@ export default function HomePage() {
                 ) : (
                   <WeatherWidget />
                 )}
+                <br />
+                <CardinnfoSesion />
+                <br />
+                {/*<CardCerrarSesion />*/}
+                <SocialLinks />
+                <br />
+
               </div>
             </div>
+
             {/* Diseño para móvil */}
             <div className="grid grid-cols-1 gap-6 lg:hidden">
               <div className="space-y-6">
@@ -421,20 +423,11 @@ export default function HomePage() {
                     </div>
                   </>
                 )}
-                <CardPensamientos key={`mobile-pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
-                <CardAutorizacion />
                 {/* <div className="relative grid grid-cols-2 gap-4 mt-6">
                   {currencyPairs.map((pair) => (
                     <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
                   ))}
                 </div> */}
-                <div className="flex justify-center items-center">
-                  <CardinnfoSesion />
-                  <CardCerrarSesion />
-                </div>
-                <div className="flex justify-center items-center">
-                  <SocialLinks />
-                </div>
                 <div className="flex justify-center items-center">
                   {isAuthenticated ? (
                     <WeatherWidget
@@ -446,6 +439,14 @@ export default function HomePage() {
                     <WeatherWidget />
                   )}
                 </div>
+                <div className="flex justify-center items-center">
+                  <CardinnfoSesion />
+                  {/*<CardCerrarSesion />*/}
+                </div>
+                <div className="flex justify-center items-center">
+                  <SocialLinks />
+                </div>
+
               </div>
             </div>
           </motion.main>
