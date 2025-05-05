@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/app/context/AuthContext";
 
 import { ArticleCard } from "@/components/CardPrincipal/article-card";
-// import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
+import { CurrencyCard } from "@/components/CardsMonedas/currency-card";
 import { SocialLinks } from "@/components/CardRedesSociales/social-links";
 import { CardPensamientos } from "@/components/CardPensamientos/CardPensamientos";
 import WeatherWidget from "@/components/Tiempo/WeatherWidget";
@@ -297,11 +297,11 @@ export default function HomePage() {
               <div className="space-y-6">
                 <CardEventos />
               </div>
-              {/* <div className="relative grid grid-cols-2 gap-4">
+              <div className="relative grid grid-cols-2 gap-4">
                 {currencyPairs.map((pair) => (
                   <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
                 ))}
-              </div> */}
+              </div>
               <div>
                 {/* Renderizamos el WeatherWidget en resumen y pasamos la ubicación del usuario */}
                   {isAuthenticated ? (
@@ -423,11 +423,13 @@ export default function HomePage() {
                     </div>
                   </>
                 )}
-                {/* <div className="relative grid grid-cols-2 gap-4 mt-6">
-                  {currencyPairs.map((pair) => (
-                    <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
-                  ))}
-                </div> */}
+                <CardPensamientos key={`mobile-pensamientos-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
+                <CardAutorizacion />
+                <div className="relative grid grid-cols-2 gap-4 mt-6">
+                {currencyPairs.map((pair) => (
+                  <CurrencyCard key={`${pair.base}-${pair.quote}`} pair={pair} />
+                ))}
+              </div>
                 <div className="flex justify-center items-center">
                   {isAuthenticated ? (
                     <WeatherWidget

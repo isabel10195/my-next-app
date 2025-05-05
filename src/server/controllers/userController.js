@@ -206,6 +206,70 @@ const getUserDetailsByHandle = async (req, res) => {
   }
 };
 
+const getUserActivity = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+      const query = `
+          SELECT 
+              CONVERT(date, activity_date, 23) AS date,
+              COUNT(*) AS count
+          FROM (
+              SELECT created_at AS activity_date FROM tweets WHERE user_id = @userId
+              UNION ALL
+              SELECT created_at FROM tweet_comments WHERE user_id = @userId
+              UNION ALL
+              SELECT created_at FROM retweets WHERE user_id = @userId
+              UNION ALL
+              SELECT created_at FROM stories WHERE user_id = @userId
+          ) AS activities
+          WHERE activity_date >= DATEADD(month, -1, GETDATE())
+          GROUP BY CONVERT(date, activity_date, 23)
+          ORDER BY date DESC
+      `;
+
+      const inputs = [{ name: "userId", type: db.Int, value: userId }];
+      const result = await executeQuery(query, inputs);
+
+      // Rellenar días faltantes
+      const activityMap = new Map();
+      const now = new Date();
+      
+      // Inicializar últimos 357 días
+      for (let i = 0; i <= 30; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        const dateString = date.toISOString().split('T')[0];
+        activityMap.set(dateString, 0);
+      } 
+
+      // Llenar datos reales
+      result.recordset.forEach(row => {
+          const date = new Date(row.date);
+          const dateString = date.toISOString().split('T')[0];
+          activityMap.set(dateString, row.count);
+      });
+
+      const activityData = Array.from(activityMap, ([date, count]) => ({ 
+        date, 
+        count 
+      })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      res.status(200).json(activityData);
+      
+  } catch (error) {
+      console.error("Error detallado:", {
+          message: error.message,
+          stack: error.stack,
+          sqlError: error.originalError?.info?.message
+      });
+      res.status(500).json({ 
+          error: "Error al obtener actividad",
+          details: process.env.NODE_ENV === 'development' ? error.message : null
+      });
+  }
+};
+
 // Exportar controladores
 // 🔹 Exportar funciones para su uso en rutas
   module.exports = {
@@ -215,5 +279,6 @@ const getUserDetailsByHandle = async (req, res) => {
     deleteUserDetail,
     getUserByHandle,
     getUserDetailsByHandle,
+    getUserActivity
   };
   

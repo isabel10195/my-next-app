@@ -17,13 +17,34 @@ export const fetchPopularTweets = async () => {
   return response.json();
 };
 
+// export const fetchForYouTweets = async () => {
+//   const response = await fetch(`${API_URL}/foryou`, {
+//     credentials: "include",
+//   });
+//   if (!response.ok) {
+//     throw new Error("Error fetching tweets by interest");
+//   }
+//   const data = await response.json();
+//   return data.tweets.map(tweet => ({
+//     ...tweet,
+//     comments: tweet.comments || [],
+//   }));
+// };
+
 export const fetchForYouTweets = async () => {
-  const response = await fetch("http://localhost:3001/api/tweets/foryou", {
+  const response = await fetch(`${API_URL}/foryou`, {
     credentials: "include",
   });
+
+  // Si no hay sesión activa, devolvemos array vacío
+  if (response.status === 401) {
+    return [];
+  }
+  // Otros fallos sí los propagamos
   if (!response.ok) {
     throw new Error("Error fetching tweets by interest");
   }
+
   const data = await response.json();
   return data.tweets.map(tweet => ({
     ...tweet,
@@ -32,15 +53,33 @@ export const fetchForYouTweets = async () => {
 };
 
 
+
+// export const fetchFollowingTweets = async () => {
+//   const response = await fetch(`${API_URL}/following`, {
+//     credentials: "include",
+//   });
+//   if (!response.ok) {
+//     throw new Error("Error fetching following tweets");
+//   }
+//   const data = await response.json();
+//   return data.tweets;
+// };
+
 export const fetchFollowingTweets = async () => {
-  const response = await fetch(`${API_URL}/following`, {
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Error fetching following tweets");
+  try {
+    const response = await fetch(`${API_URL}/following`, {
+      credentials: "include",
+    });
+
+    if (response.status === 401) return [];
+    if (!response.ok) throw new Error("Error obteniendo tweets");
+    
+    const data = await response.json();
+    return data.tweets || [];
+  } catch (error) {
+    console.error("Error en fetchFollowingTweets:", error);
+    return [];
   }
-  const data = await response.json();
-  return data.tweets;
 };
 
 export const createTweet = async (tweetData) => {
