@@ -1,0 +1,51 @@
+-- 1. Crear tabla temporal con achievements
+DECLARE @achievements TABLE (text NVARCHAR(255));
+INSERT INTO @achievements VALUES
+('Culminación exitosa de un proyecto desafiante.'),
+('Obtención de un reconocimiento o premio importante.'),
+('Superación de un obstáculo significativo.'),
+('Mejora notable en el rendimiento o productividad.'),
+('Desarrollo de una nueva habilidad valiosa.'),
+('Alcanzar una meta personal o profesional a largo plazo.'),
+('Contribución significativa al éxito de un equipo.'),
+('Generación de un impacto positivo en otros.'),
+('Implementación de una idea innovadora.'),
+('Resolución efectiva de un problema complejo.'),
+('Obtención de una certificación o calificación relevante.'),
+('Expansión de la red de contactos profesionales.'),
+('Mejora significativa en la comunicación.'),
+('Liderazgo exitoso de un equipo o iniciativa.'),
+('Adaptación exitosa a un cambio importante.'),
+('Finalización de un programa educativo o de formación.'),
+('Aumento de la satisfacción del cliente.'),
+('Optimización de un proceso o sistema.'),
+('Presentación exitosa ante una audiencia importante.'),
+('Gestión eficiente de recursos limitados.'),
+('Creación de algo nuevo y original.'),
+('Mentoría o guía exitosa de otra persona.'),
+('Logro de un objetivo de ventas o financiero.'),
+('Mejora de la salud o el bienestar personal.'),
+('Contribución a una causa benéfica o comunitaria.');
+
+-- 2. Cursor para recorrer todos los usuarios insertados por script
+DECLARE @user_id INT;
+
+DECLARE user_cursor CURSOR FOR
+SELECT user_id FROM users WHERE user_id >= 1021;
+
+OPEN user_cursor;
+FETCH NEXT FROM user_cursor INTO @user_id;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Insertar 4 achievements aleatorios distintos por usuario
+    INSERT INTO user_details (user_id, category, detail_text)
+    SELECT TOP 4 @user_id, 'achievement', text
+    FROM @achievements
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM user_cursor INTO @user_id;
+END
+
+CLOSE user_cursor;
+DEALLOCATE user_cursor;

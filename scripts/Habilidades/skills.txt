@@ -1,0 +1,35 @@
+-- 1. Crear tabla temporal con habilidades (skills)
+DECLARE @skills TABLE (skill NVARCHAR(100));
+INSERT INTO @skills VALUES
+('Comunicación efectiva'), ('Pensamiento crítico'), ('Resolución de problemas'),
+('Trabajo en equipo'), ('Liderazgo'), ('Gestión del tiempo'),
+('Adaptabilidad'), ('Creatividad'), ('Inteligencia emocional'),
+('Negociación'), ('Presentación'), ('Atención al detalle'),
+('Organización'), ('Aprendizaje activo'), ('Empatía'),
+('Toma de decisiones'), ('Persuasión'), ('Gestión de proyectos'),
+('Habilidades informáticas'), ('Habilidades de investigación'),
+('Servicio al cliente'), ('Autonomía'), ('Paciencia'),
+('Flexibilidad'), ('Habilidades lingüísticas');
+
+-- 2. Cursor para recorrer todos los usuarios desde 1021
+DECLARE @user_id INT;
+
+DECLARE user_cursor CURSOR FOR
+SELECT user_id FROM users WHERE user_id >= 1021;
+
+OPEN user_cursor;
+FETCH NEXT FROM user_cursor INTO @user_id;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Insertar 4 skills aleatorias y distintas por usuario
+    INSERT INTO user_details (user_id, category, detail_text)
+    SELECT TOP 4 @user_id, 'skill', skill
+    FROM @skills
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM user_cursor INTO @user_id;
+END
+
+CLOSE user_cursor;
+DEALLOCATE user_cursor;
