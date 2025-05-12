@@ -24,7 +24,7 @@ interface WeatherWidgetProps {
 }
 
 // Función para seleccionar el ícono según algunos datos del pronóstico
-const getLoadingIcon = (forecastData: any[]): JSX.Element => {
+const getLoadingIcon = (forecastData: any[]) => {
   if (forecastData && forecastData.length > 0) {
     const today = forecastData[0];
     // Si hay precipitación significativa
