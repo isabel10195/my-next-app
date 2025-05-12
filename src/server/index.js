@@ -68,3 +68,12 @@ app.use("/api/messages", messageRoutes);
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const result = await require("./path/a/tu/db.js").executeQuery("SELECT TOP 1 * FROM Users"); // Ajusta tabla
+    res.json({ ok: true, rows: result.recordset });
+  } catch (err) {
+    console.error("❌ Error DB:", err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
