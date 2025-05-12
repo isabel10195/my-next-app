@@ -65,6 +65,6 @@ app.use("/api/messages", messageRoutes);
 // })();
 
 // Servidor
-app.listen(PORT, () => { // Usar server en lugar de app
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
