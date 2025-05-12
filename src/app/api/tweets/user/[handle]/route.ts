@@ -1,14 +1,14 @@
-// 📁 /src/app/api/tweets/user/[handle]/route.ts
-
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function GET(req: Request, context: { params: { handle: string } }) {
-  const { handle } = await context.params; // ✅ Esto debe llevar `await` si el contexto viene async
-
+export async function GET(req: NextRequest) {
   try {
     const cookieStore = cookies();
     const token = (await cookieStore).get("token")?.value;
+
+    // Extraer el handle desde la URL
+    const urlParts = req.nextUrl.pathname.split("/");
+    const handle = urlParts.at(-1);
 
     const res = await fetch(`http://localhost:3001/api/tweets/user/${handle}`, {
       method: "GET",
@@ -20,7 +20,10 @@ export async function GET(req: Request, context: { params: { handle: string } })
 
     if (!res.ok) {
       const errorData = await res.json();
-      return NextResponse.json({ error: errorData.error || "Error al obtener tweets del usuario" }, { status: res.status });
+      return NextResponse.json(
+        { error: errorData.error || "Error al obtener tweets del usuario" },
+        { status: res.status }
+      );
     }
 
     const data = await res.json();
