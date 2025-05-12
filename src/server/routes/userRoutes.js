@@ -5,7 +5,8 @@ const {
   updateUserDetail,
   deleteUserDetail,
   getUserByHandle,          
-  getUserDetailsByHandle    
+  getUserDetailsByHandle,
+  getUserActivity   
 } = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -18,6 +19,7 @@ router.post("/details", authMiddleware, updateUserDetail);    // Añadir interé
 router.delete("/details", authMiddleware, deleteUserDetail);  // Eliminar detalle
 router.get("/handle/:handle", getUserByHandle); // sin authMiddleware, es público
 router.get("/handle/:handle/details", getUserDetailsByHandle); // también sin authMiddleware
+router.get("/activity", authMiddleware, getUserActivity);
 
 
 module.exports = router;
