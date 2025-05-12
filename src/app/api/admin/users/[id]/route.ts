@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
   try {
-    const { params } = context;
+    const userId = context.params.id; // ✅ Accede a context.params directamente
     const cookie = request.headers.get("cookie");
 
-    const res = await fetch(`http://localhost:3001/api/users/admin/${params.id}`, {
+    const res = await fetch(`http://localhost:3001/api/users/admin/${userId}`, {
       method: "DELETE",
       headers: {
-        Cookie: cookie ?? "", // reenviamos la cookie
+        Cookie: cookie ?? "",
       },
     });
 
