@@ -1,9 +1,11 @@
+
+
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/settings_C/tooltip";
 import { fetchUserActivity } from "@/server/service/userService";
 import useSWR from 'swr';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, differenceInDays } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface ActivityData {
@@ -66,7 +68,6 @@ function StatsHeader({ activityData }: { activityData: ActivityData[] }) {
           {activityData.length} días registrados
         </p>
       </div>
-      
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
         <div>
           <p className="font-bold text-blue-600 dark:text-blue-400 text-lg">{total}</p>
@@ -114,60 +115,59 @@ function ColorLegend() {
 
 export function ActivityHeatmap() {
   const { data: activityData, error } = useSWR<ActivityData[]>('/api/users/activity', fetchUserActivity);
-  
-  if (error) return <div className="p-4 text-center text-red-500">Error cargando actividad</div>;
-  if (!activityData) return <div className="p-4 text-center">Cargando actividad...</div>;
-
   const today = new Date();
   const monthStart = startOfMonth(today);
   const monthEnd = endOfMonth(today);
   const allDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  
+  // Detectar sesión no iniciada
+  const noSession = Boolean(error);
 
-  const activityMap = new Map(
-    activityData.map(item => [item.date, item.count])
-  );
+  // Generar datos vacíos si no hay sesión, o usar datos reales si hay
+  const dataToUse: ActivityData[] = noSession
+    ? allDays.map(d => ({ date: format(d, 'yyyy-MM-dd'), count: 0 }))
+    : (activityData || []);
 
-  // Dividir días en 3 filas equilibradas
-  const rows = 3;
-  const chunkSize = Math.ceil(allDays.length / rows);
-  const dayGroups = Array.from({ length: rows }, (_, i) => 
-    allDays.slice(i * chunkSize, (i + 1) * chunkSize)
-  );
+  if (!activityData && !error) return <div className="p-4 text-center">Cargando actividad...</div>;
 
   return (
     <Card className="bg-white dark:bg-gray-900">
       <CardContent className="pt-6">
-        <StatsHeader activityData={activityData} />
-        
-        <TooltipProvider>
-          <div className="flex flex-col gap-4 items-center">
-            {dayGroups.map((group, index) => (
-              <div 
-                key={index}
-                className="flex gap-3 justify-center w-full overflow-x-auto px-4"
-              >
-                {group.map(date => {
-                  const dateString = format(date, 'yyyy-MM-dd');
-                  const count = activityMap.get(dateString) || 0;
-                  const isCurrentMonth = isSameMonth(date, today);
-                  
-                  return (
-                    <div 
-                      key={dateString}
-                      className={`flex-shrink-0 ${!isCurrentMonth ? 'opacity-50' : ''}`}
-                    >
-                      <ActivityCell 
-                        date={dateString} 
-                        count={count} 
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </TooltipProvider>
+        {/* Estadísticas */}
+        <StatsHeader activityData={dataToUse} />
 
+        {/* Mensaje de no sesión si aplica */}
+        {noSession ? (
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+            No estás iniciado sesión. Inicia sesión para ver tu actividad.
+          </div>
+        ) : (
+          <TooltipProvider>
+            <div className="flex flex-col gap-4 items-center">
+              {/* Filas de días */}
+              {Array.from({ length: 3 }).map((_, row) => {
+                const start = row * Math.ceil(allDays.length / 3);
+                const end = start + Math.ceil(allDays.length / 3);
+                return (
+                  <div key={row} className="flex gap-3 justify-center w-full overflow-x-auto px-4">
+                    {allDays.slice(start, end).map(date => {
+                      const dateString = format(date, 'yyyy-MM-dd');
+                      const count = dataToUse.find(item => item.date === dateString)?.count || 0;
+                      const isCurrentMonth = isSameMonth(date, today);
+                      return (
+                        <div key={dateString} className={`flex-shrink-0 ${!isCurrentMonth ? 'opacity-50' : ''}`}>
+                          <ActivityCell date={dateString} count={count} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          </TooltipProvider>
+        )}
+
+        {/* Leyenda */}
         <ColorLegend />
       </CardContent>
     </Card>
