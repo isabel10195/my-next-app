@@ -89,12 +89,6 @@ export default function TweetListAdmin() {
             >
               Eliminar
             </button>
-            <button
-              onClick={() => router.push(`/profile/${tweet.user_handle}`)}
-              className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white text-sm px-3 py-1 rounded-md"
-            >
-              Usuario ▾
-            </button>
           </div>
         </div>
       ))}
