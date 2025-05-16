@@ -1,5 +1,3 @@
-
-
 "use client"
 import { useState } from "react"
 import { SettingsNav } from "@/components/settings_C/settings-nav"
@@ -9,14 +7,13 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { HiMenu, HiX } from "react-icons/hi"
 
-
 export default function SettingsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
-
   }
+
   return (
     <div className="flex min-h-screen w-full overflow-hidden bg-gray-200 dark:bg-gray-950">
       {/* Aside para pantallas grandes oculto en pequeñas */}
@@ -121,4 +118,3 @@ function SettingsCard({ title, description, settings }) {
     </Card>
   )
 }
-
