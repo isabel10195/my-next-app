@@ -72,9 +72,12 @@ export default function ChatWindow({ contact, currentUserId }) {
                     <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${msg.sender_id}`} />
                     <AvatarFallback>{String(msg.sender_id)[0] || "?"}</AvatarFallback>
                   </Avatar>
-                  <div className={`mx-2 py-2 px-4 rounded-lg ${isOwnMessage(msg) ? "bg-blue-600 text-white" : "bg-gray-200"}`}>
-                    <p>{msg.content}</p>
-                    <p className="text-xs mt-1">
+                  <div className={`mx-2 py-2 px-4 rounded-lg mt-2
+                    ${isOwnMessage(msg) 
+                      ? "bg-blue-600 text-white" 
+                      : "bg-gray-200 dark:bg-gray-700 dark:text-white"}`}>
+                      <p>{msg.content}</p>
+                      <p className="text-xs mt-1">
                       {new Date(msg.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
