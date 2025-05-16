@@ -18,6 +18,7 @@ const path = require('path');
 const app = express();
 const PORT = 3001;
 const adminRoutes = require("./routes/adminRoutes");
+const cryptoRoutes = require('./routes/cryptoRoutes');
 
 // Middlewares
 app.use(corsMiddleware);
@@ -47,8 +48,10 @@ app.use(
   }
 ));
 app.use("/api", adminRoutes);
-
 app.use("/api/messages", messageRoutes);
+
+app.use('/api/crypto', cryptoRoutes);
+
 
 //equire("./cron/newsletterCron");
 
@@ -66,7 +69,7 @@ app.use("/api/messages", messageRoutes);
 
 // Servidor
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Servidor corriendo en http://0.0.0.0:${PORT}`);
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
 app.get("/api/db-test", async (req, res) => {
   try {

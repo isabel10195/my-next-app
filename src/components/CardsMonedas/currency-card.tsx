@@ -40,21 +40,28 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
     if (typeof window === 'undefined') return;
 
     let isMounted = true;
+
     const fetchChartData = async () => {
       let retries = 3;
+
       while (retries > 0) {
         try {
-          // Usar CoinGecko para evitar límites de CoinCap
-          const url = `https://api.coingecko.com/api/v3/coins/${pair.base}/market_chart?vs_currency=${pair.quote}&days=7&interval=daily`;
+          const url = `/api/crypto/chart?coin=${pair.base}&currency=${pair.quote}`;
           const response = await fetch(url);
           const data = await response.json();
 
-          if (!response.ok || !data.prices?.length) {
-            //throw new Error(data.error || 'No se pudo obtener datos desde CoinGecko.');
-            setError('No pudimos cargar los datos. Inténtalo más tarde.');
+          console.log('📊 Datos recibidos del backend:', data);
+
+          if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+          }
+
+          if (!data || !data.prices || !Array.isArray(data.prices)) {
+            throw new Error('Datos del gráfico no disponibles');
           }
 
           if (!isMounted) return;
+
           setChartData({
             labels: data.prices.map((p: [number, number]) =>
               format(new Date(p[0]), 'dd MMM', { locale: es })
@@ -74,10 +81,11 @@ export function CurrencyCard({ pair }: CurrencyCardProps) {
               },
             ],
           });
+
           setError(null);
           return;
         } catch (err: any) {
-          console.error('Error al cargar datos del gráfico:', err);
+          console.error('❌ Error al cargar datos del gráfico:', err);
           retries -= 1;
           if (retries === 0 && isMounted) {
             setError(err.message || 'Error desconocido');
