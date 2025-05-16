@@ -316,8 +316,6 @@ export default function HomePage() {
                   <WeatherWidget />
                 )}
                 <br />
-                <CardinnfoSesion />
-                <br />
                 {/*<CardCerrarSesion />*/}
                 <SocialLinks />
                 <br />
