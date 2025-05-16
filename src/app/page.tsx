@@ -291,6 +291,8 @@ export default function HomePage() {
                     />
                     <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
                     <CardAutorizacion />
+                    <CardinnfoSesion />
+                    
                   </div>
                 </>
               )}
@@ -321,6 +323,7 @@ export default function HomePage() {
                 <br />
 
               </div>
+              
             </div>
 
             {/* Diseño para móvil */}

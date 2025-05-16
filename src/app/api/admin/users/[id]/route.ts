@@ -35,6 +35,7 @@ export async function DELETE(req: NextRequest) {
       method: "DELETE",
       headers: {
         Cookie: cookie ?? "",
+        Cookie: cookie ?? "",
       },
     });
 
