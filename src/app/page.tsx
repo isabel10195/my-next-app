@@ -291,9 +291,8 @@ export default function HomePage() {
                     />
                     <CardPensamientos key={`pensamientos2-${isAuthenticated}`} isAuthenticated={isAuthenticated} onCommunityUpdate={() => setCommunityUpdated(prev => !prev)}/>
                     <CardAutorizacion />
-                    <CardinnfoSesion />
-                    
                   </div>
+                  
                 </>
               )}
               <div className="space-y-6">
@@ -305,6 +304,7 @@ export default function HomePage() {
                 ))}
               </div>
               <div>
+                <CardinnfoSesion />
                 {/* Renderizamos el WeatherWidget en resumen y pasamos la ubicación del usuario */}
                   {isAuthenticated ? (
                   <WeatherWidget
@@ -317,11 +317,9 @@ export default function HomePage() {
                 )}
                 <br />
                 {/*<CardCerrarSesion />*/}
+                
                 <SocialLinks />
-                <br />
-
               </div>
-              
             </div>
 
             {/* Diseño para móvil */}
