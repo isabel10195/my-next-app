@@ -34,8 +34,7 @@ export async function DELETE(req: NextRequest) {
     const res = await fetch(`http://localhost:3001/api/users/admin/${id}`, {
       method: "DELETE",
       headers: {
-        Cookie: cookie ?? "",
-        Cookie: cookie ?? "",
+        Cookie: cookie ?? ""
       },
     });
 
