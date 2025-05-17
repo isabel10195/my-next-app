@@ -16,7 +16,7 @@ const newsController = require('./controllers/newsController'); // 📌 Importam
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const adminRoutes = require("./routes/adminRoutes");
 const cryptoRoutes = require('./routes/cryptoRoutes');
 
